@@ -49,7 +49,7 @@ public class Map {
         p.setLayout(null);
         p.setBounds(new Rectangle(0, 0, 200, 200));
 
-        ImageIcon imageIcon = new ImageIcon("src\\resources\\risk-board.png"); // load the image to a imageIcon
+        ImageIcon imageIcon = new ImageIcon("..\\resources\\risk-board.png"); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
         Image newimg = image.getScaledInstance(frameX, frameY, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newimg);

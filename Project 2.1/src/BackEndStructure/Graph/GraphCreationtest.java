@@ -27,7 +27,6 @@ public class GraphCreationtest {
         testGraph.addEdge(v1, v2);
         testGraph.addEdge(v2, v0);
         testGraph.addEdge(v2, v3);
-        testGraph.addEdge(v3, v2);
 
         testGraph.printGraph();
     }
