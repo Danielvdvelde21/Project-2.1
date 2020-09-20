@@ -1,3 +1,5 @@
+package BackEndStructure.Graph;
+
 public class Edge {
 
     private Vertex vertex;
