@@ -4,6 +4,7 @@ public class Territory {
 
     private String territoryName;
     private int numberOfTroops;
+    // Change to Player name TODO
     private int belongsTo;
 
     public Territory(String territoryName, int numberOfTroops, int playerNumber) {
