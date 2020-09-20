@@ -29,7 +29,6 @@ public class MainMenuScreen extends Application {
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
         root.setPrefSize(1000,700);
-
         InputStream is = Files.newInputStream(Paths.get("risk1.jpg"));    //load image
         Image img = new Image(is);
         is.close();

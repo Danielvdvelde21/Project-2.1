@@ -15,6 +15,7 @@ public class Graph {
 
     public void addEdge(Vertex vertex1, Vertex vertex2) {
         vertex1.getEdges().add(new Edge(vertex2));
+        vertex2.getEdges().add(new Edge(vertex1));
     }
 
     public void printGraph(){
