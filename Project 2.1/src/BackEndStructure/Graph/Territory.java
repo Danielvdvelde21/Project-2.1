@@ -1,3 +1,5 @@
+package BackEndStructure.Graph;
+
 public class Territory {
 
     private String territoryName;

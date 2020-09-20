@@ -1,4 +1,6 @@
-public class test {
+package BackEndStructure.Graph;
+
+public class GraphCreationtest {
     public static void main(String[] args) {
         Graph testGraph = new Graph();
 
