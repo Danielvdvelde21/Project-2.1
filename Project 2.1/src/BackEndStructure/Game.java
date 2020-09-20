@@ -15,6 +15,7 @@ public class Game {
     private Dice white1;
     private Dice white2;
 
+    // TODO take as imput each player name
     public Game(int numberOfPlayers) {
         switch (numberOfPlayers) {
             case 2:

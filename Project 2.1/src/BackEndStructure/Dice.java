@@ -20,6 +20,8 @@ public class Dice {
     }
 
     // Determines who can start placing infantry
+    // TODO roll a dice for each player, the one that throw the most eyes starts the game
+    // TODO if two people throw 6, throw again?
     public Player whoGoesFirst(Player[] players) {
         int[] playerRolls = new int[players.length];
         Dice temp =  new Dice();
