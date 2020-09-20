@@ -4,6 +4,7 @@ public class GraphCreationtest {
     public static void main(String[] args) {
         Graph testGraph = new Graph();
 
+        // TODO Make map for Map.java
         // Territories
         Territory t0 = new Territory("London", 3, 1);
         Territory t1 = new Territory("Amsterdam", 6, 2);
