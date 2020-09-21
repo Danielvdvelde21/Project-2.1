@@ -8,4 +8,8 @@ public class Player {
         this.playerName = name;
         this.startingTroops = trooops;
     }
+
+    public Player(int startingTroops) {
+
+    }
 }

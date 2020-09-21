@@ -29,7 +29,7 @@ public class MainMenuScreen extends Application {
     public void start(Stage primaryStage) throws Exception {
         Pane root = new Pane();
         root.setPrefSize(1000,700);
-        InputStream is = Files.newInputStream(Paths.get("risk1.jpg"));    //load image
+        InputStream is = Files.newInputStream(Paths.get("src\\resources\\risk1.jpg"));    //load image
         Image img = new Image(is);
         is.close();
 
@@ -49,16 +49,19 @@ public class MainMenuScreen extends Application {
 
     private class GameMenu extends Parent {
         public GameMenu() {
-            VBox menu1 = new VBox(10);  //main menu
-            VBox menu2 = new VBox(10);  //submenu
+            VBox menu1 = new VBox(13);  //main menu
+            VBox menu2 = new VBox(13);  //submenu
 
-            menu1.setTranslateX(100);
-            menu1.setTranslateY(200);
-            menu2.setTranslateX(100);
-            menu2.setTranslateY(200);
+            menu1.setTranslateX(350);
+            menu1.setTranslateY(250);
+            menu2.setTranslateX(350);
+            menu2.setTranslateY(250);
 
             MenuButton playBtn = new MenuButton("Play");
-            playBtn.setOnMouseClicked(event -> {});
+            playBtn.setOnMouseClicked(event -> {    //transition to menu2
+                getChildren().add(menu2);
+                getChildren().remove(menu1);
+            });
 
             MenuButton settingsBtn = new MenuButton("Settings");
             settingsBtn.setOnMouseClicked(event -> {});
@@ -66,11 +69,24 @@ public class MainMenuScreen extends Application {
             MenuButton helpBtn = new MenuButton("Help");
             helpBtn.setOnMouseClicked(event -> {});
 
+            MenuButton singlePlayerBtn = new MenuButton("Single Player");
+            singlePlayerBtn.setOnMouseClicked(event -> {});
+
+            MenuButton multiPlayerBtn = new MenuButton("Multi-Player");
+            multiPlayerBtn.setOnMouseClicked(event -> {});
+
+            MenuButton backBtn = new MenuButton("Back");
+            backBtn.setOnMouseClicked(event -> {    //transition to menu1
+                getChildren().add(menu1);
+                getChildren().remove(menu2);
+            });
+
             menu1.getChildren().addAll(playBtn, settingsBtn, helpBtn);
+            menu2.getChildren().addAll(singlePlayerBtn, multiPlayerBtn, backBtn);
 
             Rectangle r = new Rectangle(1000, 700); //background for the menu
             r.setFill(Color.GREY);
-            r.setOpacity(0.4);
+            r.setOpacity(0.25);
 
             getChildren().addAll(r, menu1);
         }
@@ -81,11 +97,11 @@ public class MainMenuScreen extends Application {
 
         public MenuButton(String name) {
             text = new Text(name);
-            text.setFont(text.getFont().font(20));
+            text.setFont(text.getFont().font(23));
             text.setFill(Color.WHITE);
 
-            Rectangle r = new Rectangle(250, 30);   //background rectangle
-            r.setOpacity(0.6);
+            Rectangle r = new Rectangle(300, 35);   //background rectangle
+            r.setOpacity(0.65);
             r.setFill(Color.BLACK);
             r.setEffect(new GaussianBlur(3.5));
 
