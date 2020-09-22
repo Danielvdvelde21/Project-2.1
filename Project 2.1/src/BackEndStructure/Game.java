@@ -16,7 +16,7 @@ public class Game {
     private Dice white2;
 
     // Cards
-    private CardStack cardStack;
+    private CardStack cardStack = new CardStack();
 
     // TODO take as imput each player name
     public Game(int numberOfPlayers, String[] names) {
@@ -45,9 +45,6 @@ public class Game {
         for (int i = 0; i < numberOfPlayers; i++) {
             this.players[i] = new Player(startingTroops, names[i]);
         }
-
-        this.cardStack = new CardStack();
-
     }
 
 }

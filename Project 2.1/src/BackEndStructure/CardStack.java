@@ -70,12 +70,15 @@ public class CardStack {
         shuffle();
     }
 
-    // Todo optimize for wildcard
     public boolean isSet(Card[] cards) {
         int countInfantry = 0;
         int countCavalry = 0;
         int countArtillery = 0;
+
         for(Card c : cards) {
+            if(c.getCardType().equals("WILDCARD")) {
+                return true;
+            }
             if(c.getCardType().equals("Infantry")) {
                 countInfantry++;
                 continue;
@@ -86,7 +89,6 @@ public class CardStack {
             }
             if(c.getCardType().equals("Artillery")) {
                 countArtillery++;
-                continue;
             }
         }
         return countInfantry >= 3 || countCavalry >= 3 || countArtillery >= 3 || (countInfantry > 0 && countCavalry > 0 && countArtillery > 0);
