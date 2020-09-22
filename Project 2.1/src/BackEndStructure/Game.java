@@ -15,8 +15,11 @@ public class Game {
     private Dice white1;
     private Dice white2;
 
+    // Cards
+    private CardStack cardStack;
+
     // TODO take as imput each player name
-    public Game(int numberOfPlayers) {
+    public Game(int numberOfPlayers, String[] names) {
         switch (numberOfPlayers) {
             case 2:
                 int startingTroops = 40;
@@ -40,8 +43,10 @@ public class Game {
         this.players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            this.players[i] = new Player(startingTroops);
+            this.players[i] = new Player(startingTroops, names[i]);
         }
+
+        this.cardStack = new CardStack();
 
     }
 

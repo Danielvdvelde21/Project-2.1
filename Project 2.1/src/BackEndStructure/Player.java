@@ -1,15 +1,18 @@
 package BackEndStructure;
 
+import java.util.ArrayList;
+
 public class Player {
     private int startingTroops;
     private String playerName;
+    private final ArrayList<Card> hand = new ArrayList<>();
 
-    public Player(int trooops, String name) {
+    public Player(int troops, String name) {
         this.playerName = name;
-        this.startingTroops = trooops;
+        this.startingTroops = troops;
     }
 
-    public Player(int startingTroops) {
-
+    public void addCard(Card c) {
+        hand.add(c);
     }
 }
