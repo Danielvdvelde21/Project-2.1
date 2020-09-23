@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public class Map {
 
+    private String selectedTerritory = "";
+
     public static Insets insets;
     public static Dimension size;
     public static BufferedImage wPic;
@@ -19,7 +21,7 @@ public class Map {
 //    public static int frameY=700;
 
 
-    public static JButton createButton(JPanel p, String name, int posX, int posY) {
+    public  JButton createButton(JPanel p, String name, int posX, int posY) {
         JButton b = new JButton(name);
         b.setOpaque(false);
         b.setContentAreaFilled(false);
@@ -32,6 +34,7 @@ public class Map {
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Clicked on "+((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " "));
+                selectedTerritory = ((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
             }
         });
 
@@ -97,7 +100,7 @@ public class Map {
         buttonList.add(createButton(p, "MIDDLE EAST", 695, 337));
         buttonList.add(createButton(p, "INDIA", 805, 351));
         buttonList.add(createButton(p, "SIAM", 882, 383));
-        buttonList.add(createButton(p, "(ﾉ´ з `)ノ  JAPAN  (￣ε￣＠)", 1002, 249));
+        buttonList.add(createButton(p, "JAPAN", 1002, 249));
 
         buttonList.add(createButton(p, "INDONESIA", 901, 489));
         buttonList.add(createButton(p, "<html><center>NEW<br>GUINEA</center></html>", 999, 468));
@@ -112,4 +115,13 @@ public class Map {
 
         frame.setVisible(true);
     }
+
+    public String getSelectedTerritory() {
+        return selectedTerritory;
+    }
+
+    public void resetSelectedTerritory() {
+        selectedTerritory = "";
+    }
+
 }

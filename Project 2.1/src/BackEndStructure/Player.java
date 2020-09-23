@@ -22,4 +22,8 @@ public class Player {
     public void turnInSet(Card[] cards, ArrayList<Card> stack) {
         // TODO
     }
+
+    public String getName() {
+        return playerName;
+    }
 }
