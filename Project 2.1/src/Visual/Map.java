@@ -6,8 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Map {
@@ -40,7 +38,7 @@ public class Map {
         return b;
     }
 
-    public static void main(String[] args) {
+    public void createMap() {
         JFrame frame = new JFrame("RISK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameX, frameY);

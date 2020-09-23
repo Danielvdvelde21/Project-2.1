@@ -1,10 +1,14 @@
 package BackEndStructure;
 
+import BackEndStructure.Cards.CardStack;
+import Visual.Map;
+
 public class Game {
+    // Player object List, all the players of the game
     private Player[] players;
 
-    // How manny troops each player gets from the start
-    private int startingTroops;
+    // the Board
+    private Map map;
 
     // Attacking Die
     private Dice red1;
@@ -18,11 +22,12 @@ public class Game {
     // Cards
     private CardStack cardStack = new CardStack();
 
-    // TODO take as imput each player name
     public Game(int numberOfPlayers, String[] names) {
+        // How manny troops each player gets from the start
+        int startingTroops = 0;
         switch (numberOfPlayers) {
             case 2:
-                int startingTroops = 40;
+                startingTroops = 40;
                 break;
             case 3:
                 startingTroops = 35;
@@ -40,6 +45,7 @@ public class Game {
                 System.out.println("Insert 2,3,4,5 or 6");
                 break;
         }
+        this.map = new Map();
         this.players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -47,4 +53,11 @@ public class Game {
         }
     }
 
+    public Map getMap() {
+        return this.map;
+    }
+
+    public Player[] getPlayers() {
+        return players;
+    }
 }
