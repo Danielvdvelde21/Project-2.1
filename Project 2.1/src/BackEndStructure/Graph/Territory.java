@@ -13,6 +13,12 @@ public class Territory {
         this.belongsTo = playerNumber;
     }
 
+    public Territory(String territoryName) {
+        this.territoryName = territoryName;
+        this.numberOfTroops = 0;
+        this.belongsTo = 0;
+    }
+
     public String get_TerritoryName() {
         return territoryName;
     }
