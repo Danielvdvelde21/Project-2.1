@@ -1,4 +1,4 @@
-package BackEndStructure;
+package BackEndStructure.Cards;
 
 public class Card {
     // Territory name or WILDCARD

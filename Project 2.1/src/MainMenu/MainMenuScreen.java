@@ -1,5 +1,7 @@
 package MainMenu;
 
+import BackEndStructure.MainGameLoop;
+import com.sun.tools.javac.Main;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -70,7 +72,11 @@ public class MainMenuScreen extends Application {
             helpBtn.setOnMouseClicked(event -> {});
 
             MenuButton singlePlayerBtn = new MenuButton("Single Player");
-            singlePlayerBtn.setOnMouseClicked(event -> {});
+            singlePlayerBtn.setOnMouseClicked(event -> {
+                // TODO add option panel for amount of players and list of names
+                String[] players = {"Mike", "Peter", "Josh", "Rick"};
+                MainGameLoop mainGameLoop = new MainGameLoop(players.length, players);
+            });
 
             MenuButton multiPlayerBtn = new MenuButton("Multi-Player");
             multiPlayerBtn.setOnMouseClicked(event -> {});

@@ -1,4 +1,4 @@
-package BackEndStructure;
+package BackEndStructure.Cards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,4 +93,6 @@ public class CardStack {
         }
         return countInfantry >= 3 || countCavalry >= 3 || countArtillery >= 3 || (countInfantry > 0 && countCavalry > 0 && countArtillery > 0);
     }
+
+
 }
