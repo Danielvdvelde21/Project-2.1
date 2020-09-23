@@ -41,6 +41,13 @@ public class Map {
         return b;
     }
 
+    public JLabel createLabel(JPanel p, String number, int xPos, int yPos){
+        JLabel l = new JLabel(number);
+        l.setText("0");
+        l.setLocation(xPos, yPos);
+        return l;
+    }
+
     public void createMap() {
         JFrame frame = new JFrame("RISK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
