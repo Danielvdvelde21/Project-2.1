@@ -24,6 +24,53 @@ public class Dice {
         }
     }
 
+    public static void oneFight(int attackers, int defenders){
+        int[] attackerDice = new int[3];
+        int[] defendersDice = new int[2];
+        int max = 0;
+        int ndMax = 0;
+        int defMax = 0;
+        int defNdMax = 0;
+        for (int i = 0; i < attackers; i++) {
+            attackerDice[i] = (int) (Math.random() * 6 + 1);
+        }
+        for (int i = 0; i < defenders; i++) {
+            defendersDice[i] = (int) (Math.random() * 6 + 1);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (attackerDice[i] > max) {
+                max = attackerDice[i];
+            } else if (attackerDice[i] > ndMax) {
+                ndMax = attackerDice[i];
+            }
+            if (i < 2) {
+                if (defendersDice[i] > defMax) {
+                    defMax = defendersDice[i];
+                } else if (defendersDice[i] > defNdMax) {
+                    defNdMax = defendersDice[i];
+                }
+            }
+        }
+
+        if (attackers == 1 || defenders == 2) {
+            if (max > defMax) {
+                System.out.println("Defenders lose 1 troop");
+            } else {
+                System.out.println("Attackers lose 1 troop");
+            }
+        }
+        else {
+            if (max > defMax && ndMax > defNdMax) {
+                System.out.println("Defenders lose 2 troops!");
+            } else if (defMax >= max && defNdMax >= ndMax) {
+                System.out.println("Attackers lose 2 troops!");
+            } else {
+                System.out.println("Attackers and Defenders both lose 1 troop");
+            }
+        }
+
+    }
     // Rolling for combat
     public static void combat(int attackers, int defenders){
         int attackerDeaths = 0;
@@ -77,8 +124,8 @@ public class Dice {
             }
 
             // comparing both highest to eachother and updating each time.
-            System.out.println("attackersleft " + attackersLeft);
-            System.out.println("defendersleft " + defendersLeft);
+            //System.out.println("attackersleft " + attackersLeft);
+            //System.out.println("defendersleft " + defendersLeft);
 
             if (defendersLeft == 1 || attackersLeft == 2) {
                 if (max > defMax) {
