@@ -17,17 +17,21 @@ public class MainGameLoop {
     private void placementStage() {
         System.out.println("PLACEMENT PHASE");
 
-        for (Player p : game.getPlayers()) {
-            System.out.println(p.getName());
-            while (map.getSelectedTerritory().equals("")) {
-                // Apperantly we need sleep otherwise it doesn't work?
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        // For each player, for StartingTroops amount of rounds
+        int round = 1;
+        while(round != game.getStartingTroops()) {
+            for (Player p : game.getPlayers()) {
+                System.out.println("it is " + p.getName() + " turn to place down 1 troop");
+                while (map.getSelectedTerritory().equals("")) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                map.resetSelectedTerritory();
             }
-            map.resetSelectedTerritory();
+            round++;
         }
     }
 

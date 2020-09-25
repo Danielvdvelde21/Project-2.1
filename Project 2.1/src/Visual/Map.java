@@ -17,16 +17,16 @@ public class Map {
     public static BufferedImage wPic;
     public static int frameX = 1600;
     public static int frameY = 900;
-//    public static int frameX=1100;
-//    public static int frameY=700;
+    // public static int frameX=1100;
+    // public static int frameY=700;
 
 
-    public  JButton createButton(JPanel p, String name, int posX, int posY) {
+    public JButton createButton(JPanel p, String name, int posX, int posY) {
         JButton b = new JButton(name);
         b.setOpaque(false);
         b.setContentAreaFilled(false);
         b.setBorderPainted(false);
-//        b.repaint();
+        // b.repaint();
         insets = p.getInsets();
         size = b.getPreferredSize();
         b.setBounds(((posX * frameX) / 1100) - size.width / 2, ((posY * frameY) / 700) - size.height / 2, size.width, size.height);
@@ -34,10 +34,9 @@ public class Map {
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Clicked on "+((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " "));
-                selectedTerritory = ((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
+                selectedTerritory = ((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
             }
         });
-
         return b;
     }
 
@@ -130,5 +129,4 @@ public class Map {
     public void resetSelectedTerritory() {
         selectedTerritory = "";
     }
-
 }

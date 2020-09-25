@@ -56,6 +56,5 @@ public class GraphCreationMap {
         Territory t39 = new Territory("Indonesia");
         Territory t40 = new Territory("New Guinea");
         Territory t41 = new Territory("Western Australia");
-
     }
 }

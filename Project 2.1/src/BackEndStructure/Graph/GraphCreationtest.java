@@ -6,10 +6,10 @@ public class GraphCreationtest {
 
         // TODO Make map for Map.java
         // Territories
-        Territory t0 = new Territory("London", 3, 1);
-        Territory t1 = new Territory("Amsterdam", 6, 2);
-        Territory t2 = new Territory("Maastricht", 7, 3);
-        Territory t3 = new Territory("New York", 1, 2);
+        Territory t0 = new Territory("London");
+        Territory t1 = new Territory("Amsterdam");
+        Territory t2 = new Territory("Maastricht");
+        Territory t3 = new Territory("New York");
 
         // Vertices
         Vertex v0 = new Vertex(t0);

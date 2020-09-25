@@ -22,9 +22,11 @@ public class Game {
     // Cards
     private CardStack cardStack = new CardStack();
 
+    // Number of troops players start with
+    private int startingTroops;
+
     public Game(int numberOfPlayers, String[] names) {
         // How manny troops each player gets from the start
-        int startingTroops = 0;
         switch (numberOfPlayers) {
             case 2:
                 startingTroops = 40;
@@ -49,15 +51,15 @@ public class Game {
         this.players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            this.players[i] = new Player(startingTroops, names[i]);
+            this.players[i] = new Player(names[i]);
         }
     }
 
-    public Map getMap() {
-        return this.map;
-    }
+    public Map getMap() { return this.map; }
 
     public Player[] getPlayers() {
         return players;
     }
+
+    public int getStartingTroops() { return startingTroops; }
 }

@@ -2,6 +2,7 @@ package BackEndStructure;
 
 public class Dice {
 
+    // Test
     public static void main(String[] args) {
         combat(10, 15);
     }
