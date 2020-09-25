@@ -22,14 +22,17 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class MainMenuScreen extends Application {
 
     private GameMenu gameMenu;
     private String[] players;
+    private Stage ps;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        ps = primaryStage;
         Pane root = new Pane();
         root.setPrefSize(1000,700);
         InputStream is = Files.newInputStream(Paths.get("src\\resources\\risk1.jpg"));    //load image
@@ -110,6 +113,25 @@ public class MainMenuScreen extends Application {
             MenuButton startBtn = new MenuButton("Start");
             startBtn.setOnMouseClicked(event -> {
                 // TODO add restrictions for the names entered
+                switch(menu4.getChildren().size()) {
+                    case 4:
+                        players = new String[]{name1.tf.getText(), name2.tf.getText()};
+                        break;
+                    case 5:
+                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText()};
+                        break;
+                    case 6:
+                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText()};
+                        break;
+                    case 7:
+                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText()};
+                        break;
+                    case 8:
+                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
+                        break;
+                }
+                System.out.println("Names entered: " + Arrays.toString(players));
+                ps.hide();  //hide menu
                 MainGameLoop mainGameLoop = new MainGameLoop(players.length, players);
             });
 
@@ -133,7 +155,6 @@ public class MainMenuScreen extends Application {
                 menu4.getChildren().addAll(name1, name2, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
-                players = new String[]{name1.getString(), name2.getString()};
             });
             MenuButton players3Btn = new MenuButton("3 Players");
             players3Btn.setOnMouseClicked(event -> {
@@ -141,7 +162,6 @@ public class MainMenuScreen extends Application {
                 menu4.getChildren().addAll(name1, name2, name3, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
-                players = new String[]{name1.getString(), name2.getString(), name3.getString()};
             });
             MenuButton players4Btn = new MenuButton("4 Players");
             players4Btn.setOnMouseClicked(event -> {
@@ -149,7 +169,6 @@ public class MainMenuScreen extends Application {
                 menu4.getChildren().addAll(name1, name2, name3, name4, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
-                players = new String[]{name1.getString(), name2.getString(), name3.getString(), name4.getString()};
             });
             MenuButton players5Btn  = new MenuButton("5 Players");
             players5Btn.setOnMouseClicked(event -> {
@@ -157,7 +176,6 @@ public class MainMenuScreen extends Application {
                 menu4.getChildren().addAll(name1, name2, name3, name4, name5, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
-                players = new String[]{name1.getString(), name2.getString(), name3.getString(), name4.getString(), name5.getString()};
             });
             MenuButton players6Btn = new MenuButton("6 Players");
             players6Btn.setOnMouseClicked(event -> {
@@ -165,7 +183,6 @@ public class MainMenuScreen extends Application {
                 menu4.getChildren().addAll(name1, name2, name3, name4, name5, name6, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
-                players = new String[]{name1.getString(), name2.getString(), name3.getString(), name4.getString(), name5.getString(), name6.getString()};
             });
 
             menu1.getChildren().addAll(playBtn, settingsBtn, helpBtn, exitBtn);
@@ -246,10 +263,6 @@ public class MainMenuScreen extends Application {
         private TextField tf;
         private Rectangle r;
         private Label label1;
-
-        public String getString() {
-            return this.tf.getText();
-        }
 
         public TextInput(String name) {
             tf = new TextField();
