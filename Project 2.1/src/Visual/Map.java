@@ -1,6 +1,6 @@
 package Visual;
 
-import javax.imageio.ImageIO;
+import BackEndStructure.Graph.Territory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,16 +12,16 @@ public class Map {
 
     private String selectedTerritory = "";
 
-    public static Insets insets;
-    public static Dimension size;
-    public static BufferedImage wPic;
-    public static int frameX = 1600;
-    public static int frameY = 900;
+    private static Insets insets;
+    private static Dimension size;
+    private static BufferedImage wPic;
+    private static int frameX = 1600;
+    private static int frameY = 900;
     // public static int frameX=1100;
     // public static int frameY=700;
 
 
-    public JButton createButton(JPanel p, String name, int posX, int posY) {
+    private JButton createButton(JPanel p, String name, int posX, int posY) {
         JButton b = new JButton(name);
         b.setOpaque(false);
         b.setContentAreaFilled(false);
@@ -35,12 +35,13 @@ public class Map {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Clicked on "+((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " "));
                 selectedTerritory = ((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
+                // TODO Need a method that when a button is pressed it can point to a territory
             }
         });
         return b;
     }
 
-    public JLabel createLabel(JPanel p, String number, int xPos, int yPos){
+    private JLabel createLabel(JPanel p, String number, int xPos, int yPos){
         JLabel l = new JLabel(number);
         l.setText("0");
         l.setLocation(xPos, yPos);

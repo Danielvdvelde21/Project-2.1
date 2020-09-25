@@ -2,7 +2,7 @@ package BackEndStructure.Graph;
 
 public class Territory {
 
-    private String territoryName;
+    private final String territoryName;
     private int numberOfTroops;
     private String owner = "unowned";
 
