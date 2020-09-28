@@ -30,7 +30,7 @@ public class MainGameLoop {
     private boolean validTerritoryChosen = false;
 
     private void placeTroop(Player player) {
-        System.out.println("it is " + player.getName() + " turn to place down 1 troop");
+        System.out.println("it is " + player.getName() + "'s turn to place down 1 troop");
 
         while(!validTerritoryChosen) {
             try {
