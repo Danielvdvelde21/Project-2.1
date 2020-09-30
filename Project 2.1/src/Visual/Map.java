@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Map {
 
-    private int territoryNumber; // Int that represents a territory
+    private int territoryNumber = -1; // Int that represents a territory
     private int buttonCount = -1; // The first button will have count 0 (array indexing)
 
     private static Insets insets;
@@ -39,8 +39,6 @@ public class Map {
             public final int territoryCount = buttonCount;
 
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Clicked on "+((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " "));
-                System.out.println(territoryCount);
                 territoryNumber = territoryCount;
             }
         });
@@ -129,4 +127,5 @@ public class Map {
     public int getTerritoryNumber() {
         return territoryNumber;
     }
+    public void deselectTerritory() { territoryNumber = -1; }
 }

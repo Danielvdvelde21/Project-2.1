@@ -10,9 +10,9 @@ public class Territories {
         Territory t3 = new Territory("Alberta");
         Territory t4 = new Territory("Argentina");
         Territory t5 = new Territory("Brazil");
-        Territory t6 = new Territory("China");
-        Territory t7 = new Territory("Congo");
-        Territory t8 = new Territory("Central America");
+        Territory t6 = new Territory("Central America");
+        Territory t7 = new Territory("China");
+        Territory t8 = new Territory("Congo");
         Territory t9 = new Territory("East Africa");
         Territory t10 = new Territory("Eastern Australia");
         Territory t11 = new Territory("Eastern United States");

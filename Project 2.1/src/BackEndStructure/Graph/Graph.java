@@ -20,10 +20,10 @@ public class Graph {
 
     public void printGraph(){
         for (Vertex v : territories){
-            System.out.print("BackEndStructure.Graph.Territory name: "+ v.territoryData.get_TerritoryName());
+            System.out.print("BackEndStructure.Graph.Territory name: "+ v.territoryData.getTerritoryName());
             System.out.print(" Connected with: ");
             for(Edge e : v.getEdges()){
-                System.out.print(e.getVertex().territoryData.get_TerritoryName() + ", ");
+                System.out.print(e.getVertex().territoryData.getTerritoryName() + ", ");
             }
             System.out.print("\n");
         }

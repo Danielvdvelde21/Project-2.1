@@ -11,7 +11,7 @@ public class Territory {
         this.numberOfTroops = 0;
     }
 
-    public String get_TerritoryName() {
+    public String getTerritoryName() {
         return territoryName;
     }
 

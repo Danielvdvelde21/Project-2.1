@@ -150,7 +150,7 @@ public class MainMenuScreen extends Application {
                     startBtn.addWarning("ENTER NAMES");
                 }
                 else {
-                    System.out.println("Names entered: " + Arrays.toString(playerNames));
+                    // System.out.println("Names entered: " + Arrays.toString(playerNames));
                     ps.hide();  //hide menu
                     MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames);
                 }
