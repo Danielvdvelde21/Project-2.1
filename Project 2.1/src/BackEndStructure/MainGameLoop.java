@@ -37,12 +37,12 @@ public class MainGameLoop {
                 Thread.sleep(100);
             } catch (InterruptedException e) {}
 
-            if(!map.getSelectedTerritory().equals("")) {
-                // TODO Check if the player can use the territory (aka unowed or playername matches territtory owner name
-                if(map.getSelectedTerritory().equals("unowned") || map.getSelectedTerritory().equals(player.getName())) {
-                    validTerritoryChosen = true;
-                }
-            }
+//            if(!map.getSelectedTerritory().equals("")) {
+//                // TODO Check if the player can use the territory (aka unowed or playername matches territtory owner name
+//                if(map.getSelectedTerritory().equals("unowned") || map.getSelectedTerritory().equals(player.getName())) {
+//                    validTerritoryChosen = true;
+//                }
+//            }
         }
     }
 
