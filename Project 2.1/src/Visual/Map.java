@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class Map {
 
-    private int territory; // Int that represents a territory
-    private int buttonCount;
+    private int territoryNumber; // Int that represents a territory
+    private int buttonCount = -1; // The first button will have count 0 (array indexing)
 
     private static Insets insets;
     private static Dimension size;
@@ -41,7 +41,7 @@ public class Map {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Clicked on "+((JButton)e.getSource()).getText().replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " "));
                 System.out.println(territoryCount);
-                territory = territoryCount;
+                territoryNumber = territoryCount;
             }
         });
         return b;
@@ -112,9 +112,9 @@ public class Map {
         buttonList.add(createButton(p, "UKRAINE", 653, 173));
         buttonList.add(createButton(p, "URAL", 758, 169));
         buttonList.add(createButton(p, "VENEZUELA", 265, 381));
-        buttonList.add(createButton(p, "<html><center>WESTERN<br>UNITED STATES</center></html>", 183, 232));
         buttonList.add(createButton(p, "<html><center>WESTERN<br>AUSTRALIA</center></html>", 946, 590));
         buttonList.add(createButton(p, "<html><center>WESTERN<br>EUROPE</center></html>", 481, 303));
+        buttonList.add(createButton(p, "<html><center>WESTERN<br>UNITED STATES</center></html>", 183, 232));
         buttonList.add(createButton(p, "YAKUTSK", 900, 92));
 
         for (JButton button : buttonList) {
@@ -126,7 +126,7 @@ public class Map {
         frame.setVisible(true);
     }
 
-    public int getTerritory() {
-        return territory;
+    public int getTerritoryNumber() {
+        return territoryNumber;
     }
 }

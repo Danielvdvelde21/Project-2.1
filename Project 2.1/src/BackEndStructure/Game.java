@@ -1,6 +1,8 @@
 package BackEndStructure;
 
 import BackEndStructure.Cards.CardStack;
+import BackEndStructure.Graph.Territories;
+import BackEndStructure.Graph.Territory;
 import Visual.Map;
 
 public class Game {
@@ -9,6 +11,9 @@ public class Game {
 
     // the Board
     private Map map;
+
+    // All the territories
+    private Territory[] territories;
 
     // Attacking Die
     private Dice red1;
@@ -47,7 +52,14 @@ public class Game {
                 System.out.println("Insert 2,3,4,5 or 6");
                 break;
         }
+        // Create a new map
         this.map = new Map();
+        map.createMap();
+
+        // Instantiate Territory list
+        this.territories = new Territories().getAllTerritories();
+
+        // Instantiate players
         this.players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -60,6 +72,8 @@ public class Game {
     public Player[] getPlayers() {
         return players;
     }
+
+    public Territory[] getTerritories() { return territories; }
 
     public int getStartingTroops() { return startingTroops; }
 }
