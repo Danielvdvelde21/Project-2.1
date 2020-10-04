@@ -1,14 +1,19 @@
-package BackEndStructure;
+package BackEndStructure.Game;
 
-import Visual.Map;
+import BackEndStructure.Entities.Player;
 
 public class MainGameLoop {
     private final Game game;
+    private boolean gameOver = false;
 
     public MainGameLoop(int players, String[] playerNames) {
         this.game = new Game(players, playerNames);
         placementStage();
-        attackingStage();
+        while(!gameOver) {
+            for (Player p : game.getPlayers()) {
+                playerTurn(p);
+            }
+        }
     }
 
     private void placementStage() {
@@ -50,6 +55,26 @@ public class MainGameLoop {
         game.getMap().deselectTerritory();
     }
 
-    private void attackingStage() {
+    private void playerTurn(Player p) {
+        while(!game.getMap().hasTurnEnded()) {
+           // TODO
+           // Cards
+
+           // Attacking
+            if (game.getMap().getTerritoryNumber() != -1 ) {
+                if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals(p.getName())) {
+
+                } else {
+                    System.out.println("please choose a territory that belongs to you to attack another player!");
+                }
+            }
+        }
+        fortifyTerritories(p);
+        game.getMap().resetTurnEnd();
+    }
+
+    private void fortifyTerritories(Player p) {
+        // TODO
+        // While()
     }
 }

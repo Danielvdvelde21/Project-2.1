@@ -1,6 +1,5 @@
-package Visual;
+package Visualisation;
 
-import BackEndStructure.Graph.Territory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +11,7 @@ public class Map {
 
     private int territoryNumber = -1; // Int that represents a territory
     private int buttonCount = -1; // The first button will have count 0 (array indexing)
+    private boolean endTurn = false;
 
     private static Insets insets;
     private static Dimension size;
@@ -124,8 +124,21 @@ public class Map {
         frame.setVisible(true);
     }
 
+    // Get current selected territory
     public int getTerritoryNumber() {
         return territoryNumber;
     }
+
+    // Deselect current territory
     public void deselectTerritory() { territoryNumber = -1; }
+
+    // Has a player turn ended?
+    public boolean hasTurnEnded() {
+        return endTurn;
+    }
+
+    // New player turn
+    public void resetTurnEnd() {
+        endTurn = false;
+    }
 }

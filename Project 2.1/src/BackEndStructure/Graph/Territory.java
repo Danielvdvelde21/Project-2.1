@@ -4,11 +4,12 @@ public class Territory {
 
     private final String territoryName;
     private int numberOfTroops;
-    private String owner = "unowned";
+    private String owner;
 
     public Territory(String territoryName) {
         this.territoryName = territoryName;
         this.numberOfTroops = 0;
+        this.owner = "unowned";
     }
 
     public String getTerritoryName() {

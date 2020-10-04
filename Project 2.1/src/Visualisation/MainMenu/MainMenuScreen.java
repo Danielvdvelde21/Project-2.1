@@ -1,6 +1,6 @@
-package MainMenu;
+package Visualisation.MainMenu;
 
-import BackEndStructure.MainGameLoop;
+import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class MainMenuScreen extends Application {
 

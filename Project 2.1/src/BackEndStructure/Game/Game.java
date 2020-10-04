@@ -1,9 +1,11 @@
-package BackEndStructure;
+package BackEndStructure.Game;
 
-import BackEndStructure.Cards.CardStack;
+import BackEndStructure.Entities.Cards.CardStack;
+import BackEndStructure.Entities.Dice;
+import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Territories;
 import BackEndStructure.Graph.Territory;
-import Visual.Map;
+import Visualisation.Map;
 
 public class Game {
     // Player object List, all the players of the game

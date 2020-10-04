@@ -1,4 +1,4 @@
-package BackEndStructure;
+package BackEndStructure.Entities;
 
 public class Dice {
 
