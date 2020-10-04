@@ -1,7 +1,12 @@
-package BackEndStructure;
+package BackEndStructure.Game;
 
-import BackEndStructure.Cards.CardStack;
-import Visual.Map;
+import BackEndStructure.Entities.Cards.CardStack;
+import BackEndStructure.Entities.Dice;
+import BackEndStructure.Entities.Player;
+import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Territories;
+import BackEndStructure.Graph.Territory;
+import Visualisation.Map;
 
 public class Game {
     // Player object List, all the players of the game
@@ -9,6 +14,12 @@ public class Game {
 
     // the Board
     private Map map;
+
+    // All the territories in an array
+    private Territory[] territories;
+
+    // All the territories in a graph (with edges)
+    private Graph graph;
 
     // Attacking Die
     private Dice red1;
@@ -47,7 +58,17 @@ public class Game {
                 System.out.println("Insert 2,3,4,5 or 6");
                 break;
         }
+        // Create a new map
         this.map = new Map();
+        map.createMap();
+
+        // Instantiate Territory list
+        this.territories = new Territories().getTerritories();
+
+        // Instantiate Graph
+        this.graph = new Territories().getGraph();
+
+        // Instantiate players
         this.players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -60,6 +81,10 @@ public class Game {
     public Player[] getPlayers() {
         return players;
     }
+
+    public Territory[] getTerritories() { return territories; }
+
+    public Graph getGraph() { return graph; }
 
     public int getStartingTroops() { return startingTroops; }
 }
