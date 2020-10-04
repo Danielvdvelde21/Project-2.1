@@ -3,12 +3,14 @@ package BackEndStructure.Graph;
 import java.util.*;
 
 public class Graph {
-    private HashSet<Vertex> territoryGraph;
+    private HashSet<Vertex> territories;
 
-    public Graph(){ territoryGraph = new HashSet<>(); }
+    public Graph(){
+        territories = new HashSet<>();
+    }
 
-    public void AddVertex (Vertex newVertex){
-        territoryGraph.add(newVertex);
+    public boolean AddVertex(Vertex newVertex){
+        return territories.add(newVertex);
     }
 
     public void addEdge(Vertex vertex1, Vertex vertex2) {
@@ -17,11 +19,11 @@ public class Graph {
     }
 
     public void printGraph(){
-        for (Vertex v : territoryGraph){
-            System.out.print("Territory name: "+ v.getTerritory().getTerritoryName());
+        for (Vertex v : territories){
+            System.out.print("BackEndStructure.Graph.Territory name: "+ v.territoryData.get_TerritoryName());
             System.out.print(" Connected with: ");
-            for (Edge e : v.getEdges()){
-                System.out.print(e.getVertex().getTerritory().getTerritoryName() + ", ");
+            for(Edge e : v.getEdges()){
+                System.out.print(e.getVertex().territoryData.get_TerritoryName() + ", ");
             }
             System.out.print("\n");
         }

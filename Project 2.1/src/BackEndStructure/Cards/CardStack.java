@@ -1,6 +1,4 @@
-package BackEndStructure.Entities.Cards;
-
-import BackEndStructure.Entities.Cards.Card;
+package BackEndStructure.Cards;
 
 import java.util.ArrayList;
 import java.util.Arrays;

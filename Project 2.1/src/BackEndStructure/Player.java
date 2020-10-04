@@ -1,7 +1,6 @@
-package BackEndStructure.Entities;
+package BackEndStructure;
 
-import BackEndStructure.Entities.Cards.Card;
-
+import BackEndStructure.Cards.Card;
 import java.util.ArrayList;
 
 public class Player {

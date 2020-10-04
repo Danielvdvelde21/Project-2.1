@@ -3,17 +3,16 @@ package BackEndStructure.Graph;
 import java.util.*;
 
 public class Vertex {
+
+    Territory territoryData;
     private LinkedList<Edge> edgeList;
-    private Territory territory;
 
     public Vertex(Territory data) {
-        this.territory = data;
+        this.territoryData = data;
         edgeList = new LinkedList<>();
     }
 
     public LinkedList<Edge> getEdges() {
         return edgeList;
     }
-
-    public Territory getTerritory() { return territory; }
 }

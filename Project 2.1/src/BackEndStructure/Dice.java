@@ -1,4 +1,4 @@
-package BackEndStructure.Entities;
+package BackEndStructure;
 
 import java.util.Arrays;
 
