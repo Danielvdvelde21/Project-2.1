@@ -1,10 +1,13 @@
 package BackEndStructure;
 
+import java.util.Arrays;
+
 public class Dice {
 
     // Test
     public static void main(String[] args) {
-        combat(10, 15);
+        int[] players = new int[6];
+        whoGoesFirst(players);
     }
 
     // Number of eyes rolled
@@ -159,7 +162,59 @@ public class Dice {
     // Determines who can start placing infantry
     // TODO roll a dice for each player, the one that throw the most eyes starts the game
     // TODO if two people throw 6, throw again?
-    public Player whoGoesFirst(Player[] players) {
+    public static int[] whoGoesFirst(int[] players) {
+
+        // first we get a simple list of players
+        int[] playerss = new int[players.length];
+        // give everyone a number
+        for (int i = 0; i < playerss.length; i++) {
+            playerss[i] = (int) (Math.random() * 6 + 1);
+        }
+        // decide who got the best roll
+        int max = 0;
+        int[] playersWhoThrewMax = new int[players.length];
+        int goodRolls = 0;
+        int[] playOrder = new int[players.length];
+        int highRolls = 0;
+        for (int i = 0; i < players.length; i++) {
+
+            for (int j = 0; j < players.length; j++) {
+                if (playerss[j] > max) {
+                    max = playerss[j];
+                    goodRolls = 0;
+                    playersWhoThrewMax = new int[players.length];
+                    playersWhoThrewMax[goodRolls] = j+1;
+                } else if (playerss[j] == max) {
+                    goodRolls++;
+                    playersWhoThrewMax[goodRolls] = j+1;
+                }
+            }
+
+            for (int k = 0; k < playersWhoThrewMax.length; k++) {
+                if (playersWhoThrewMax[k] >= 1) {
+                    highRolls++;
+                    //System.out.println("this is high enough = " + playersWhoThrewMax[k] + "this is highrolls now = " + highRolls);
+                }
+                //System.out.println("amount that threw the same " + highRolls);
+                for (int l = 0; l < highRolls; l++) {
+                    System.out.println("player who threw max " + playersWhoThrewMax[k]);
+                    playOrder[i] = playersWhoThrewMax[k] - 1;
+                    i++;
+                    playerss[playersWhoThrewMax[k]-1] = 0;
+                    //System.out.println(playOrder[i]);
+                    //System.out.println("here we skip one, current highrolls = " + highRolls);
+                }
+                highRolls =0;
+            }
+
+
+        }
+        for(int i = 0; i < players.length; i++){
+            System.out.println(playOrder[i]);
+        }
+        return playOrder;
+    }
+        /*
         int[] playerRolls = new int[players.length];
         Dice temp =  new Dice();
 
@@ -182,7 +237,9 @@ public class Dice {
         }
 
         return players[bestRoll];
-    }
+        */
+
+
 
     public int getEyes() {
         return eyes;
