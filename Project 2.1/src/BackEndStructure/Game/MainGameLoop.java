@@ -1,6 +1,7 @@
 package BackEndStructure.Game;
 
 import BackEndStructure.Entities.Player;
+import BackEndStructure.Graph.Territory;
 
 public class MainGameLoop {
     private final Game game;
@@ -56,14 +57,16 @@ public class MainGameLoop {
     }
 
     private void playerTurn(Player p) {
-        while(!game.getMap().hasTurnEnded()) {
-           // TODO
-           // Cards
+        Territory attackingTerritory;
 
-           // Attacking
+        while(!game.getMap().hasTurnEnded()) {
+           // Cards TODO
+
+           // Attacking TODO
             if (game.getMap().getTerritoryNumber() != -1 ) {
                 if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals(p.getName())) {
-
+                    attackingTerritory = game.getTerritories()[game.getMap().getTerritoryNumber()];
+                    // attack, check adjacency!
                 } else {
                     System.out.println("please choose a territory that belongs to you to attack another player!");
                 }
@@ -75,6 +78,8 @@ public class MainGameLoop {
 
     private void fortifyTerritories(Player p) {
         // TODO
-        // While()
+        // while (!fortified) {
+        //      logic for fortification
+        // }
     }
 }

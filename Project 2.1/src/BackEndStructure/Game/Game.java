@@ -3,6 +3,7 @@ package BackEndStructure.Game;
 import BackEndStructure.Entities.Cards.CardStack;
 import BackEndStructure.Entities.Dice;
 import BackEndStructure.Entities.Player;
+import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territories;
 import BackEndStructure.Graph.Territory;
 import Visualisation.Map;
@@ -14,8 +15,11 @@ public class Game {
     // the Board
     private Map map;
 
-    // All the territories
+    // All the territories in an array
     private Territory[] territories;
+
+    // All the territories in a graph (with edges)
+    private Graph graph;
 
     // Attacking Die
     private Dice red1;
@@ -59,7 +63,10 @@ public class Game {
         map.createMap();
 
         // Instantiate Territory list
-        this.territories = new Territories().getAllTerritories();
+        this.territories = new Territories().getTerritories();
+
+        // Instantiate Graph
+        this.graph = new Territories().getGraph();
 
         // Instantiate players
         this.players = new Player[numberOfPlayers];
@@ -76,6 +83,8 @@ public class Game {
     }
 
     public Territory[] getTerritories() { return territories; }
+
+    public Graph getGraph() { return graph; }
 
     public int getStartingTroops() { return startingTroops; }
 }
