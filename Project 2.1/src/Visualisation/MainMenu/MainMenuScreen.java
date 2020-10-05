@@ -1,6 +1,6 @@
-package MainMenu;
+package Visualisation.MainMenu;
 
-import BackEndStructure.MainGameLoop;
+import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -22,12 +22,11 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class MainMenuScreen extends Application {
 
     private GameMenu gameMenu;
-    private String[] players;
+    private String[] playerNames;
     private Stage ps;
 
     @Override
@@ -54,6 +53,21 @@ public class MainMenuScreen extends Application {
     }
 
     private class GameMenu extends Parent {
+
+        int i = 0;
+
+        public boolean emptyString(String[] array) {
+            boolean isEmpty = false;
+            i=0;    //reset count
+
+            for ( String s : array ) {
+                if (s.length() == 0) {
+                    i++;
+                    isEmpty = true;
+                }
+            }
+            return isEmpty;
+        }
 
         public GameMenu() {
             VBox menu1 = new VBox(13);  //main menu
@@ -113,30 +127,37 @@ public class MainMenuScreen extends Application {
             MenuButton startBtn = new MenuButton("Start");
             startBtn.setOnMouseClicked(event -> {
                 // TODO add restrictions for the names entered
-                switch(menu4.getChildren().size()) {
+                switch(menu4.getChildren().size()) {    //getting players' names from TextInput objects
                     case 4:
-                        players = new String[]{name1.tf.getText(), name2.tf.getText()};
+                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText()};
                         break;
                     case 5:
-                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText()};
+                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText()};
                         break;
                     case 6:
-                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText()};
+                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText()};
                         break;
                     case 7:
-                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText()};
+                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText()};
                         break;
                     case 8:
-                        players = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
+                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
                         break;
                 }
-                System.out.println("Names entered: " + Arrays.toString(players));
-                ps.hide();  //hide menu
-                MainGameLoop mainGameLoop = new MainGameLoop(players.length, players);
+
+                if(emptyString(playerNames)) {
+                    startBtn.addWarning("ENTER NAMES");
+                }
+                else {
+                    // System.out.println("Names entered: " + Arrays.toString(playerNames));
+                    ps.hide();  //hide menu
+                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames);
+                }
             });
 
             MenuButton back2Btn = new MenuButton("Back");
             back2Btn.setOnMouseClicked(event -> {    //transition to menu3
+                startBtn.removeWarning();
                 getChildren().add(menu3);
                 getChildren().remove(menu4);
             });
@@ -201,25 +222,38 @@ public class MainMenuScreen extends Application {
 
         private Text text;
         private Rectangle r;
+        private Text w;
 
         private void comboBoxStyle() {    //makes button appear pressed
-            text.setFont(text.getFont().font(23));
-            text.setFill(Color.BLACK);
+            r.setTranslateX(10);    //move element in X direction
+            text.setTranslateX(10);
             r.setFill(Color.WHITE);
-            r.setTranslateX(-10);    //move element in X direction
-            text.setTranslateX(-10);
+            text.setFill(Color.BLACK);
 
             setOnMouseEntered(event -> {    //effect when entering the button area
-                r.setTranslateX(0);
-                text.setTranslateX(0);
-            });
-
-            setOnMouseExited(event -> { //reverting the effect when exiting the area
-                r.setTranslateX(-10);
-                text.setTranslateX(-10);
+                r.setTranslateX(10);    //move element in X direction
+                text.setTranslateX(10);
                 r.setFill(Color.WHITE);
                 text.setFill(Color.BLACK);
             });
+
+            setOnMouseExited(event -> { //reverting the effect when exiting the area
+                r.setTranslateX(0);
+                text.setTranslateX(0);
+                r.setFill(Color.WHITE);
+                text.setFill(Color.BLACK);
+            });
+        }
+        public void addWarning(String warning) {
+            w = new Text(warning);
+            w.setFont(w.getFont().font(15));
+            w.setFill(Color.RED);
+            w.setTranslateX(100);
+            getChildren().add(w);
+        }
+
+        public void removeWarning() {
+            getChildren().remove(w);
         }
 
         public MenuButton(String name) {
