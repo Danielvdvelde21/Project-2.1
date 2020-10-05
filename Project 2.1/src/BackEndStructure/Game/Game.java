@@ -16,6 +16,7 @@ public class Game {
     private Map map;
 
     // All the territories in an array
+    // TODO remove
     private Territory[] territories;
 
     // All the territories in a graph (with edges)
