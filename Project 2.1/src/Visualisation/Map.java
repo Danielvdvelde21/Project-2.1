@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Map {
 
@@ -39,7 +38,6 @@ public class Map {
 
         //TODO get the owner's colour eg. Color owner.getColor()
         Border redline = BorderFactory.createLineBorder(Color.red); //TODO set the border colour of the label according to its owner's colour
-
         Border compound = BorderFactory.createCompoundBorder(redline, redline);
         nt.setBorder(compound);
 
@@ -84,7 +82,7 @@ public class Map {
         //JFrame frame = new JFrame("RISK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setSize(frameX, frameY);
-        frame.setSize(1800, 900);
+        frame.setSize(frameX+200, frameY+150);
         JPanel p = new JPanel();
 
         p.setLayout(null);
@@ -195,7 +193,6 @@ public class Map {
         }
         p.add(imgLabel);
         frame.add(p);
-
         frame.setVisible(true);
     }
 

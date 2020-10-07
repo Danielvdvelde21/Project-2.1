@@ -2,10 +2,12 @@ package BackEndStructure.Game;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Territory;
+import Visualisation.Narrator;
 
 public class MainGameLoop {
     private final Game game;
     private boolean gameOver = false;
+    private Narrator narrator = new Narrator();
 
     public MainGameLoop(int players, String[] playerNames) {
         this.game = new Game(players, playerNames);
@@ -19,12 +21,14 @@ public class MainGameLoop {
 
     private void placementStage() {
         System.out.println("PLACEMENT PHASE");
+        narrator.addText("PLACEMENT PHASE");
 
         // For each player, for StartingTroops amount of rounds
         int round = 1;
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
                 System.out.println("It's " + p.getName() + "'s turn to place down 1 troop");
+                narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 placeTroop(p);
             }
             round++;
@@ -45,10 +49,12 @@ public class MainGameLoop {
                 } else {
                     game.getMap().deselectTerritory();
                     System.out.println("This territory already belongs to a player!");
+                    narrator.addText("This territory already belongs to a player!");
                 }
             }
         }
         System.out.println(player.getName() + " put a troop on " + game.getTerritories()[game.getMap().getTerritoryNumber()].getTerritoryName());
+        narrator.addText(player.getName() + " put a troop on " + game.getTerritories()[game.getMap().getTerritoryNumber()].getTerritoryName());
         // If the territory did not have an owner, set it to player
         if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals("unowned")) {
             game.getTerritories()[game.getMap().getTerritoryNumber()].setOwner(player.getName());
@@ -69,6 +75,7 @@ public class MainGameLoop {
                     // attack, check adjacency!
                 } else {
                     System.out.println("please choose a territory that belongs to you to attack another player!");
+                    narrator.addText("please choose a territory that belongs to you to attack another player!");
                 }
             }
         }
