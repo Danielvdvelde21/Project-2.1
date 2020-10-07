@@ -22,10 +22,12 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainMenuScreen extends Application {
 
-    private GameMenu gameMenu;
     private String[] playerNames;
     private Stage ps;
 
@@ -42,7 +44,7 @@ public class MainMenuScreen extends Application {
         iv.setFitWidth(1000);
         iv.setFitHeight(700);
 
-        gameMenu = new GameMenu();
+        GameMenu gameMenu = new GameMenu();
 
         root.getChildren().addAll(iv, gameMenu);
 
@@ -54,19 +56,23 @@ public class MainMenuScreen extends Application {
 
     private class GameMenu extends Parent {
 
-        int i = 0;
-
         public boolean emptyString(String[] array) {
-            boolean isEmpty = false;
-            i=0;    //reset count
-
             for ( String s : array ) {
                 if (s.length() == 0) {
-                    i++;
-                    isEmpty = true;
+                    return true;
                 }
             }
-            return isEmpty;
+            return false;
+        }
+
+        public boolean duplicateString(String[] array) {
+            Set<String> set = new HashSet<>();
+            for(String s : array) {
+                if(!set.add(s)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public GameMenu() {
@@ -98,7 +104,7 @@ public class MainMenuScreen extends Application {
             helpBtn.setOnMouseClicked(event -> {});
 
             MenuButton exitBtn = new MenuButton("Exit");
-            exitBtn.setOnMouseClicked(event -> {System.exit(0);});
+            exitBtn.setOnMouseClicked(event -> System.exit(0));
 
             // Menu 2
             MenuButton singlePlayerBtn = new MenuButton("Single Player");
@@ -126,30 +132,19 @@ public class MainMenuScreen extends Application {
 
             MenuButton startBtn = new MenuButton("Start");
             startBtn.setOnMouseClicked(event -> {
-                // TODO add restrictions for the names entered
-                switch(menu4.getChildren().size()) {    //getting players' names from TextInput objects
-                    case 4:
-                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText()};
-                        break;
-                    case 5:
-                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText()};
-                        break;
-                    case 6:
-                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText()};
-                        break;
-                    case 7:
-                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText()};
-                        break;
-                    case 8:
-                        playerNames = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
-                        break;
-                }
+                //getting players' names from TextInput objects
+                int count = menu4.getChildren().size();
+                String[] pm = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
+                playerNames = Arrays.copyOf(pm, count-2);
 
-                if(emptyString(playerNames)) {
-                    startBtn.addWarning("ENTER NAMES");
+                if(emptyString(playerNames)) {  //name input restrictions
+                    startBtn.addWarning("[ENTER NAMES]");
+                }
+                else if(duplicateString(playerNames)) {
+                    startBtn.addWarning("[DUPLICATE NAMES]");
                 }
                 else {
-                    // System.out.println("Names entered: " + Arrays.toString(playerNames));
+                    //System.out.println("Names entered: " + Arrays.toString(playerNames));
                     ps.hide();  //hide menu
                     MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames);
                 }
@@ -222,7 +217,7 @@ public class MainMenuScreen extends Application {
 
         private Text text;
         private Rectangle r;
-        private Text w;
+        private Text w = new Text();
 
         private void comboBoxStyle() {    //makes button appear pressed
             r.setTranslateX(10);    //move element in X direction
@@ -244,12 +239,15 @@ public class MainMenuScreen extends Application {
                 text.setFill(Color.BLACK);
             });
         }
+
         public void addWarning(String warning) {
-            w = new Text(warning);
-            w.setFont(w.getFont().font(15));
+            w.setText(warning);
+            w.setFont(Font.font(15));
             w.setFill(Color.RED);
             w.setTranslateX(100);
-            getChildren().add(w);
+            if(!getChildren().contains(w)) {
+                getChildren().add(w);
+            }
         }
 
         public void removeWarning() {
@@ -258,7 +256,7 @@ public class MainMenuScreen extends Application {
 
         public MenuButton(String name) {
             text = new Text(name);
-            text.setFont(text.getFont().font(23));
+            text.setFont(Font.font(23));
             text.setFill(Color.WHITE);
 
             r = new Rectangle(300, 35);   //background rectangle
@@ -295,8 +293,6 @@ public class MainMenuScreen extends Application {
     private static class TextInput extends StackPane {
 
         private TextField tf;
-        private Rectangle r;
-        private Label label1;
 
         public TextInput(String name) {
             tf = new TextField();
@@ -304,7 +300,7 @@ public class MainMenuScreen extends Application {
             tf.setPrefColumnCount(10);
             tf.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
 
-            label1 = new Label(name);
+            Label label1 = new Label(name);
             label1.setFont(Font.font(18));
             label1.setTextFill(Color.GREY);
             label1.setTranslateY(5);    //fixing position
@@ -313,7 +309,7 @@ public class MainMenuScreen extends Application {
             hb.getChildren().addAll(label1, tf);
             hb.setSpacing(10);
 
-            r = new Rectangle(300, 35);   //background rectangle
+            Rectangle r = new Rectangle(300, 35);   //background rectangle
             r.setOpacity(0.65);
             r.setFill(Color.BLACK);
             r.setEffect(new GaussianBlur(3.5));
@@ -321,7 +317,6 @@ public class MainMenuScreen extends Application {
             setAlignment(Pos.CENTER_LEFT);
             setRotate(-0.5);
             getChildren().addAll(r,  hb);  //add hBox (label and textField) over background
-
         }
     }
 

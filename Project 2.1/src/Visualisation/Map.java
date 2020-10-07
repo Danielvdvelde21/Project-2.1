@@ -1,11 +1,13 @@
 package Visualisation;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Map {
 
@@ -16,16 +18,42 @@ public class Map {
     private static Insets insets;
     private static Dimension size;
     private static BufferedImage wPic;
-    private static int frameX = 1600;
-    private static int frameY = 900;
-    // public static int frameX=1100;
-    // public static int frameY=700;
+    // private static int frameX = 1600;
+    // private static int frameY = 900;
+    public static int frameX=1100;
+    public static int frameY=700;
 
+    public static JFrame frame = new JFrame("RISK");    //TODO add another JPanel to the Frame that contains the label storyteller and the label player turn
 
+    private JLabel troopCount(JPanel p, String name, int posX, int posY) {
+        //TODO update everything while the game goes on (!gameOver)
+
+        int numOfTroops = 0;    //TODO get the # of troops and owner of this territory eg. getNumOfTroops(name), getOwner(name)
+
+        JLabel nt = new JLabel();
+
+        nt.setOpaque(false);
+        nt.setText(String.valueOf(numOfTroops));
+
+        //TODO assign a colour to each player (not here)
+
+        //TODO get the owner's colour eg. Color owner.getColor()
+        Border redline = BorderFactory.createLineBorder(Color.red); //TODO set the border colour of the label according to its owner's colour
+
+        Border compound = BorderFactory.createCompoundBorder(redline, redline);
+        nt.setBorder(compound);
+
+        //insets = p.getInsets();
+        size = nt.getPreferredSize();
+        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 3, size.height - 2);
+
+        return nt;
+    }
     private JButton createButton(JPanel p, String name, int posX, int posY) {
         // New button created, buttonCount goes up
         buttonCount++;
         JButton b = new JButton(name);
+
         b.setOpaque(false);
         b.setContentAreaFilled(false);
         b.setBorderPainted(false);
@@ -53,9 +81,10 @@ public class Map {
 //    }
 
     public void createMap() {
-        JFrame frame = new JFrame("RISK");
+        //JFrame frame = new JFrame("RISK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(frameX, frameY);
+        //frame.setSize(frameX, frameY);
+        frame.setSize(1800, 900);
         JPanel p = new JPanel();
 
         p.setLayout(null);
@@ -70,53 +99,99 @@ public class Map {
         imgLabel.setBounds(0, 0, frameX, frameY);
 
         ArrayList<JButton> buttonList = new ArrayList<JButton>();
+        ArrayList<JLabel> labelList = new ArrayList<>();
 
         // Sorted on alphabet
         buttonList.add(createButton(p, "AFGHANISTAN", 745, 252));
+        labelList.add(troopCount(p, "AFGHANISTAN", 745, 252));
         buttonList.add(createButton(p, "ALASKA", 87, 113));
+        labelList.add(troopCount(p, "ALASKA", 87, 113));
         buttonList.add(createButton(p, "ALBERTA", 177, 165));
+        labelList.add(troopCount(p, "ALBERTA", 177, 165));
         buttonList.add(createButton(p, "ARGENTINA", 293, 539));
+        labelList.add(troopCount(p, "ARGENTINA", 293, 539));
         buttonList.add(createButton(p, "BRAZIL", 341, 443));
+        labelList.add(troopCount(p, "BRAZIL", 341, 443));
         buttonList.add(createButton(p, "CENTRAL AMERICA", 192, 327));
+        labelList.add(troopCount(p, "CENTRAL AMERICA", 192, 327));
         buttonList.add(createButton(p, "CHINA", 873, 302));
+        labelList.add(troopCount(p, "CHINA", 873, 302));
         buttonList.add(createButton(p, "CONGO", 594, 503));
+        labelList.add(troopCount(p, "CONGO", 594, 503));
         buttonList.add(createButton(p, "EAST AFRICA", 656, 472));
+        labelList.add(troopCount(p, "EAST AFRICA", 656, 472));
         buttonList.add(createButton(p, "<html><center>EASTERN<br>AUSTRALIA</center></html>", 1014, 557));
+        labelList.add(troopCount(p, "<html><center>EASTERN<br>AUSTRALIA</center></html>", 1014, 557));
         buttonList.add(createButton(p, "<html><center>EASTERN<br>UNITED STATES</center></html>", 247, 262));
+        labelList.add(troopCount(p, "<html><center>EASTERN<br>UNITED STATES</center></html>", 247, 262));
         buttonList.add(createButton(p, "EGYPT", 596, 392));
+        labelList.add(troopCount(p, "EGYPT", 596, 392));
         buttonList.add(createButton(p, "GREAT BRITAIN", 457, 216));
+        labelList.add(troopCount(p, "GREAT BRITAIN", 457, 216));
         buttonList.add(createButton(p, "GREENLAND", 385, 73));
+        labelList.add(troopCount(p, "GREENLAND", 385, 73));
         buttonList.add(createButton(p, "ICELAND", 474, 143));
+        labelList.add(troopCount(p, "ICELAND", 474, 143));
         buttonList.add(createButton(p, "INDIA", 805, 351));
+        labelList.add(troopCount(p, "INDIA", 805, 351));
         buttonList.add(createButton(p, "INDONESIA", 901, 489));
+        labelList.add(troopCount(p, "INDONESIA", 901, 489));
         buttonList.add(createButton(p, "IRKUTSK", 881, 183));
+        labelList.add(troopCount(p, "IRKUTSK", 881, 183));
         buttonList.add(createButton(p, "JAPAN", 1002, 249));
+        labelList.add(troopCount(p, "JAPAN", 1002, 249));
         buttonList.add(createButton(p, "KAMCHATKA", 984, 95));
+        labelList.add(troopCount(p, "KAMCHATKA", 984, 95));
         buttonList.add(createButton(p, "MADAGASCAR", 697, 595));
+        labelList.add(troopCount(p, "MADAGASCAR", 697, 595));
         buttonList.add(createButton(p, "MIDDLE EAST", 695, 337));
+        labelList.add(troopCount(p, "MIDDLE EAST", 695, 337));
         buttonList.add(createButton(p, "MONGOLIA", 891, 238));
+        labelList.add(troopCount(p, "MONGOLIA", 891, 238));
         buttonList.add(createButton(p, "<html><center>NEW<br>GUINEA</center></html>", 999, 468));
+        labelList.add(troopCount(p, "<html><center>NEW<br>GUINEA</center></html>", 999, 468));
         buttonList.add(createButton(p, "NORTH AFRICA", 527, 428));
+        labelList.add(troopCount(p, "NORTH AFRICA", 527, 428));
         buttonList.add(createButton(p, "NORTH WEST TERRITORY", 190, 109));
+        labelList.add(troopCount(p, "NORTH WEST TERRITORY", 190, 109));
         buttonList.add(createButton(p, "<html><center>NORTHERN<br>EUROPE</center></html>", 555, 232));
+        labelList.add(troopCount(p, "<html><center>NORTHERN<br>EUROPE</center></html>", 555, 232));
         buttonList.add(createButton(p, "ONTARIO", 246, 180));
+        labelList.add(troopCount(p, "ONTARIO", 246, 180));
         buttonList.add(createButton(p, "PERU", 288, 478));
+        labelList.add(troopCount(p, "PERU", 288, 478));
         buttonList.add(createButton(p, "QUEBEC", 320, 178));
+        labelList.add(troopCount(p, "QUEBEC", 320, 178));
         buttonList.add(createButton(p, "SCANDINAVIA", 574, 122));
+        labelList.add(troopCount(p, "SCANDINAVIA", 574, 122));
         buttonList.add(createButton(p, "SIAM", 882, 383));
+        labelList.add(troopCount(p, "SIAM", 882, 383));
         buttonList.add(createButton(p, "SIBERIA", 817, 129));
+        labelList.add(troopCount(p, "SIBERIA", 817, 129));
         buttonList.add(createButton(p, "SOUTH AFRICA", 607, 583));
+        labelList.add(troopCount(p, "SOUTH AFRICA", 607, 583));
         buttonList.add(createButton(p, "<html><center>SOUTHERN<br>EUROPE</center></html>", 560, 284));
+        labelList.add(troopCount(p, "<html><center>SOUTHERN<br>EUROPE</center></html>", 560, 284));
         buttonList.add(createButton(p, "UKRAINE", 653, 173));
+        labelList.add(troopCount(p, "UKRAINE", 653, 173));
         buttonList.add(createButton(p, "URAL", 758, 169));
+        labelList.add(troopCount(p, "URAL", 758, 169));
         buttonList.add(createButton(p, "VENEZUELA", 265, 381));
+        labelList.add(troopCount(p, "VENEZUELA", 265, 381));
         buttonList.add(createButton(p, "<html><center>WESTERN<br>AUSTRALIA</center></html>", 946, 590));
+        labelList.add(troopCount(p, "<html><center>WESTERN<br>AUSTRALIA</center></html>", 946, 590));
         buttonList.add(createButton(p, "<html><center>WESTERN<br>EUROPE</center></html>", 481, 303));
+        labelList.add(troopCount(p, "<html><center>WESTERN<br>EUROPE</center></html>", 481, 303));
         buttonList.add(createButton(p, "<html><center>WESTERN<br>UNITED STATES</center></html>", 183, 232));
+        labelList.add(troopCount(p, "<html><center>WESTERN<br>UNITED STATES</center></html>", 183, 232));
         buttonList.add(createButton(p, "YAKUTSK", 900, 92));
+        labelList.add(troopCount(p, "YAKUTSK", 900, 92));
 
         for (JButton button : buttonList) {
             p.add(button);
+        }
+        for (JLabel label : labelList) {
+            p.add(label);
         }
         p.add(imgLabel);
         frame.add(p);
