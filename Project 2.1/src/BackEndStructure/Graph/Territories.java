@@ -95,7 +95,7 @@ public class Territories {
         g.AddVertex(v42);
 
         // Example Afghanistan(v1) is adjacent to ukraine(v36), ural(v37), china(v7), india(v16) , middle east
-        // You dont need to return an edge (v1, v2) = (v2, v1)
+        // You dont need to return an edge (v1, v2) = (v2, v1), already added
         g.addEdge(v1, v36);
         g.addEdge(v1, v37);
         g.addEdge(v1, v7);
