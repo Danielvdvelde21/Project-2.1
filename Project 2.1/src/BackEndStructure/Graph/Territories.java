@@ -127,7 +127,90 @@ public class Territories {
         g.addEdge(v7, v33);
         g.addEdge(v7, v37);
 
+        g.addEdge(v8, v9);
+        g.addEdge(v8, v25);
+        g.addEdge(v8, v34);
 
+        g.addEdge(v9, v12);
+        g.addEdge(v9, v21);
+        g.addEdge(v9, v22);
+        g.addEdge(v9, v25);
+        g.addEdge(v9, v34);
+
+        g.addEdge(v10, v24);
+        g.addEdge(v10, v39);
+
+        g.addEdge(v11, v28);
+        g.addEdge(v11, v30);
+        g.addEdge(v11, v41);
+
+        g.addEdge(v12, v22);
+        g.addEdge(v12, v25);
+        g.addEdge(v12, v35);
+
+        g.addEdge(v13, v15);
+        g.addEdge(v13, v27);
+        g.addEdge(v13, v31);
+        g.addEdge(v13, v40);
+
+        g.addEdge(v14, v15);
+        g.addEdge(v14, v26);
+        g.addEdge(v14, v28);
+        g.addEdge(v14, v30);
+
+        g.addEdge(v15, v31);
+
+        g.addEdge(v16, v22);
+        g.addEdge(v16, v32);
+
+        g.addEdge(v17, v24);
+        g.addEdge(v17, v32);
+        g.addEdge(v17, v39);
+
+        g.addEdge(v18, v20);
+        g.addEdge(v18, v23);
+        g.addEdge(v18, v33);
+        g.addEdge(v18, v42);
+
+        g.addEdge(v19, v20);
+        g.addEdge(v19, v23);
+
+        g.addEdge(v20, v23);
+        g.addEdge(v20, v42);
+
+        g.addEdge(v21, v34);
+
+        g.addEdge(v22, v35);
+        g.addEdge(v22, v36);
+
+        g.addEdge(v23, v33);
+
+        g.addEdge(v24, v39);
+
+        g.addEdge(v25, v35);
+        g.addEdge(v25, v40);
+
+        g.addEdge(v26, v28);
+
+        g.addEdge(v27, v31);
+        g.addEdge(v27, v35);
+        g.addEdge(v27, v36);
+        g.addEdge(v27, v40);
+
+        g.addEdge(v28, v30);
+        g.addEdge(v28, v41);
+
+        g.addEdge(v29, v38);
+
+        g.addEdge(v31, v36);
+
+        g.addEdge(v33, v37);
+        g.addEdge(v33, v42);
+
+        g.addEdge(v35, v36);
+        g.addEdge(v35, v40);
+
+        g.addEdge(v36, v37);
 
         // Print all vertices with their respective edges
         g.printGraph();
