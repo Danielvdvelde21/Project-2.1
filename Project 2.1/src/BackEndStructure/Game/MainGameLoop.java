@@ -20,14 +20,12 @@ public class MainGameLoop {
     }
 
     private void placementStage() {
-        System.out.println("PLACEMENT PHASE");
         narrator.addText("PLACEMENT PHASE");
 
         // For each player, for StartingTroops amount of rounds
         int round = 1;
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
-                System.out.println("It's " + p.getName() + "'s turn to place down 1 troop");
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 placeTroop(p);
             }
@@ -48,17 +46,21 @@ public class MainGameLoop {
                     validTerritoryChosen = true;
                 } else {
                     game.getMap().deselectTerritory();
-                    System.out.println("This territory already belongs to a player!");
                     narrator.addText("This territory already belongs to a player!");
                 }
             }
         }
-        System.out.println(player.getName() + " put a troop on " + game.getTerritories()[game.getMap().getTerritoryNumber()].getTerritoryName());
-        narrator.addText(player.getName() + " put a troop on " + game.getTerritories()[game.getMap().getTerritoryNumber()].getTerritoryName());
+
+        // Update Territories
         // If the territory did not have an owner, set it to player
         if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals("unowned")) {
             game.getTerritories()[game.getMap().getTerritoryNumber()].setOwner(player.getName());
         }
+        game.getTerritories()[game.getMap().getTerritoryNumber()].setNumberOfTroops(game.getTerritories()[game.getMap().getTerritoryNumber()].getNumberOfTroops()+1);
+
+        // Update the Map
+        narrator.addText(player.getName() + " put a troop on " + game.getTerritories()[game.getMap().getTerritoryNumber()].getTerritoryName());
+        game.getMap().updateTroopCount(game.getMap().getTerritoryNumber(), game.getTerritories()[game.getMap().getTerritoryNumber()].getNumberOfTroops());
         game.getMap().deselectTerritory();
     }
 
@@ -74,7 +76,6 @@ public class MainGameLoop {
                     attackingTerritory = game.getTerritories()[game.getMap().getTerritoryNumber()];
                     // attack, check adjacency!
                 } else {
-                    System.out.println("please choose a territory that belongs to you to attack another player!");
                     narrator.addText("please choose a territory that belongs to you to attack another player!");
                 }
             }

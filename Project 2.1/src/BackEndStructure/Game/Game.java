@@ -11,6 +11,7 @@ import Visualisation.Map;
 public class Game {
     // Player object List, all the players of the game
     private Player[] players;
+    private final String[] colors = {"red", "blue", "green", "brown", "yellow", "purple"};
 
     // the Board
     private Map map;
@@ -73,7 +74,7 @@ public class Game {
         this.players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            this.players[i] = new Player(names[i]);
+            this.players[i] = new Player(names[i], colors[i]);
         }
     }
 

@@ -94,8 +94,8 @@ public class Territories {
         g.AddVertex(v41);
         g.AddVertex(v42);
 
-        // Example Afghanistan(v1) is adjacent to ukraine(v36), ural(v37), china(v7), india(v16) , middle east
-        // You dont need to return an edge (v1, v2) = (v2, v1), already added
+        // Add edges between vertices
+        // Edge (v1, v2) = (v2, v1)
         g.addEdge(v1, v36);
         g.addEdge(v1, v37);
         g.addEdge(v1, v7);
@@ -213,7 +213,7 @@ public class Territories {
         g.addEdge(v36, v37);
 
         // Print all vertices with their respective edges
-        g.printGraph();
+        // g.printGraph();
 
         return g;
     }

@@ -1,5 +1,7 @@
 package Visualisation;
 
+import BackEndStructure.Entities.Player;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -10,43 +12,64 @@ import java.util.ArrayList;
 
 public class Map {
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Variables for MainGameLoop
     private int territoryNumber = -1; // Int that represents a territory
     private int buttonCount = -1; // The first button will have count 0 (array indexing)
     private boolean endTurn = false;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Variables for creating the map
     private static Insets insets;
     private static Dimension size;
     private static BufferedImage wPic;
+
     // private static int frameX = 1600;
     // private static int frameY = 900;
+
     public static int frameX=1100;
     public static int frameY=700;
 
+    private ArrayList<JButton> buttonList = new ArrayList<JButton>();
+    private ArrayList<JLabel> labelList = new ArrayList<>();
+
     public static JFrame frame = new JFrame("RISK");    //TODO add another JPanel to the Frame that contains the label storyteller and the label player turn
-
+    // -----------------------------------------------------------------------------------------------------------------
+    // Label for how many troops a territory has
     private JLabel troopCount(JPanel p, String name, int posX, int posY) {
-        //TODO update everything while the game goes on (!gameOver)
-
-        int numOfTroops = 0;    //TODO get the # of troops and owner of this territory eg. getNumOfTroops(name), getOwner(name)
+        int numOfTroops = 0;
 
         JLabel nt = new JLabel();
-
         nt.setOpaque(false);
         nt.setText(String.valueOf(numOfTroops));
 
-        //TODO assign a colour to each player (not here)
+        // TODO set color depending on the player that owns the territory
+        // See method setTroopCountColor()
 
-        //TODO get the owner's colour eg. Color owner.getColor()
         Border redline = BorderFactory.createLineBorder(Color.red); //TODO set the border colour of the label according to its owner's colour
         Border compound = BorderFactory.createCompoundBorder(redline, redline);
         nt.setBorder(compound);
 
-        //insets = p.getInsets();
         size = nt.getPreferredSize();
         nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 3, size.height - 2);
 
         return nt;
     }
+
+    // Update the troopCount label color
+    public void setTroopCountColor(int territoryNumber, Player p) {
+        // TODO set actual color
+        // label.color = p.getColor() (returns string)
+    }
+
+    // Update the troopCount label
+    public void updateTroopCount(int territoryNumber, int troopCount) {
+        // labelList is alphabetically sorted
+        labelList.get(territoryNumber).setText(String.valueOf(troopCount));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Button for selecting territories
     private JButton createButton(JPanel p, String name, int posX, int posY) {
         // New button created, buttonCount goes up
         buttonCount++;
@@ -71,13 +94,8 @@ public class Map {
         return b;
     }
 
-//    private JLabel createLabel(JPanel p, String number, int xPos, int yPos){
-//        JLabel l = new JLabel(number);
-//        l.setText("0");
-//        l.setLocation(xPos, yPos);
-//        return l;
-//    }
-
+    // -----------------------------------------------------------------------------------------------------------------
+    // Creates the map
     public void createMap() {
         //JFrame frame = new JFrame("RISK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,9 +113,6 @@ public class Map {
 
         JLabel imgLabel = new JLabel(imageIcon);
         imgLabel.setBounds(0, 0, frameX, frameY);
-
-        ArrayList<JButton> buttonList = new ArrayList<JButton>();
-        ArrayList<JLabel> labelList = new ArrayList<>();
 
         // Sorted on alphabet
         buttonList.add(createButton(p, "AFGHANISTAN", 745, 252));
@@ -196,6 +211,8 @@ public class Map {
         frame.setVisible(true);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Methods for MainGameLoop
     // Get current selected territory
     public int getTerritoryNumber() {
         return territoryNumber;
@@ -213,4 +230,5 @@ public class Map {
     public void resetTurnEnd() {
         endTurn = false;
     }
+    // -----------------------------------------------------------------------------------------------------------------
 }
