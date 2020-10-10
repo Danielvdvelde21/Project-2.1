@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PlayerTurn {
-    private JLabel nameLabel = new JLabel();
+    private final JLabel nameLabel = new JLabel();
     private JPanel p1 = new JPanel();
     private JPanel p2 = new JPanel();
     private JPanel p3 = new JPanel();
@@ -22,11 +22,7 @@ public class PlayerTurn {
 
         JButton endTurnButton = new JButton("End Turn");
         endTurnButton.setFont(new Font("Courier New", Font.PLAIN, 14));
-        endTurnButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                turnEnded = true;
-            }
-        });
+        endTurnButton.addActionListener(e -> turnEnded = true);
 
         p1.setBackground(Color.LIGHT_GRAY);
         p2.setBackground(Color.LIGHT_GRAY);
@@ -46,7 +42,6 @@ public class PlayerTurn {
     }
 
     public void setPlayerTurn(Player player) {
-        System.out.println("jey");
         nameLabel.setText(player.getName());
         p2.setBackground(player.getColor());
     }
