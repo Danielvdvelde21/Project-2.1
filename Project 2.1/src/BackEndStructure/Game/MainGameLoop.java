@@ -5,6 +5,7 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import Visualisation.Map;
 import Visualisation.Narrator;
+import Visualisation.PlayerTurnPanels;
 
 public class MainGameLoop {
     private final Game game;
@@ -14,6 +15,9 @@ public class MainGameLoop {
 
     // For updating the storyteller
     private final Narrator narrator = new Narrator();
+
+    //
+    private PlayerTurnPanels playerTurn = new PlayerTurnPanels();
 
     // Game state
     private boolean gameOver = false;
@@ -88,7 +92,6 @@ public class MainGameLoop {
         Vertex attacker;
         while(!map.hasTurnEnded()) {
            // Cards TODO
-            
             if (map.getTerritoryNumber() != -1 ) {
                 if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName())) {
                     attacker = graph.get(map.getTerritoryNumber());

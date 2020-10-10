@@ -8,10 +8,12 @@ import BackEndStructure.Graph.Territories;
 import BackEndStructure.Graph.Territory;
 import Visualisation.Map;
 
+import java.awt.*;
+
 public class Game {
     // Player object List, all the players of the game
     private Player[] players;
-    private final String[] colors = {"red", "blue", "green", "brown", "yellow", "purple"};
+    private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
 
     // the Board
     private Map map;

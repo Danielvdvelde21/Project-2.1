@@ -33,7 +33,7 @@ public class Map {
     private ArrayList<JButton> buttonList = new ArrayList<JButton>();
     private ArrayList<JLabel> labelList = new ArrayList<>();
 
-    public static JFrame frame = new JFrame("RISK");    //TODO add another JPanel to the Frame that contains the label storyteller and the label player turn
+    public static JFrame frame = new JFrame("RISK");
     // -----------------------------------------------------------------------------------------------------------------
     // Label for how many troops a territory has
     private JLabel troopCount(JPanel p, String name, int posX, int posY) {
@@ -101,6 +101,7 @@ public class Map {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setSize(frameX, frameY);
         frame.setSize(frameX+200, frameY+150);
+        frame.setResizable(false);
         JPanel p = new JPanel();
 
         p.setLayout(null);

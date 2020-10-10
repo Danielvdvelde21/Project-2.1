@@ -2,15 +2,16 @@ package BackEndStructure.Entities;
 
 import BackEndStructure.Entities.Cards.Card;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Player {
     private String playerName;
-    private String playerColor;
+    private Color playerColor;
     private int setsTurnedIn;
     private ArrayList<Card> hand = new ArrayList<>();
 
-    public Player(String name, String col) {
+    public Player(String name, Color col) {
         this.playerName = name;
         this.playerColor = col;
     }
@@ -26,6 +27,6 @@ public class Player {
     public String getName() {
         return playerName;
     }
-    public String getColor() { return playerColor; }
+    public Color getColor() { return playerColor; }
     public ArrayList<Card> getHand() { return hand; }
 }

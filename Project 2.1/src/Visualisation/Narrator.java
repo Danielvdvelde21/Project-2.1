@@ -9,8 +9,8 @@ public class Narrator {
 
     public Narrator() {
         JPanel p2 = new JPanel();
-        p2.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         p2.setBackground(Color.LIGHT_GRAY);
+        label.setFont(new Font("Courier New", Font.PLAIN, 14));
         p2.add(label);
         Map.frame.add(p2, BorderLayout.BEFORE_FIRST_LINE);
     }
