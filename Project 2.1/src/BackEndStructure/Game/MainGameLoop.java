@@ -5,7 +5,7 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import Visualisation.Map;
 import Visualisation.Narrator;
-import Visualisation.PlayerTurnPanels;
+import Visualisation.PlayerTurn;
 
 public class MainGameLoop {
     private final Game game;
@@ -13,11 +13,11 @@ public class MainGameLoop {
     private final Map map;
     private final Graph graph;
 
-    // For updating the storyteller
+    // Updating visual variables
     private final Narrator narrator = new Narrator();
 
     // For updating the player turn label (current player)
-    private PlayerTurnPanels playerTurnPanels = new PlayerTurnPanels();
+    private PlayerTurn playerTurn = new PlayerTurn();
 
     // Game state
     private boolean gameOver = false;
@@ -32,6 +32,7 @@ public class MainGameLoop {
         placementStage();
         while(!gameOver) {
             for (Player p : game.getPlayers()) {
+                playerTurn.setPlayerTurn(p);
                 playerTurn(p);
             }
         }
@@ -45,6 +46,7 @@ public class MainGameLoop {
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
+                playerTurn.setPlayerTurn(p);
                 placeTroop(p);
             }
             round++;
@@ -83,8 +85,6 @@ public class MainGameLoop {
     }
 
     private void playerTurn(Player player) {
-        playerTurnPanels.setCurrentPlayerLabel(player); //TODO not working
-
         // Check if the player got more than 4 cards in his hand
         if (player.getHand().size() > 4) {
             // Player must turn in at least 1 set

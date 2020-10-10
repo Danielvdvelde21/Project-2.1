@@ -6,8 +6,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Player {
-    private String playerName;
-    private Color playerColor;
+    private final String playerName;
+    private final Color playerColor;
     private int setsTurnedIn;
     private ArrayList<Card> hand = new ArrayList<>();
 
