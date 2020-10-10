@@ -2,7 +2,6 @@ package BackEndStructure.Game;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
-import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 import Visualisation.Map;
 import Visualisation.Narrator;
@@ -89,8 +88,7 @@ public class MainGameLoop {
         Vertex attacker;
         while(!map.hasTurnEnded()) {
            // Cards TODO
-
-           // Attacking TODO
+            
             if (map.getTerritoryNumber() != -1 ) {
                 if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName())) {
                     attacker = graph.get(map.getTerritoryNumber());
@@ -104,7 +102,6 @@ public class MainGameLoop {
                         map.deselectTerritory();
                         narrator.addText("These territories are not adjacent to each other");
                     }
-                    // attack, check adjacency!
                 } else {
                     narrator.addText("please choose a territory that belongs to you to attack another player!");
                 }
