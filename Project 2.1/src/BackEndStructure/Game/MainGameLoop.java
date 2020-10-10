@@ -73,7 +73,6 @@ public class MainGameLoop {
         }
         graph.get(map.getTerritoryNumber()).getTerritory().setNumberOfTroops(graph.get(map.getTerritoryNumber()).getTerritory().getNumberOfTroops()+1);
 
-
         // Update the Map
         narrator.addText(player.getName() + " put a troop on " +  graph.get(map.getTerritoryNumber()).getTerritory().getTerritoryName());
         map.updateTroopCount(map.getTerritoryNumber(),  graph.get(map.getTerritoryNumber()).getTerritory().getNumberOfTroops());
@@ -87,14 +86,24 @@ public class MainGameLoop {
             // TODO Player must selected cards from his hand and turn in a set requires need frontend
         }
 
-        Territory attackingTerritory;
+        Vertex attacker;
         while(!map.hasTurnEnded()) {
            // Cards TODO
 
            // Attacking TODO
             if (map.getTerritoryNumber() != -1 ) {
                 if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName())) {
-                    attackingTerritory = graph.get(map.getTerritoryNumber()).getTerritory();
+                    attacker = graph.get(map.getTerritoryNumber());
+                    while (graph.get(map.getTerritoryNumber()) == attacker) {
+                        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+                    }
+                    Vertex defender = graph.get(map.getTerritoryNumber());
+                    if (graph.isAdjecent(attacker, defender)) {
+                        // TODO attack need visual buttons
+                    } else {
+                        map.deselectTerritory();
+                        narrator.addText("These territories are not adjacent to each other");
+                    }
                     // attack, check adjacency!
                 } else {
                     narrator.addText("please choose a territory that belongs to you to attack another player!");
@@ -108,6 +117,7 @@ public class MainGameLoop {
 
     private void fortifyTerritories(Player player) {
         boolean fortified = false;
+
         while (!map.hasTurnEnded() || fortified) {
             if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName()) && map.getTerritoryNumber() != -1) {
                 Vertex from = graph.get(map.getTerritoryNumber());
@@ -120,6 +130,9 @@ public class MainGameLoop {
                     // TODO promt messeage how many troops do you want to fortify
                     // if he cancels fortified is false and reset from, to and selectedterritorynumber
                     // else fortified = true
+                } else {
+                    map.deselectTerritory();
+                    narrator.addText("These territories are not adjacent to each other");
                 }
             } else {
                   map.deselectTerritory();
@@ -127,4 +140,5 @@ public class MainGameLoop {
               }
          }
     }
+
 }
