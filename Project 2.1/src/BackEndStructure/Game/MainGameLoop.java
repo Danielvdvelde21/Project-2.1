@@ -1,16 +1,27 @@
 package BackEndStructure.Game;
 
 import BackEndStructure.Entities.Player;
+import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
+import Visualisation.Map;
 import Visualisation.Narrator;
 
 public class MainGameLoop {
     private final Game game;
-    private boolean gameOver = false;
+    private final Map map;
+    private final Graph graph;
+
+    // For updating the storyteller
     private Narrator narrator = new Narrator();
+
+    // Game state
+    private boolean gameOver = false;
 
     public MainGameLoop(int players, String[] playerNames) {
         this.game = new Game(players, playerNames);
+        this.map = game.getMap();
+        this.graph = game.getGraph();
+
         placementStage();
         while(!gameOver) {
             for (Player p : game.getPlayers()) {
@@ -20,7 +31,7 @@ public class MainGameLoop {
     }
 
     private void placementStage() {
-        narrator.addText("PLACEMENT PHASE");
+        narrator.addText("Placement phase");
 
         // For each player, for StartingTroops amount of rounds
         int round = 1;
@@ -40,12 +51,12 @@ public class MainGameLoop {
         while (!validTerritoryChosen) {
             try { Thread.sleep(100); } catch (InterruptedException e) {}
             // If a territory is selected
-            if (game.getMap().getTerritoryNumber() != -1) {
+            if (map.getTerritoryNumber() != -1) {
                 // Has the player selected one of his own territories or has he selected an unowned territory
-                if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals("unowned") || game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals(player.getName())) {
+                if(graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals("unowned") || graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName())) {
                     validTerritoryChosen = true;
                 } else {
-                    game.getMap().deselectTerritory();
+                    map.deselectTerritory();
                     narrator.addText("This territory already belongs to a player!");
                 }
             }
@@ -53,35 +64,36 @@ public class MainGameLoop {
 
         // Update Territories
         // If the territory did not have an owner, set it to player
-        if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals("unowned")) {
-            game.getTerritories()[game.getMap().getTerritoryNumber()].setOwner(player.getName());
+        if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals("unowned")) {
+            graph.get(map.getTerritoryNumber()).getTerritory().setOwner(player.getName());
         }
-        game.getTerritories()[game.getMap().getTerritoryNumber()].setNumberOfTroops(game.getTerritories()[game.getMap().getTerritoryNumber()].getNumberOfTroops()+1);
+        graph.get(map.getTerritoryNumber()).getTerritory().setNumberOfTroops(graph.get(map.getTerritoryNumber()).getTerritory().getNumberOfTroops()+1);
+
 
         // Update the Map
-        narrator.addText(player.getName() + " put a troop on " + game.getTerritories()[game.getMap().getTerritoryNumber()].getTerritoryName());
-        game.getMap().updateTroopCount(game.getMap().getTerritoryNumber(), game.getTerritories()[game.getMap().getTerritoryNumber()].getNumberOfTroops());
-        game.getMap().deselectTerritory();
+        narrator.addText(player.getName() + " put a troop on " +  graph.get(map.getTerritoryNumber()).getTerritory().getTerritoryName());
+        map.updateTroopCount(map.getTerritoryNumber(),  graph.get(map.getTerritoryNumber()).getTerritory().getNumberOfTroops());
+        map.deselectTerritory();
     }
 
-    private void playerTurn(Player p) {
+    private void playerTurn(Player player) {
         Territory attackingTerritory;
 
-        while(!game.getMap().hasTurnEnded()) {
+        while(!map.hasTurnEnded()) {
            // Cards TODO
 
            // Attacking TODO
-            if (game.getMap().getTerritoryNumber() != -1 ) {
-                if (game.getTerritories()[game.getMap().getTerritoryNumber()].getOwner().equals(p.getName())) {
-                    attackingTerritory = game.getTerritories()[game.getMap().getTerritoryNumber()];
+            if (map.getTerritoryNumber() != -1 ) {
+                if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName())) {
+                    attackingTerritory = graph.get(map.getTerritoryNumber()).getTerritory();
                     // attack, check adjacency!
                 } else {
                     narrator.addText("please choose a territory that belongs to you to attack another player!");
                 }
             }
         }
-        fortifyTerritories(p);
-        game.getMap().resetTurnEnd();
+        fortifyTerritories(player);
+        map.resetTurnEnd();
     }
 
     private void fortifyTerritories(Player p) {

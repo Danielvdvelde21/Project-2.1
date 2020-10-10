@@ -16,10 +16,6 @@ public class Game {
     // the Board
     private Map map;
 
-    // All the territories in an array
-    // TODO remove
-    private Territory[] territories;
-
     // All the territories in a graph (with edges)
     private Graph graph;
 
@@ -64,9 +60,6 @@ public class Game {
         this.map = new Map();
         map.createMap();
 
-        // Instantiate Territory list
-        this.territories = new Territories().getTerritories();
-
         // Instantiate Graph
         this.graph = new Territories().getGraph();
 
@@ -83,8 +76,6 @@ public class Game {
     public Player[] getPlayers() {
         return players;
     }
-
-    public Territory[] getTerritories() { return territories; }
 
     public Graph getGraph() { return graph; }
 

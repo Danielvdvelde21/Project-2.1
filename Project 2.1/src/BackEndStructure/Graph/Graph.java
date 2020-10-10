@@ -3,12 +3,12 @@ package BackEndStructure.Graph;
 import java.util.*;
 
 public class Graph {
-    private HashSet<Vertex> territoryGraph;
+    private final List<Vertex> graph;
 
-    public Graph(){ territoryGraph = new HashSet<>(); }
+    public Graph(){ graph = new ArrayList<Vertex>(); }
 
     public void AddVertex (Vertex newVertex){
-        territoryGraph.add(newVertex);
+        graph.add(newVertex);
     }
 
     public void addEdge(Vertex vertex1, Vertex vertex2) {
@@ -26,7 +26,7 @@ public class Graph {
     }
 
     public void printGraph(){
-        for (Vertex v : territoryGraph){
+        for (Vertex v : graph){
             System.out.print("Territory name: "+ v.getTerritory().getTerritoryName());
             System.out.print(" Connected with: ");
             for (Edge e : v.getEdges()){
@@ -36,4 +36,7 @@ public class Graph {
         }
     }
 
+    public Vertex get(int i) {
+        return graph.get(i);
+    }
 }
