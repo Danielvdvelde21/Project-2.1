@@ -3,16 +3,18 @@ package BackEndStructure.Game;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
+import BackEndStructure.Graph.Vertex;
 import Visualisation.Map;
 import Visualisation.Narrator;
 
 public class MainGameLoop {
     private final Game game;
+    // Variables in game that get used a lot
     private final Map map;
     private final Graph graph;
 
     // For updating the storyteller
-    private Narrator narrator = new Narrator();
+    private final Narrator narrator = new Narrator();
 
     // Game state
     private boolean gameOver = false;
@@ -22,6 +24,8 @@ public class MainGameLoop {
         this.map = game.getMap();
         this.graph = game.getGraph();
 
+        // The game starts by every player starting to place troops on the board
+        // TODO who goes first?
         placementStage();
         while(!gameOver) {
             for (Player p : game.getPlayers()) {
@@ -49,7 +53,7 @@ public class MainGameLoop {
         boolean validTerritoryChosen = false;
 
         while (!validTerritoryChosen) {
-            try { Thread.sleep(100); } catch (InterruptedException e) {}
+            try { Thread.sleep(100); } catch (InterruptedException ignored) {}
             // If a territory is selected
             if (map.getTerritoryNumber() != -1) {
                 // Has the player selected one of his own territories or has he selected an unowned territory
@@ -77,8 +81,13 @@ public class MainGameLoop {
     }
 
     private void playerTurn(Player player) {
-        Territory attackingTerritory;
+        // Check if the player got more than 4 cards in his hand
+        if (player.getHand().size() > 4) {
+            // Player must turn in at least 1 set
+            // TODO Player must selected cards from his hand and turn in a set requires need frontend
+        }
 
+        Territory attackingTerritory;
         while(!map.hasTurnEnded()) {
            // Cards TODO
 
@@ -92,14 +101,30 @@ public class MainGameLoop {
                 }
             }
         }
+        // At the end of a turn a player can fortify 1 territory if he chooses
         fortifyTerritories(player);
         map.resetTurnEnd();
     }
 
-    private void fortifyTerritories(Player p) {
-        // TODO
-        // while (!fortified) {
-        //      logic for fortification
-        // }
+    private void fortifyTerritories(Player player) {
+        boolean fortified = false;
+        while (!map.hasTurnEnded() || fortified) {
+            if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals(player.getName()) && map.getTerritoryNumber() != -1) {
+                Vertex from = graph.get(map.getTerritoryNumber());
+                while (graph.get(map.getTerritoryNumber()) == from) {
+                    try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+                }
+                Vertex to = graph.get(map.getTerritoryNumber());
+
+                if (graph.isAdjecent(from, to)) {
+                    // TODO promt messeage how many troops do you want to fortify
+                    // if he cancels fortified is false and reset from, to and selectedterritorynumber
+                    // else fortified = true
+                }
+            } else {
+                  map.deselectTerritory();
+                  narrator.addText("Choose a territory that belongs to you!");
+              }
+         }
     }
 }

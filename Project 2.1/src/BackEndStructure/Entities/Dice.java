@@ -187,7 +187,6 @@ public class Dice {
         int[] list = new int[]{1,2,3,4,5,6};
         int[] playOrder = new int[players.length];
 
-
         for(int i = 0; i < players.length; i++){
             int winner = (int) (Math.random() * players.length);
             while(list[winner] == 0){
@@ -199,8 +198,6 @@ public class Dice {
         }
         return playOrder;
     }
-
-
 
     public int getEyes() {
         return eyes;

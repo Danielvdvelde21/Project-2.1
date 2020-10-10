@@ -27,4 +27,5 @@ public class Player {
         return playerName;
     }
     public String getColor() { return playerColor; }
+    public ArrayList<Card> getHand() { return hand; }
 }
