@@ -1,17 +1,29 @@
 package Visualisation;
 
+import BackEndStructure.Entities.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class PlayerTurnPanels {
 
-    private String name = "Name";   // TODO get the name of the current player
-    private Color col = Color.red;  // TODO get the color of the current player
+    private String name;    // name of the current player
+    private Color col;  // TODO get the color of the current player
+    private JLabel nameLabel = new JLabel();
+    private JPanel p2;
 
-    public PlayerTurnPanels() { //name and color of the current player
-        JLabel nameLabel = new JLabel(name);
+    public void setCurrentPlayerLabel(Player p) {
+        this.name = p.getName();
+        this.col = p.getColor();
+        if(!p2.equals(null)){p2.remove(nameLabel);}
+        nameLabel = new JLabel(name);
         nameLabel.setFont(new Font("Courier New", Font.BOLD, 17));
+        nameLabel.setVisible(true);
+        p2.setBackground(col);
+        p2.add(nameLabel);
+    }
 
+    public PlayerTurnPanels() {
         JLabel label = new JLabel("Player turn:");
         label.setFont(new Font("Courier New", Font.PLAIN, 14));
 
@@ -20,14 +32,13 @@ public class PlayerTurnPanels {
         setButtonFunction(endTurnButton);
 
         JPanel p1 = new JPanel();
-        JPanel p2 = new JPanel();
+        p2 = new JPanel();
         JPanel p3 = new JPanel();
         p1.setBackground(Color.LIGHT_GRAY);
-        p2.setBackground(col);
+        p2.setBackground(Color.LIGHT_GRAY);
         p3.setBackground(Color.LIGHT_GRAY);
 
         p1.add(label);
-        p2.add(nameLabel);
         p3.add(endTurnButton);
 
         int yStart = 43;

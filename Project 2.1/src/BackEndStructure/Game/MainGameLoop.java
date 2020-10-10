@@ -16,8 +16,8 @@ public class MainGameLoop {
     // For updating the storyteller
     private final Narrator narrator = new Narrator();
 
-    //
-    private PlayerTurnPanels playerTurn = new PlayerTurnPanels();
+    // For updating the player turn label (current player)
+    private PlayerTurnPanels playerTurnPanels = new PlayerTurnPanels();
 
     // Game state
     private boolean gameOver = false;
@@ -83,6 +83,8 @@ public class MainGameLoop {
     }
 
     private void playerTurn(Player player) {
+        playerTurnPanels.setCurrentPlayerLabel(player); //TODO not working
+
         // Check if the player got more than 4 cards in his hand
         if (player.getHand().size() > 4) {
             // Player must turn in at least 1 set
