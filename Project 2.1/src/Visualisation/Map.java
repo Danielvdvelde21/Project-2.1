@@ -51,8 +51,7 @@ public class Map {
         nt.setBackground(Color.lightGray);
 
         size = nt.getPreferredSize();
-        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 3, size.height - 2);
-
+        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 10, size.height - 2);
         return nt;
     }
 
