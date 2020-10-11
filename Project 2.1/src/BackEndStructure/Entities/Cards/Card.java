@@ -7,9 +7,12 @@ public class Card {
     // Infantry, Cavalry, Artillery or WILDCARD
     private String cardType;
 
-    public Card(String name, String type) {
+    private int cardImageId;
+
+    public Card(String name, String type, int cardImageId) {
         this.cardName = name;
         this.cardType = type;
+        this.cardImageId = cardImageId;
     }
 
     public String getCardName() {
@@ -17,6 +20,10 @@ public class Card {
     }
 
     public String getCardType() {
-        return cardName;
+        return cardType;
+    }
+
+    public int getCardImageId() {
+        return cardImageId;
     }
 }
