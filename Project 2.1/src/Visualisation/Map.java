@@ -36,6 +36,7 @@ public class Map {
     private ArrayList<JLabel> labelList = new ArrayList<>();
 
     public static JFrame frame = new JFrame("RISK");
+
     // -----------------------------------------------------------------------------------------------------------------
     // Label for how many troops a territory has
     private JLabel troopLabel(JPanel p, String name, int posX, int posY) {
@@ -57,15 +58,8 @@ public class Map {
     }
 
     // Update the troopCount label color
-    public void setTroopCountColor(int territoryNumber, String name) {
-        // TODO set actual color
-        Player p = null;
-        for(Player player : Game.getPlayers()) {
-            if(player.getName().equals(name)) {
-                p = player;
-            }
-        }
-        Border line = BorderFactory.createLineBorder(p.getColor());
+    public void setTroopCountColor(int territoryNumber, Player player) {
+        Border line = BorderFactory.createLineBorder(player.getColor());
         Border compound = BorderFactory.createCompoundBorder(line, line);
         labelList.get(territoryNumber).setBorder(compound);
     }
