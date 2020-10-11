@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class Game {
     // Player object List, all the players of the game
-    private Player[] players;
+    private static Player[] players;
     private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
 
     // the Board
@@ -75,7 +75,7 @@ public class Game {
 
     public Map getMap() { return this.map; }
 
-    public Player[] getPlayers() {
+    public static Player[] getPlayers() {
         return players;
     }
 

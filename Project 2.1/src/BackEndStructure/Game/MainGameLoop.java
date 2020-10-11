@@ -75,6 +75,7 @@ public class MainGameLoop {
         // If the territory did not have an owner, set it to player
         if (graph.get(map.getTerritoryNumber()).getTerritory().getOwner().equals("unowned")) {
             graph.get(map.getTerritoryNumber()).getTerritory().setOwner(player.getName());
+            map.setTroopCountColor(map.getTerritoryNumber(),  graph.get(map.getTerritoryNumber()).getTerritory().getOwner());
         }
         graph.get(map.getTerritoryNumber()).getTerritory().setNumberOfTroops(graph.get(map.getTerritoryNumber()).getTerritory().getNumberOfTroops()+1);
 

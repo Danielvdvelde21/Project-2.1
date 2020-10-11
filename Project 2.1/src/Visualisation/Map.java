@@ -1,6 +1,7 @@
 package Visualisation;
 
 import BackEndStructure.Entities.Player;
+import BackEndStructure.Game.Game;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -43,10 +44,7 @@ public class Map {
         nt.setOpaque(true);
         nt.setText(String.valueOf(numOfTroops));
 
-        // TODO set color depending on the player that owns the territory
-        // See method setTroopCountColor()
-
-        Color color = Color.red;    //TODO get the territory owner's color
+        Color color = Color.lightGray;
         Border line = BorderFactory.createLineBorder(color);
         Border compound = BorderFactory.createCompoundBorder(line, line);
         nt.setBorder(compound);
@@ -59,9 +57,17 @@ public class Map {
     }
 
     // Update the troopCount label color
-    public void setTroopCountColor(int territoryNumber, Player p) {
+    public void setTroopCountColor(int territoryNumber, String name) {
         // TODO set actual color
-        // label.color = p.getColor() (returns string)
+        Player p = null;
+        for(Player player : Game.getPlayers()) {
+            if(player.getName().equals(name)) {
+                p = player;
+            }
+        }
+        Border line = BorderFactory.createLineBorder(p.getColor());
+        Border compound = BorderFactory.createCompoundBorder(line, line);
+        labelList.get(territoryNumber).setBorder(compound);
     }
 
     // Update the troopCount label
