@@ -12,14 +12,14 @@ import java.awt.*;
 
 public class Game {
     // Player object List, all the players of the game
-    private static Player[] players;
+    private final Player[] players;
     private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
 
     // the Board
-    private Map map;
+    private final Map map;
 
     // All the territories in a graph (with edges)
-    private Graph graph;
+    private final Graph graph;
 
     // Attacking Die
     private Dice red1;
@@ -31,7 +31,7 @@ public class Game {
     private Dice white2;
 
     // Cards
-    private CardStack cardStack = new CardStack();
+    private final CardStack cardStack = new CardStack();
 
     // Number of troops players start with
     private int startingTroops;
@@ -75,9 +75,7 @@ public class Game {
 
     public Map getMap() { return this.map; }
 
-    public static Player[] getPlayers() {
-        return players;
-    }
+    public  Player[] getPlayers() { return players; }
 
     public Graph getGraph() { return graph; }
 
