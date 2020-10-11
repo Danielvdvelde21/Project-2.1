@@ -115,11 +115,12 @@ public class Map {
         Image newimg = image.getScaledInstance(frameX, frameY, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newimg);
 
-        /* CARD DISPLAY EXAMPLE:
+        /*//CARD DISPLAY EXAMPLE:
         Card card1=new Card("ALASKA", "Infantry",2);
         ImageIcon ii1=card1.getCardImageIcon();
         JLabel cardLabel = new JLabel(ii1);
-        cardLabel.setBounds(0, 0, ii1.getIconWidth(), ii1.getIconHeight());*/
+        cardLabel.setBounds(0, 0, ii1.getIconWidth(), ii1.getIconHeight());
+        p.add(cardLabel);*/
 
         JLabel imgLabel = new JLabel(imageIcon);
         imgLabel.setBounds(0, 0, frameX, frameY);
@@ -217,7 +218,7 @@ public class Map {
             p.add(label);
         }
         p.add(imgLabel);
-        p.add(cardLabel);
+
         frame.add(p);
         frame.setVisible(true);
     }
