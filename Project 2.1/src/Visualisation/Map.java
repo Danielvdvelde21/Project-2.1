@@ -1,5 +1,6 @@
 package Visualisation;
 
+import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 
@@ -115,9 +116,16 @@ public class Map {
         p.setBounds(new Rectangle(0, 0, 200, 200));
 
         ImageIcon imageIcon = new ImageIcon("src\\resources\\risk-board.png"); // load the image to a imageIcon
+
         Image image = imageIcon.getImage(); // transform it
         Image newimg = image.getScaledInstance(frameX, frameY, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newimg);
+
+        /* CARD DISPLAY EXAMPLE:
+        Card card1=new Card("ALASKA", "Infantry",2);
+        ImageIcon ii1=card1.getCardImageIcon();
+        JLabel cardLabel = new JLabel(ii1);
+        cardLabel.setBounds(0, 0, ii1.getIconWidth(), ii1.getIconHeight());*/
 
         JLabel imgLabel = new JLabel(imageIcon);
         imgLabel.setBounds(0, 0, frameX, frameY);
@@ -137,8 +145,8 @@ public class Map {
         labelList.add(troopLabel(p, "CENTRAL AMERICA", 192, 327));
         buttonList.add(createButton(p, "CHINA", 873, 302));
         labelList.add(troopLabel(p, "CHINA", 873, 302));
-        buttonList.add(createButton(p, "CONGO", 594, 503));
-        labelList.add(troopLabel(p, "CONGO", 594, 503));
+        buttonList.add(createButton(p, "CENTRAL AFRICA", 594, 503));
+        labelList.add(troopLabel(p, "CENTRAL AFRICA", 594, 503));
         buttonList.add(createButton(p, "EAST AFRICA", 656, 472));
         labelList.add(troopLabel(p, "EAST AFRICA", 656, 472));
         buttonList.add(createButton(p, "<html><center>EASTERN<br>AUSTRALIA</center></html>", 1014, 557));
@@ -215,6 +223,7 @@ public class Map {
             p.add(label);
         }
         p.add(imgLabel);
+        p.add(cardLabel);
         frame.add(p);
         frame.setVisible(true);
     }

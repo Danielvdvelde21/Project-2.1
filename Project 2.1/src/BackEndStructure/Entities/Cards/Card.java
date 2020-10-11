@@ -1,5 +1,8 @@
 package BackEndStructure.Entities.Cards;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Card {
     // Territory name or WILDCARD
     private String cardName;
@@ -26,4 +29,11 @@ public class Card {
     public int getCardImageId() {
         return cardImageId;
     }
+
+    public ImageIcon getCardImageIcon(){
+        ImageIcon imageIcon = new ImageIcon("src\\resources\\Risk Cards\\"+cardImageId+".jpg"); // load the image to a imageIcon
+        return imageIcon;
+    }
+
+
 }

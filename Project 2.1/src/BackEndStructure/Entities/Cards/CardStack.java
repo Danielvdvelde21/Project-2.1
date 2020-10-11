@@ -18,7 +18,7 @@ public class CardStack {
         stack.add(new Card("ALBERTA", "Cavalry",4));
         stack.add(new Card("ARGENTINA", "Infantry",5));
         stack.add(new Card("BRAZIL", "Artillery",6));
-        stack.add(new Card("CONGO", "Infantry",7));
+        stack.add(new Card("CENTRAL AFRICA", "Infantry",7));
         stack.add(new Card("CENTRAL AMERICA", "Artillery",8));
         stack.add(new Card("CHINA", "Infantry",9));
         stack.add(new Card("EAST AFRICA", "Infantry",10));
