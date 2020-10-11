@@ -9,20 +9,26 @@ import Visualisation.Narrator;
 import Visualisation.PlayerTurn;
 
 public class MainGameLoop {
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Gameplay variables
     private final Game game;
 
     // Variables in game that get used a lot
     private final Map map;
     private final Graph graph;
 
+    // Game state
+    private boolean gameOver = false;
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Updating visual variables
     private final Narrator narrator = new Narrator();
 
     // For updating the player turn label (current player)
     private PlayerTurn playerTurn = new PlayerTurn();
 
-    // Game state
-    private boolean gameOver = false;
+    // -----------------------------------------------------------------------------------------------------------------
 
     public MainGameLoop(int players, String[] playerNames) {
         this.game = new Game(players, playerNames);
@@ -118,11 +124,11 @@ public class MainGameLoop {
 
         // Player can start attacking different territories
         attacking(player);
-        map.resetTurnEnd();
+        playerTurn.resetTurn();
 
         // Player can fortify 1 territory if he chooses to do so at the end of his turn
         fortifyTerritory(player);
-        map.resetTurnEnd();
+        playerTurn.resetTurn();
     }
 
     private void turningInCards(Player player) {
@@ -135,7 +141,7 @@ public class MainGameLoop {
 
     private void attacking(Player player) {
         // While the turn has not ended
-        while(!map.hasTurnEnded()) {
+        while(!playerTurn.hasTurnEnded()) {
             delay();
             // If a territory is selected
             if (map.getTerritoryNumber() != -1 ) {
@@ -170,7 +176,7 @@ public class MainGameLoop {
     private void fortifyTerritory(Player player) {
         boolean fortified = false;
 
-        while (!map.hasTurnEnded() || fortified) {
+        while (!playerTurn.hasTurnEnded() || fortified) {
             // If a territory is selected
             if (map.getTerritoryNumber() != -1) {
                 // This territory will be the territory from which troops will leave
@@ -186,7 +192,7 @@ public class MainGameLoop {
                     Vertex to = graph.get(map.getTerritoryNumber());
 
                     if (graph.isAdjecent(from, to)) {
-                        // TODO promt messeage how many troops do you want to fortify
+                        // TODO prompt message how many troops do you want to fortify
                         // If cancel --> fortified = false;
                         fortified = true;
                     } else {

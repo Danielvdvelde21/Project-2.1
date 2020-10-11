@@ -18,7 +18,6 @@ public class Map {
     // Variables for MainGameLoop
     private int territoryNumber = -1; // Int that represents a territory
     private int buttonCount = -1; // The first button will have count 0 (array indexing)
-    private boolean endTurn = false;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Variables for creating the map
@@ -233,14 +232,5 @@ public class Map {
     // Deselect current territory
     public void deselectTerritory() { territoryNumber = -1; }
 
-    // Has a player turn ended?
-    public boolean hasTurnEnded() {
-        return endTurn;
-    }
-
-    // New player turn
-    public void resetTurnEnd() {
-        endTurn = false;
-    }
     // -----------------------------------------------------------------------------------------------------------------
 }
