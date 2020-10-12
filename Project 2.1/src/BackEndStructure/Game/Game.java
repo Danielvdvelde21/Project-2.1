@@ -138,9 +138,27 @@ public class Game {
                 counter++;
             }
         }
-        // If all countries are owned by player, counter will equal the amount of territories in the continent
+        boolean check = false;
         if (counter == terr.length) {
-            player.addContinent(continent);
+            // Making sure no duplicates are added to continents owned
+            for (int i = 0; i < player.getContinentsOwned().size(); i++) {
+                if (player.getContinentsOwned().get(i).equals(continent)) {
+                    check = true;
+                    break;
+                }
+            }
+            if (!check) {
+                player.addContinent(continent);
+            }
+        }
+        else {
+            for (int i = 0; i < player.getContinentsOwned().size(); i++) {
+                if (player.getContinentsOwned().get(i).equals(continent)) {
+                    player.getContinentsOwned().remove(i);
+                    // Can break as there shouldn't be any duplicates and we don't want to run into bugs
+                    break;
+                }
+            }
         }
     }
 
