@@ -1,17 +1,21 @@
 package BackEndStructure.Entities;
 
 import BackEndStructure.Entities.Cards.Card;
+import Visualisation.CardInventory;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Player {
+    // Player data
     private final String playerName;
     private final Color playerColor;
 
+    // Territories and Continents
     private int territoriesOwned;
     private final ArrayList<String> continentsOwned = new ArrayList<>();
 
+    // Cards
     private ArrayList<Card> hand = new ArrayList<>();
     private int setsTurnedIn;
 
@@ -20,30 +24,23 @@ public class Player {
         this.playerColor = col;
     }
 
-    public void addCardToHand(Card c) {
-        hand.add(c);
-    }
-
-    public void turnInSet(Card[] cards, ArrayList<Card> stack) {
-        // TODO
-    }
-
     public String getName() {
         return playerName;
     }
     public Color getColor() { return playerColor; }
-    public ArrayList<Card> getHand() { return hand; }
 
-    public int getTerritoriesOwned() {
-        return territoriesOwned;
-    }
-
+    public int getTerritoriesOwned() { return territoriesOwned; }
     public void increaseTerritoriesOwned() {
         territoriesOwned++;
     }
-
     public ArrayList<String> getContinentsOwned() {
         return continentsOwned;
     }
     public void addContinent(String c) { continentsOwned.add(c); }
+
+    public ArrayList<Card> getHand() { return hand; }
+    public void addToHand(Card c) { hand.add(c); }
+    public void turnInSet(Card[] cards, ArrayList<Card> stack) {
+        // TODO
+    }
 }

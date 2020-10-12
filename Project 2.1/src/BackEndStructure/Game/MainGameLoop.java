@@ -34,8 +34,7 @@ public class MainGameLoop {
     private PlayerTurn playerTurn = new PlayerTurn();
 
     // For updating the card inventory
-    private ArrayList<Card> cardInventory = new ArrayList<>();
-    private CardInventory ci = new CardInventory(cardInventory);
+    private CardInventory cardInventory = new CardInventory();
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -158,16 +157,18 @@ public class MainGameLoop {
     }
 
     private int recievedTroops(Player player) {
-        int value = 0;
         // Troops for turning in cards
-        value += turningInCards(player);
+        int cards = turningInCards(player);
 
-        // Troops for territories and continents owned
-        value += player.getTerritoriesOwned()/3;
+        // Troops for territories owned
+        int terri = player.getTerritoriesOwned()/3;
+
+        // Troops for ontinents owned
         game.hasContinents(player);
-        value += game.getValueOfContinentsOwned(player.getContinentsOwned());
-        narrator.addText("Player " + player.getName() + " received " + value + " troop(s)");
-        return value;
+        int conti = game.getValueOfContinentsOwned(player.getContinentsOwned());
+
+        narrator.addText("Player " + player.getName() + " received " + terri + " troop(s) from Territories, " + conti + " troop(s) from Continents and " + cards + " troop(s) from Cards");
+        return cards + terri + conti;
     }
 
     private int turningInCards(Player player) {
