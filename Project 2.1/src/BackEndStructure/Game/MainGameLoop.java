@@ -61,6 +61,7 @@ public class MainGameLoop {
     }
 
     public void placementTurn(Player player) {
+        // TODO IF THERE EXIST AN UNOCUPIED TERRITORY THIS MUST BE CHOSE FIRST
         placeTroop(player, getSelectedTerritoryNumber(player), 1);
     }
 
@@ -121,6 +122,9 @@ public class MainGameLoop {
         // Player has to or can choose to turn in set of cards
         turningInCards(player);
 
+        // TODO at the start of turn player receives troop based on continents and cards
+        // TODO player needs to place these troops
+
         // Player can start attacking different territories
         attacking(player);
         playerTurn.resetTurn();
@@ -136,6 +140,7 @@ public class MainGameLoop {
             // Player must turn in at least 1 set
             // TODO Player must selected cards from his hand and turn in a set requires need frontend
         }
+        // TODO IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
     }
 
     private void attacking(Player player) {
@@ -155,8 +160,12 @@ public class MainGameLoop {
                     narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
                     if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                         if (graph.isAdjecent(attacker, defender)) {
-                            // TODO attack need visual buttons
                             // TODO COMBAT
+                            // TODO CHECK IF GAME IS OVER
+                            // TODO if player eliminates a player he receives their cards
+                            // TODO if player gets more then 6 cards --> turn in sets such that he has less than 4 cards but ones he has 4,3 or less cards stop trading
+                            // TODO IF LESS THEN 6 CARDS HE CANT TRADE!
+                            // TODO if at least one territory is captured player receives a card
                             // attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() +- dice);
                             // defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() +- dice);
                             map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
