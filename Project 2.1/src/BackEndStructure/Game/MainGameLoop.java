@@ -1,13 +1,13 @@
 package BackEndStructure.Game;
 
+import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
-import Visualisation.FortifyTroops;
-import Visualisation.Map;
-import Visualisation.Narrator;
-import Visualisation.PlayerTurn;
+import Visualisation.*;
+
+import java.util.ArrayList;
 
 public class MainGameLoop {
 
@@ -28,6 +28,10 @@ public class MainGameLoop {
 
     // For updating the player turn label (current player)
     private PlayerTurn playerTurn = new PlayerTurn();
+
+    // For updating the card inventory
+    private ArrayList<Card> cardInventory = new ArrayList<>();
+    private CardInventory ci = new CardInventory(cardInventory);   //TODO get cards
 
     // -----------------------------------------------------------------------------------------------------------------
 

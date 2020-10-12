@@ -52,7 +52,7 @@ public class Map {
         nt.setBackground(Color.lightGray);
 
         size = nt.getPreferredSize();
-        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 10, size.height - 2);
+        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 3, size.height - 2);
         return nt;
     }
 
@@ -67,6 +67,8 @@ public class Map {
     public void updateTroopCount(int territoryNumber, int troopCount) {
         // labelList is alphabetically sorted
         labelList.get(territoryNumber).setText(String.valueOf(troopCount));
+        size = labelList.get(territoryNumber).getPreferredSize();
+        labelList.get(territoryNumber).setSize(size.width + 3, size.height - 2);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -113,13 +115,6 @@ public class Map {
         Image image = imageIcon.getImage(); // transform it
         Image newimg = image.getScaledInstance(frameX, frameY, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newimg);
-
-        /*//CARD DISPLAY EXAMPLE:
-        Card card1=new Card("ALASKA", "Infantry",2);
-        ImageIcon ii1=card1.getCardImageIcon();
-        JLabel cardLabel = new JLabel(ii1);
-        cardLabel.setBounds(0, 0, ii1.getIconWidth(), ii1.getIconHeight());
-        p.add(cardLabel);*/
 
         JLabel imgLabel = new JLabel(imageIcon);
         imgLabel.setBounds(0, 0, frameX, frameY);

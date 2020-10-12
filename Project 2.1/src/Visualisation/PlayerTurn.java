@@ -35,7 +35,7 @@ public class PlayerTurn {
         int yStart = 43;
         p1.setBounds(new Rectangle(Map.frameX, yStart, 200, 40));
         p2.setBounds(new Rectangle(Map.frameX, yStart+40, 200, 35));
-        p3.setBounds(new Rectangle(Map.frameX, yStart+40+35, 200, 40));
+        p3.setBounds(new Rectangle(Map.frameX, yStart+40+35, 200, 100));
         Map.frame.add(p1);
         Map.frame.add(p2);
         Map.frame.add(p3);
