@@ -97,14 +97,51 @@ public class Game {
 
     // Checks how many continents a player has
     public void hasContinents(Player player) {
-        String n = player.getName();
-        // Australia
-        // 10, 38, 24, 16
-        if (graph.get(10).getTerritory().getOwner().equals(n) && graph.get(38).getTerritory().getOwner().equals(n) && graph.get(24).getTerritory().getOwner().equals(n) && graph.get(16).getTerritory().getOwner().equals(n)) {
-            player.addContinent("Australia");
-        }
 
-        // TODO for other continents
+        // Australia
+        // 9, 38, 23, 16
+        int[] ausArr = new int[]{9, 16, 23, 38};
+        checkContinent(player, ausArr, "Australia");
+
+        // Europe
+        // 12, 14, 26, 30, 34, 35, 39
+        int[] euArr = new int[]{12, 14, 26, 30, 34, 39};
+        checkContinent(player, euArr, "Europe");
+
+        // North America
+        // 1, 2, 5, 10, 13, 25, 27, 29, 40
+        int[] naArr = new int[]{1, 2, 5, 10, 13, 25, 27, 29, 40};
+        checkContinent(player, naArr, "North America");
+
+        // South America
+        // 3, 4, 28, 37
+        int[] saArr = new int[]{3, 4, 28, 37};
+        checkContinent(player, saArr, "South America");
+
+        // Africa
+        // 7, 8, 11, 20, 24, 33
+        int[] afArr = new int[]{7, 8, 11, 20, 24, 33};
+        checkContinent(player, afArr, "Africa");
+
+        // Asia
+        // 0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41
+        int[] asArr = new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41};
+        checkContinent(player, asArr, "Asia");
+    }
+
+    // Checks whether a player owns all countries in a continent based on its territories
+    public void checkContinent(Player player, int[] terr, String continent) {
+        String n = player.getName();
+        int counter = 0;
+        for (int i = 0; i < terr.length ; i++) {
+            if (graph.get(terr[i]).getTerritory().getOwner().equals(n)) {
+                counter++;
+            }
+        }
+        // If all countries are owned by player, counter will equal the amount of territories in the continent
+        if (counter == terr.length) {
+            player.addContinent(continent);
+        }
     }
 
     // Checks how money points a player gets for the amount of continents he owns

@@ -215,6 +215,7 @@ public class Territories {
         // Print all vertices with their respective edges
         // g.printGraph();
 
+
         return g;
     }
 
@@ -250,7 +251,7 @@ public class Territories {
         Territory t28 = new Territory("Ontario",27);
         Territory t29 = new Territory("Peru",28);
         Territory t30 = new Territory("Quebec",29);
-        Territory t31 = new Territory("Scandinavia",39);
+        Territory t31 = new Territory("Scandinavia",30);
         Territory t32 = new Territory("Siam",31);
         Territory t33 = new Territory("Siberia",32);
         Territory t34 = new Territory("South Africa",33);
