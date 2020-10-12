@@ -8,8 +8,12 @@ import java.util.ArrayList;
 public class Player {
     private final String playerName;
     private final Color playerColor;
-    private int setsTurnedIn;
+
+    private int territoriesOwned;
+    private final ArrayList<String> continentsOwned = new ArrayList<>();
+
     private ArrayList<Card> hand = new ArrayList<>();
+    private int setsTurnedIn;
 
     public Player(String name, Color col) {
         this.playerName = name;
@@ -29,4 +33,16 @@ public class Player {
     }
     public Color getColor() { return playerColor; }
     public ArrayList<Card> getHand() { return hand; }
+
+    public int getTerritoriesOwned() {
+        return territoriesOwned;
+    }
+
+    public void increaseTerritoriesOwned() {
+        territoriesOwned++;
+    }
+
+    public ArrayList<String> getContinentsOwned() {
+        return continentsOwned;
+    }
 }

@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class Dice {
 
-    // Test
-    public static void main(String[] args) {
-        int[] players = new int[]{55,66,77,88,99};
-        getPlayOrder2(players);
-    }
+//    // Test
+//    public static void main(String[] args) {
+//        int[] players = new int[]{55,66,77,88,99};
+//        getPlayOrder2(players);
+//    }
 
     // Number of eyes rolled
     private int eyes;
@@ -28,7 +28,7 @@ public class Dice {
         }
     }
 
-    public static void oneFight(int attackers, int defenders){
+    public void oneFight(int attackers, int defenders){
         int[] attackerDice = new int[3];
         int[] defendersDice = new int[2];
         int max = 0;
@@ -76,7 +76,7 @@ public class Dice {
 
     }
     // Rolling for combat
-    public static void combat(int attackers, int defenders){
+    public void combat(int attackers, int defenders){
         int attackerDeaths = 0;
         int defenderDeaths = 0;
         while(attackers-1  > attackerDeaths && defenders > defenderDeaths) {
@@ -160,13 +160,12 @@ public class Dice {
     }
 
     // Determines who can start placing infantry
-    public static Player[] getPlayOrder(Player[] players) {
+    public Player[] getPlayOrder(Player[] players) {
         // get the order in int
         int[] playOrderInts = new int[players.length];
         // get the output ready
         int[] list = new int[]{1,2,3,4,5,6};
         Player[] playOrder = new Player[players.length];
-
 
         for(int i = 0; i < players.length; i++){
             int winner = (int) (Math.random() * players.length);
@@ -180,26 +179,22 @@ public class Dice {
     }
 
     // tester method of getPlayOrder
-    public static int[] getPlayOrder2(int[] players) {
-        // get the order in int
-        int[] playOrderInts = new int[players.length];
-        // get the output ready
-        int[] list = new int[]{1,2,3,4,5,6};
-        int[] playOrder = new int[players.length];
-
-        for(int i = 0; i < players.length; i++){
-            int winner = (int) (Math.random() * players.length);
-            while(list[winner] == 0){
-                winner = (int) (Math.random() * players.length);
-            }
-            list[winner] = 0;
-            System.out.println(players[winner]);
-            playOrder[i] = players[winner];
-        }
-        return playOrder;
-    }
-
-    public int getEyes() {
-        return eyes;
-    }
+//    public int[] getPlayOrder2(int[] players) {
+//        // get the order in int
+//        int[] playOrderInts = new int[players.length];
+//        // get the output ready
+//        int[] list = new int[]{1,2,3,4,5,6};
+//        int[] playOrder = new int[players.length];
+//
+//        for(int i = 0; i < players.length; i++){
+//            int winner = (int) (Math.random() * players.length);
+//            while(list[winner] == 0){
+//                winner = (int) (Math.random() * players.length);
+//            }
+//            list[winner] = 0;
+//            System.out.println(players[winner]);
+//            playOrder[i] = players[winner];
+//        }
+//        return playOrder;
+//    }
 }

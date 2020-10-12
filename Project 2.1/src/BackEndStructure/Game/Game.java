@@ -9,10 +9,11 @@ import BackEndStructure.Graph.Territory;
 import Visualisation.Map;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Game {
     // Player object List, all the players of the game
-    private final Player[] players;
+    private Player[] players;
     private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
 
     // the Board
@@ -22,13 +23,7 @@ public class Game {
     private final Graph graph;
 
     // Attacking Die
-    private Dice red1;
-    private Dice red2;
-    private Dice red3;
-
-    // Defending Die
-    private Dice white1;
-    private Dice white2;
+    private Dice dice;
 
     // Cards
     private final CardStack cardStack = new CardStack();
@@ -68,16 +63,59 @@ public class Game {
         // Instantiate players
         this.players = new Player[numberOfPlayers];
 
+        // Instantiate Dice
+        this.dice = new Dice();
+
         for (int i = 0; i < numberOfPlayers; i++) {
             this.players[i] = new Player(names[i], colors[i]);
         }
     }
 
-    public Map getMap() { return this.map; }
+    public Map getMap() {
+        return this.map;
+    }
 
-    public  Player[] getPlayers() { return players; }
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public void setPlayerOrder(Player[] order) {
+        players = order;
+    }
 
     public Graph getGraph() { return graph; }
 
     public int getStartingTroops() { return startingTroops; }
+
+    public CardStack getCardStack() {
+        return cardStack;
+    }
+
+    public Dice getDice() {
+        return dice;
+    }
+
+    public int getValueOfContinentsOwned(ArrayList<String> list) {
+        int value = 0;
+        for (String c : list) {
+            switch (c) {
+                case "Asia":
+                    value += 7;
+                    break;
+                case "Europe":
+                case "North America":
+                    value += 5;
+                    break;
+                case "Australia":
+                case "South America":
+                    value += 2;
+                    break;
+                case "Africa":
+                    value += 3;
+            }
+        }
+        return value;
+    }
+
+
 }
