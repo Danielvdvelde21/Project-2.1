@@ -70,7 +70,7 @@ public class MainGameLoop {
     }
 
     public void placementTurn(Player player) {
-        placeTroop(player, getSelectedTerritoryNumber(player), 1);
+        placeTroop(player, getSelectedTerritoryNumber(player));
     }
 
     // Logic for whether a player can place down a troop on a territory
@@ -102,19 +102,24 @@ public class MainGameLoop {
     }
 
     // Places a number of troops on a territory
-    private void placeTroop(Player player, int territoryNumber, int troops) {
+    private void placeTroop(Player player, int territoryNumber) {
         Territory t = graph.get(territoryNumber).getTerritory();
 
-        // If the territory did not have an owner, set it to player
+        // If the territory did not have an owner
         if (isTerritoryOwnedBy(t, "unowned")) {
+            // How many unowned territories are left?
             unownedTerritories--;
             unownedTerritoriesLeft();
+            // Increase player territories owned
+            player.increaseTerritoriesOwned();
+            // Owner is now player
             t.setOwner(player.getName());
+            // Update map
             map.setTroopCountColor(territoryNumber, player);
         }
 
         // Add the troops to the territory
-        t.setNumberOfTroops(t.getNumberOfTroops() + troops);
+        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
 
         // Update the Map
         narrator.addText(player.getName() + " put a troop on " + t.getTerritoryName());
@@ -135,7 +140,7 @@ public class MainGameLoop {
 
     private void playerTurn(Player player) {
         // Gain troops at start of turn
-        placeReceivedTroops(recievedTroops(player));
+        placeReceivedTroops(player, recievedTroops(player));
 
         // Player can start attacking different territories
         attacking(player);
@@ -146,17 +151,21 @@ public class MainGameLoop {
         playerTurn.resetTurn();
     }
 
-    private void placeReceivedTroops(int troops) {
-        // TODO PLACE TROOPS
+    private void placeReceivedTroops(Player player, int troops) {
+        for (int i = 0; i < troops; i++) {
+            placementTurn(player);
+        }
     }
 
     private int recievedTroops(Player player) {
         int value = 0;
         // Troops for turning in cards
         value += turningInCards(player);
+
         // Troops for territories and continents owned
         value += player.getTerritoriesOwned()/3;
         value += game.getValueOfContinentsOwned(player.getContinentsOwned());
+        narrator.addText("Player " + player.getName() + " received " + value + " troop(s)");
         return value;
     }
 
@@ -190,6 +199,7 @@ public class MainGameLoop {
                         if (graph.isAdjecent(attacker, defender)) {
                             // TODO COMBAT
                             // TODO CHECK IF GAME IS OVER
+                            // TODO IF PLAYER CONQUERES A TERRITORY INCREMENT HIS TERRITORIESOWNEDCOUNT
                             isGameOver(player);
                             // TODO if player eliminates a player he receives their cards
                             // TODO if player gets more then 6 cards --> turn in sets such that he has less than 4 cards but ones he has 4,3 or less cards stop trading
