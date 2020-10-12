@@ -22,6 +22,10 @@ public class MainGameLoop {
     // Game state
     private boolean gameOver = false;
 
+    private int unownedTerritories = 42;
+    private boolean noMoreUnownedTerritories = false;
+
+
     // -----------------------------------------------------------------------------------------------------------------
     // Updating visual variables
     private final Narrator narrator = new Narrator();
@@ -31,7 +35,7 @@ public class MainGameLoop {
 
     // For updating the card inventory
     private ArrayList<Card> cardInventory = new ArrayList<>();
-    private CardInventory ci = new CardInventory(cardInventory);   //TODO get cards
+    private CardInventory ci = new CardInventory(cardInventory);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -66,7 +70,6 @@ public class MainGameLoop {
     }
 
     public void placementTurn(Player player) {
-        // TODO IF THERE EXIST AN UNOCUPIED TERRITORY THIS MUST BE CHOSE FIRST
         placeTroop(player, getSelectedTerritoryNumber(player), 1);
     }
 
@@ -78,9 +81,14 @@ public class MainGameLoop {
             delay();
             if (territorySelected()) {
                 Territory t = graph.get(map.getTerritoryNumber()).getTerritory();
-                if (isTerritoryOwnedBy(t, "unowned") || isTerritoryOwnedBy(t, player.getName())) {
+                if (isTerritoryOwnedBy(t, "unowned")) {
                     validTerritoryChosen = true;
-                } else {
+                } else if (isTerritoryOwnedBy(t, player.getName()) && noMoreUnownedTerritories){
+                    validTerritoryChosen = true;
+                } else if (isTerritoryOwnedBy(t, player.getName()) && !noMoreUnownedTerritories) {
+                    map.deselectTerritory();
+                    narrator.addText("Please select unowned territories first!");
+                }  else {
                     map.deselectTerritory();
                     narrator.addText("This territory already belongs to a player!");
                 }
@@ -99,6 +107,8 @@ public class MainGameLoop {
 
         // If the territory did not have an owner, set it to player
         if (isTerritoryOwnedBy(t, "unowned")) {
+            unownedTerritories--;
+            unownedTerritoriesLeft();
             t.setOwner(player.getName());
             map.setTroopCountColor(territoryNumber, player);
         }
@@ -164,7 +174,7 @@ public class MainGameLoop {
     private void attacking(Player player) {
         narrator.addText("Brace yourself! Player " + player.getName() + " is attacking different players!");
 
-        while(!playerTurn.hasTurnEnded()) {
+        while(!playerTurn.hasTurnEnded() && !gameOver) {
             delay();
             if (territorySelected()) {
                 Vertex attacker = graph.get(map.getTerritoryNumber()); // Attacking territory
@@ -211,7 +221,7 @@ public class MainGameLoop {
         narrator.addText("Player " + player.getName() + " is fortifying his territories!");
         boolean fortified = false;
 
-        while (!playerTurn.hasTurnEnded() && !fortified) {
+        while (!playerTurn.hasTurnEnded() && !fortified && !gameOver) {
             delay();
             if (territorySelected()) {
                 Vertex from = graph.get(map.getTerritoryNumber()); // Territory that sends troops
@@ -272,6 +282,12 @@ public class MainGameLoop {
 
     private void isGameOver(Player player) {
         gameOver = player.getTerritoriesOwned() == 42;
+    }
+
+    private void unownedTerritoriesLeft() {
+        if (unownedTerritories == 0) {
+            noMoreUnownedTerritories = true;
+        }
     }
 
 }
