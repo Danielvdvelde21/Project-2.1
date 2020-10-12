@@ -95,6 +95,19 @@ public class Game {
         return dice;
     }
 
+    // Checks how many continents a player has
+    public void hasContinents(Player player) {
+        String n = player.getName();
+        // Australia
+        // 10, 38, 24, 16
+        if (graph.get(10).getTerritory().getOwner().equals(n) && graph.get(38).getTerritory().getOwner().equals(n) && graph.get(24).getTerritory().getOwner().equals(n) && graph.get(16).getTerritory().getOwner().equals(n)) {
+            player.addContinent("Australia");
+        }
+
+        // TODO for other continents
+    }
+
+    // Checks how money points a player gets for the amount of continents he owns
     public int getValueOfContinentsOwned(ArrayList<String> list) {
         int value = 0;
         for (String c : list) {

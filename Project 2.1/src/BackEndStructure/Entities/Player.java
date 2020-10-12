@@ -45,4 +45,5 @@ public class Player {
     public ArrayList<String> getContinentsOwned() {
         return continentsOwned;
     }
+    public void addContinent(String c) { continentsOwned.add(c); }
 }

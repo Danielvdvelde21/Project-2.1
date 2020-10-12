@@ -164,6 +164,7 @@ public class MainGameLoop {
 
         // Troops for territories and continents owned
         value += player.getTerritoriesOwned()/3;
+        game.hasContinents(player);
         value += game.getValueOfContinentsOwned(player.getContinentsOwned());
         narrator.addText("Player " + player.getName() + " received " + value + " troop(s)");
         return value;
