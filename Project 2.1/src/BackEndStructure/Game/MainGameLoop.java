@@ -57,7 +57,7 @@ public class MainGameLoop {
     private void placementStage() {
         narrator.addText("Placement phase");
         // For each player, for StartingTroops amount of rounds
-        int round = 1;
+        int round = 34;
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
@@ -142,12 +142,12 @@ public class MainGameLoop {
         placeReceivedTroops(player, recievedTroops(player));
 
         // Player can start attacking different territories
-        attacking(player);
         playerTurn.resetTurn();
+        attacking(player);
 
         // Player can fortify 1 territory if he chooses to do so at the end of his turn
-        fortifyTerritory(player);
         playerTurn.resetTurn();
+        fortifyTerritory(player);
     }
 
     private void placeReceivedTroops(Player player, int troops) {
