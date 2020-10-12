@@ -3,11 +3,13 @@ package BackEndStructure.Graph;
 public class Territory {
 
     private final String territoryName;
+    private final int territoryNumber;
     private int numberOfTroops;
     private String owner;
 
-    public Territory(String territoryName) {
+    public Territory(String territoryName, int num) {
         this.territoryName = territoryName;
+        this.territoryNumber = num;
         this.numberOfTroops = 0;
         this.owner = "unowned";
     }
@@ -31,4 +33,6 @@ public class Territory {
     public String getOwner() {
         return owner;
     }
+
+    public int getTerritoryNumber() { return territoryNumber; }
 }

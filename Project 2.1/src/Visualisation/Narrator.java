@@ -15,6 +15,7 @@ public class Narrator {
         Map.frame.add(p2, BorderLayout.BEFORE_FIRST_LINE);
     }
     public void addText(String text) {
+        System.out.println(text);
         String newText = text;
         if(oldText == null) {
             label.setText("<html><br>" + ">> " + newText + "</html>");
