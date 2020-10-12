@@ -40,7 +40,8 @@ public class MainGameLoop {
         this.map = game.getMap();
         this.graph = game.getGraph();
 
-        // TODO who goes first?
+        // TODO with actual dice
+        game.setPlayerOrder(game.getDice().getPlayOrder(game.getPlayers()));
         // The game starts by every player starting to place troops on the board
         placementStage();
         // The game is no about attacking, using cards, fortifying, etc.
@@ -53,7 +54,7 @@ public class MainGameLoop {
     private void placementStage() {
         narrator.addText("Placement phase");
         // For each player, for StartingTroops amount of rounds
-        int round = 30;//1
+        int round = 1;
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
@@ -123,11 +124,8 @@ public class MainGameLoop {
     }
 
     private void playerTurn(Player player) {
-        // Player has to or can choose to turn in set of cards
-        turningInCards(player);
-
-        // TODO at the start of turn player receives troop based on continents and cards
-        // TODO player needs to place these troops
+        // Gain troops at start of turn
+        placeReceivedTroops(recievedTroops(player));
 
         // Player can start attacking different territories
         attacking(player);
@@ -138,13 +136,29 @@ public class MainGameLoop {
         playerTurn.resetTurn();
     }
 
-    private void turningInCards(Player player) {
+    private void placeReceivedTroops(int troops) {
+        // TODO PLACE TROOPS
+    }
+
+    private int recievedTroops(Player player) {
+        int value = 0;
+        // Troops for turning in cards
+        value += turningInCards(player);
+        // Troops for territories and continents owned
+        value += player.getTerritoriesOwned()/3;
+        value += game.getValueOfContinentsOwned(player.getContinentsOwned());
+        return value;
+    }
+
+    private int turningInCards(Player player) {
+        // Player has to or can choose to turn in set of cards
         // Check if the player got more than 4 cards in his hand
         if (player.getHand().size() > 4) {
             // Player must turn in at least 1 set
             // TODO Player must selected cards from his hand and turn in a set requires need frontend
         }
         // TODO IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
+        return 1;
     }
 
     private void attacking(Player player) {
@@ -166,6 +180,7 @@ public class MainGameLoop {
                         if (graph.isAdjecent(attacker, defender)) {
                             // TODO COMBAT
                             // TODO CHECK IF GAME IS OVER
+                            isGameOver(player);
                             // TODO if player eliminates a player he receives their cards
                             // TODO if player gets more then 6 cards --> turn in sets such that he has less than 4 cards but ones he has 4,3 or less cards stop trading
                             // TODO IF LESS THEN 6 CARDS HE CANT TRADE!
@@ -253,6 +268,10 @@ public class MainGameLoop {
     // If a territory belongs to a player
     private boolean isTerritoryOwnedBy(Territory t, String name) {
         return t.getOwner().equals(name);
+    }
+
+    private void isGameOver(Player player) {
+        gameOver = player.getTerritoriesOwned() == 42;
     }
 
 }
