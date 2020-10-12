@@ -102,6 +102,12 @@ public class Game {
         // 10, 38, 24, 16
         if (graph.get(10).getTerritory().getOwner().equals(n) && graph.get(38).getTerritory().getOwner().equals(n) && graph.get(24).getTerritory().getOwner().equals(n) && graph.get(16).getTerritory().getOwner().equals(n)) {
             player.addContinent("Australia");
+        } else {
+            for (int i = 0; i<player.getContinentsOwned().size(); i++) {
+                if (player.getContinentsOwned().get(i).equals("Australia")) {
+                    player.getContinentsOwned().remove(i);
+                }
+            }
         }
 
         // TODO for other continents
