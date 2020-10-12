@@ -172,11 +172,11 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-        // Player has to or can choose to turn in set of cards
         // Check if the player got more than 4 cards in his hand
         if (player.getHand().size() > 4) {
             // Player must turn in at least 1 set
-            // TODO Player must selected cards from his hand and turn in a set requires need frontend
+            // Show Inventory
+            cardInventory.getInventory(player.getHand());
         }
         // TODO IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
         return 1;

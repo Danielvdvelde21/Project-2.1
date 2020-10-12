@@ -9,9 +9,7 @@ import java.util.ArrayList;
 public class CardInventory {
 
     private static JFrame f = new JFrame("Inventory");
-    private ArrayList<Card> cards;
-
-    public void getInventory() {
+    public void getInventory(ArrayList<Card> cards) {
         f.setDefaultCloseOperation(2);
         if(cards != null) {
             f.setSize(140*cards.size()+50, 300);
@@ -45,16 +43,12 @@ public class CardInventory {
     public CardInventory() {
         JButton cardInventory = new JButton("Card Inventory");
         cardInventory.setFont(new Font("Courier New", Font.PLAIN, 14));
-        cardInventory.addActionListener(e -> getInventory());
+        cardInventory.addActionListener(e -> getInventory(new ArrayList<Card>()));
 
         JPanel p = new JPanel();
         p.setBackground(Color.LIGHT_GRAY);
         p.add(cardInventory);
         p.setBounds(new Rectangle(Map.frameX, 218, 200, 40));
         Map.frame.add(p);
-    }
-
-    public void setCards(ArrayList<Card> c) {
-        cards = c;
     }
 }
