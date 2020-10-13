@@ -53,7 +53,7 @@ public class CardInventory {
                     f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);    //disables close operation
                 }
                 else {
-                    // HERE!!! if(tradingCompleted) {}
+                    tradingCompleted = true;
                     Map.frame.setCursor(Cursor.getDefaultCursor()); //resets the cursor
                     Map.frame.removeWindowListener(Map.frame.getWindowListeners()[Map.frame.getWindowListeners().length-1]);    //removes the WindowAdapter getWindowAdapter()
                     e.getWindow().dispose();
@@ -149,6 +149,7 @@ public class CardInventory {
                     errorLabel.setText("[YOU MAY NOT TRADE RIGHT NOW]");
                     errorLabel.setVisible(true);
                 }
+                selectedCards.clear();
             }});
 
         panel2.add(turnInSetButton);
