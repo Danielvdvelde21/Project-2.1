@@ -33,6 +33,7 @@ public class Player {
     public void increaseTerritoriesOwned() {
         territoriesOwned++;
     }
+    public void decreaseTerritoriesOwned() { territoriesOwned--; }
     public ArrayList<String> getContinentsOwned() {
         return continentsOwned;
     }
@@ -40,6 +41,7 @@ public class Player {
 
     public ArrayList<Card> getHand() { return hand; }
     public void addToHand(Card c) { hand.add(c); }
+    public void addToHand(ArrayList<Card> cards) { hand.addAll(cards); }
     public int getSetsTurnedIn() { return setsTurnedIn; }
     public void incrementSetsOwned() { setsTurnedIn++;}
 }
