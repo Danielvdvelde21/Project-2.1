@@ -63,12 +63,13 @@ public class MainGameLoop {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
-                cardInventory.setCurrentPlayer(p);
-                p.addToHand(new Card("1", "WILDCARD",0));
-                p.addToHand(new Card("1", "WILDCARD",1));
-                p.addToHand(new Card("1", "Infantry",2));
-                p.addToHand(new Card("1", "Infantry",3));
-                p.addToHand(new Card("1", "Infantry",4));
+
+                p.addToHand(new Card("1", "WILDCARD", 0));
+                p.addToHand(new Card("1", "WILDCARD", 0));
+                p.addToHand(new Card("1", "WILDCARD", 0));
+                p.addToHand(new Card("1", "WILDCARD", 0));
+                p.addToHand(new Card("1", "WILDCARD", 0));
+                cardInventory.getInventory(p.getHand());
             }
             round++;
         }
@@ -169,7 +170,7 @@ public class MainGameLoop {
         // Troops for territories owned
         int terri = player.getTerritoriesOwned()/3;
 
-        // Troops for ontinents owned
+        // Troops for continents owned
         game.hasContinents(player);
         int conti = game.getValueOfContinentsOwned(player.getContinentsOwned());
 
@@ -178,11 +179,15 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-        cardInventory.setStartTurn(true);
-        cardInventory.setCurrentPlayer(player);
-        cardInventory.getInventory();
-        cardInventory.setStartTurn(false);
-        // TODO IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
+//        cardInventory.tradingAllowed(true);
+//        cardInventory.setCurrentPlayer(player);
+//        cardInventory.getInventory();
+//        while (!cardInventory.isTradingCompleted()) {
+//            delay();
+//        }
+//        int value = game.getSetValue(player.getSetsTurnedIn());
+//        cardInventory.tradingAllowed(false);
+//        return value;
         return 1;
     }
 
@@ -208,6 +213,12 @@ public class MainGameLoop {
                             // TODO IF PLAYER CONQUERES A TERRITORY INCREMENT HIS TERRITORIESOWNEDCOUNT
                             isGameOver(player);
                             // TODO if player eliminates a player he receives their cards
+//                            cardInventory.attacking(true);
+//                            while (cardInventory.isTradingCompleted()) {
+//                                delay();
+//                            }
+//                            placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
+//                            cardInventory.attacking(false);
                             // TODO if player gets more then 6 cards --> turn in sets such that he has less than 4 cards but ones he has 4,3 or less cards stop trading
                             // TODO IF LESS THEN 6 CARDS HE CANT TRADE!
                             // TODO if at least one territory is captured player receives a card

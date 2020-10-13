@@ -31,6 +31,8 @@ public class Game {
     // Number of troops players start with
     private int startingTroops;
 
+    private int[] setValues = new int[]{4,6,8,10,12,15};
+
     public Game(int numberOfPlayers, String[] names) {
         // How manny troops each player gets from the start
         switch (numberOfPlayers) {
@@ -183,6 +185,14 @@ public class Game {
             }
         }
         return value;
+    }
+
+    public int getSetValue(int sets) {
+        if (sets > 6) {
+            return 15 + (sets-6)*5;
+        } else {
+            return setValues[sets-1];
+        }
     }
 
 }

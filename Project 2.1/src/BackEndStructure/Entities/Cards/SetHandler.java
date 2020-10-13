@@ -1,11 +1,15 @@
 package BackEndStructure.Entities.Cards;
 
+import BackEndStructure.Entities.Player;
+
 import java.util.ArrayList;
 
 public class SetHandler {
 
     // Sets are always pairs of 3 cards
-    public boolean isSet(ArrayList<Card> cards) {
+    public boolean isSet(Player player, ArrayList<Card> cards) {
+        // TODO IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
+
         int countInfantry = 0;
         int countCavalry = 0;
         int countArtillery = 0;

@@ -1,57 +1,55 @@
 package Visualisation;
 
 import BackEndStructure.Entities.Cards.Card;
-import BackEndStructure.Entities.Cards.SetHandler;
-import BackEndStructure.Entities.Player;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class CardInventory {
 
-    private final JFrame f = new JFrame("Inventory");
-
-    private final SetHandler setHandler = new SetHandler();
-
-    private Player currentPlayer;
-    private boolean allowTrading;
-    private boolean attacking;
-
-    private ArrayList<Card> selectedCards = new ArrayList<>();
+    private JFrame f;
 
     private WindowAdapter getWindowAdapter() {
         return new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent we) {
-                super.windowClosing(we);
-                JOptionPane.showMessageDialog(f, "Can't Exit");
-            }
-            @Override
-            public void windowIconified(WindowEvent we) {
+            public void windowActivated(WindowEvent windowEvent) {
                 f.setState(JFrame.NORMAL);
-                JOptionPane.showMessageDialog(f, "Can't Minimize");
+                f.toFront();
+                JOptionPane.showMessageDialog(f, "Error!");
             }
         };
     }
 
-    public void getInventory() {
-        ArrayList<Card> playerCards = currentPlayer.getHand();
+    public void getInventory(ArrayList<Card> cards) {
+        f = new JFrame("Inventory");
 
-        f.setDefaultCloseOperation(2);
+        if(cards != null) { //fixing frame size
+            f.setSize(140*cards.size()+90, 325);
+            f.setLocation(1200-(140*cards.size()+90), 300);
+        }
+
+        f.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if(cards.size() > 4) {
+                    f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);    //disables close operation
+                }
+                else {
+                    Map.frame.setCursor(Cursor.getDefaultCursor()); //resets the cursor
+                    Map.frame.removeWindowListener(Map.frame.getWindowListeners()[Map.frame.getWindowListeners().length-1]);    //removes the WindowAdapter getWindowAdapter()
+                    e.getWindow().dispose();
+                }
+            }
+        });
         f.setAlwaysOnTop(true);
         f.setResizable(false);
-
-        if(playerCards != null) {
-            f.setSize(140*playerCards.size()+90, 325);
-        }
-        if(playerCards.size() > 4) {
-            f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            f.addWindowListener(getWindowAdapter());    //can't exit or minimize
-            // Map.frame.se //TODO set Map.frame as not editable
-        }
+        Map.frame.addWindowListener(getWindowAdapter());    //gives error if Map.frame is activated
+        Map.frame.setCursor(3); //wait cursor
 
         JPanel panell = new JPanel();
         JPanel panel1 = new JPanel();
@@ -60,7 +58,7 @@ public class CardInventory {
         panel2.setBackground(Color.LIGHT_GRAY);
         panell.setBackground(Color.LIGHT_GRAY);
 
-        for (Card card : playerCards) {   //adding all cards in panel1
+        for (Card card : cards) {   //adding all cards in panel1
             ImageIcon ii1 = card.getCardImageIcon();
             Image scaledImage = ii1.getImage().getScaledInstance(140, 195, Image.SCALE_SMOOTH);
             ii1 = new ImageIcon(scaledImage);
@@ -70,15 +68,13 @@ public class CardInventory {
                 int i = 0;
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if(i == 0) {
+                    if(i == 0) {    //selected
                         cardLabel.setBorder(BorderFactory.createLineBorder(Color.green, 2, true));
                         i = 1;
-                        selectedCards.add(card);
                     }
                     else if(i == 1) {
                         cardLabel.setBorder(null);
                         i = 0;
-                        selectedCards.remove(card);
                     }
                 }
             });
@@ -87,33 +83,14 @@ public class CardInventory {
 
         JButton turnInSetButton = new JButton("Turn in set");
         turnInSetButton.setFont(new Font("Courier New", Font.PLAIN, 14));
-        JLabel errorLabel = new JLabel();
+        JLabel errorLabel = new JLabel("[NOT A VALID SET SELECTED]");
         errorLabel.setForeground(Color.red.darker());
         errorLabel.setVisible(false);
         panell.add(errorLabel);
-        turnInSetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (allowTrading) {
-                    if(setHandler.isSet(selectedCards) && selectedCards.size() == 3) {
-                        currentPlayer.getHand().removeAll(selectedCards);
-                        if (attacking) {
-                            allowTrading = false;
-                        }
-                        } else {
-                        errorLabel.setText("[NOT A VALID SET SELECTED]");
-                        errorLabel.setVisible(true);
-                    }
-                } else {
-                    errorLabel.setText("[YOU MAY NOT TRADE RIGHT NOW]");
-                    errorLabel.setVisible(true);
-                }
-            }
-        });
 
+        turnInSetButton.addActionListener(e -> errorLabel.setVisible(true));    //TODO turn in set button
         panel2.add(turnInSetButton);
 
-        f.setLocation(800, 350);
         f.add(panell, BorderLayout.PAGE_START);
         f.add(panel1, BorderLayout.CENTER);
         f.add(panel2, BorderLayout.AFTER_LAST_LINE);
@@ -123,25 +100,13 @@ public class CardInventory {
     public CardInventory() {
         JButton cardInventory = new JButton("Card Inventory");
         cardInventory.setFont(new Font("Courier New", Font.PLAIN, 14));
-        cardInventory.addActionListener(e -> {getInventory();
-        });
+        cardInventory.addActionListener(e -> getInventory(new ArrayList<>()));
+        cardInventory.setEnabled(true);
 
         JPanel p = new JPanel();
         p.setBackground(Color.LIGHT_GRAY);
         p.add(cardInventory);
         p.setBounds(new Rectangle(Map.frameX, 218, 200, 40));
         Map.frame.add(p);
-    }
-
-    public void setCurrentPlayer(Player p) {
-        currentPlayer = p;
-    }
-
-    public void tradingAllowed(boolean b) {
-        allowTrading = b;
-    }
-
-    public void setAttacking(boolean b) {
-        attacking = b;
     }
 }

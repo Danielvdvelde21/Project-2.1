@@ -40,4 +40,6 @@ public class Player {
 
     public ArrayList<Card> getHand() { return hand; }
     public void addToHand(Card c) { hand.add(c); }
+    public int getSetsTurnedIn() { return setsTurnedIn; }
+    public void incrementSets() { setsTurnedIn++;}
 }
