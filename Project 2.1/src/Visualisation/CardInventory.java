@@ -30,7 +30,7 @@ public class CardInventory {
             public void windowActivated(WindowEvent windowEvent) {
                 f.setState(JFrame.NORMAL);
                 f.toFront();
-                JOptionPane.showMessageDialog(f, "Choose cards first BITCH!");
+                JOptionPane.showMessageDialog(f, "Please trade in a set first or Close your card inventory");
             }
         };
     }

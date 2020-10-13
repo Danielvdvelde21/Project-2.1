@@ -214,7 +214,7 @@ public class MainGameLoop {
                             isGameOver(player);
                             // TODO if player eliminates a player he receives their cards
                             if (isEliminated(defender)) {
-
+                                eliminatePlayer(defender.getTerritory().getOwner());
                             }
                             cardInventory.attacking(true);
                             while (cardInventory.isTradingCompleted()) {
@@ -325,12 +325,15 @@ public class MainGameLoop {
         for (Player p : game.getPlayers()) {
             if (v.getTerritory().getOwner().equals(p.getName())) {
                 if (p.getTerritoriesOwned() == 0) {
-                    // Remove player from player list
-                    game.getPlayers().remove(p);
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    // Remove player from player list
+    private void eliminatePlayer(String name) {
+        game.getPlayers().removeIf(p -> p.getName().equals(name));
     }
 }
