@@ -64,6 +64,8 @@ public class MainGameLoop {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
+                cardInventory.setCurrentPlayer(p);
+                p.addToHand(new Card("1","wja", 0));
             }
             round++;
         }
@@ -319,12 +321,15 @@ public class MainGameLoop {
         }
     }
 
+    // If a player is defeated
     private boolean isEliminated(Vertex v) {
         for (Player p : game.getPlayers()) {
             if (v.getTerritory().getOwner().equals(p.getName())) {
-
+                if (p.getTerritoriesOwned() == 0) {
+                    return true;
+                }
             }
         }
-        return true;
+        return false;
     }
 }
