@@ -134,6 +134,8 @@ public class MainGameLoop {
         while(!gameOver) {
             for (Player p : game.getPlayers()) {
                 playerTurn.setPlayerTurn(p);
+                // Set the player's inventory
+                cardInventory.setCurrentPlayer(p);
                 playerTurn(p);
             }
         }
@@ -174,8 +176,6 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-        // Set the player's inventory
-        cardInventory.setCurrentPlayer(player);
         // Only now allow trading, player is not attacking
         cardInventory.tradingAllowed(true);
         cardInventory.attacking(false);
