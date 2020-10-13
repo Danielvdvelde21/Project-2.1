@@ -209,10 +209,12 @@ public class MainGameLoop {
                     if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                         if (graph.isAdjecent(attacker, defender)) {
                             // TODO COMBAT
-                            // TODO CHECK IF GAME IS OVER
                             // TODO IF PLAYER CONQUERES A TERRITORY INCREMENT HIS TERRITORIESOWNEDCOUNT
                             isGameOver(player);
                             // TODO if player eliminates a player he receives their cards
+                            if (isEliminated(defender)) {
+
+                            }
                             cardInventory.attacking(true);
                             while (cardInventory.isTradingCompleted()) {
                                 delay();
@@ -317,4 +319,12 @@ public class MainGameLoop {
         }
     }
 
+    private boolean isEliminated(Vertex v) {
+        for (Player p : game.getPlayers()) {
+            if (v.getTerritory().getOwner().equals(p.getName())) {
+
+            }
+        }
+        return true;
+    }
 }
