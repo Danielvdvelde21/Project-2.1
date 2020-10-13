@@ -219,6 +219,7 @@ public class MainGameLoop {
                             // defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() +- dice);
                             // TODO if player wins do all of this
                             player.increaseTerritoriesOwned();
+                            oneTerritoryCaptured = true;
                             decreaseTerritories(defender);
                             isGameOver(player);
                             if (isEliminated(defender)) {
@@ -230,6 +231,7 @@ public class MainGameLoop {
                             if (player.getHand().size() >= 6) {
                                 turnInCardsAttacking(player);
                             }
+
                         } else {
                             map.deselectTerritory();
                             narrator.addText("These territories are not adjacent to each other");
