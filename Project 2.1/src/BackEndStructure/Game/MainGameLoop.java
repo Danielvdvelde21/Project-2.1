@@ -211,13 +211,14 @@ public class MainGameLoop {
                     if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                         if (graph.isAdjecent(attacker, defender)) {
                             // TODO COMBAT
-                            game.getDice().oneFight(1,1);
+                            // game.getDice().oneFight();
                             map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
                             map.updateTroopCount(defender.getTerritory().getTerritoryNumber(),  defender.getTerritory().getNumberOfTroops());
                             map.deselectTerritory();
                             narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
                             // attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() +- dice);
                             // defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() +- dice);
+
                             // TODO if player wins do all of this
                             player.increaseTerritoriesOwned();
                             oneTerritoryCaptured = true;
