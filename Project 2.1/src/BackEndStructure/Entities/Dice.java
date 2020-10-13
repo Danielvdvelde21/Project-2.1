@@ -1,6 +1,6 @@
 package BackEndStructure.Entities;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Dice {
 
@@ -160,20 +160,20 @@ public class Dice {
     }
 
     // Determines who can start placing infantry
-    public Player[] getPlayOrder(Player[] players) {
+    public ArrayList<Player> getPlayOrder(ArrayList<Player> players) {
         // get the order in int
-        int[] playOrderInts = new int[players.length];
+        int[] playOrderInts = new int[players.size()];
         // get the output ready
         int[] list = new int[]{1,2,3,4,5,6};
-        Player[] playOrder = new Player[players.length];
+        ArrayList<Player> playOrder = new ArrayList<>();
 
-        for(int i = 0; i < players.length; i++){
-            int winner = (int) (Math.random() * players.length);
+        for(int i = 0; i < players.size(); i++){
+            int winner = (int) (Math.random() * players.size());
             while(list[winner] == 0){
-                winner = (int) (Math.random() * players.length);
+                winner = (int) (Math.random() * players.size());
             }
             list[winner] = 0;
-            playOrder[i] = players[winner];
+            playOrder.add(players.get(winner));
         }
         return playOrder;
     }

@@ -325,6 +325,8 @@ public class MainGameLoop {
         for (Player p : game.getPlayers()) {
             if (v.getTerritory().getOwner().equals(p.getName())) {
                 if (p.getTerritoriesOwned() == 0) {
+                    // Remove player from player list
+                    game.getPlayers().remove(p);
                     return true;
                 }
             }

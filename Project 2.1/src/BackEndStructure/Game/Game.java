@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Game {
     // Player object List, all the players of the game
-    private Player[] players;
+    private ArrayList<Player> players = new ArrayList<>();
     private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
 
     // the Board
@@ -66,14 +66,12 @@ public class Game {
         // Instantiate Graph
         this.graph = new Territories().getGraph();
 
-        // Instantiate players
-        this.players = new Player[numberOfPlayers];
-
         // Instantiate Dice
         this.dice = new Dice();
 
+        // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
-            this.players[i] = new Player(names[i], colors[i]);
+            players.add(new Player(names[i], colors[i]));
         }
     }
 
@@ -81,11 +79,11 @@ public class Game {
         return this.map;
     }
 
-    public Player[] getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayerOrder(Player[] order) {
+    public void setPlayerOrder(ArrayList<Player> order) {
         players = order;
     }
 
