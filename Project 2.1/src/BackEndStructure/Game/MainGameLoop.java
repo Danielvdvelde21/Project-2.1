@@ -64,15 +64,6 @@ public class MainGameLoop {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
-
-                cardInventory.setCurrentPlayer(p);
-                cardInventory.tradingAllowed(true);
-                p.addToHand(new Card("India", "WILDCARD", 0));
-                p.addToHand(new Card("1", "WILDCARD", 0));
-                p.addToHand(new Card("1", "WILDCARD", 0));
-                p.addToHand(new Card("1", "WILDCARD", 0));
-                p.addToHand(new Card("1", "WILDCARD", 0));
-                cardInventory.getInventory();
             }
             round++;
         }
