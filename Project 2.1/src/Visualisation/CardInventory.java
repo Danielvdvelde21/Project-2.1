@@ -39,6 +39,7 @@ public class CardInventory {
     public void getInventory() {
         ArrayList<Card> playerCards = currentPlayer.getHand();
         f = new JFrame("Inventory");
+        tradingCompleted = false;
 
         if(playerCards != null) { //fixing frame size
             f.setSize(140*playerCards.size()+90, 325);
@@ -52,6 +53,7 @@ public class CardInventory {
                     f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);    //disables close operation
                 }
                 else {
+                    // HERE!!! if(tradingCompleted) {}
                     Map.frame.setCursor(Cursor.getDefaultCursor()); //resets the cursor
                     Map.frame.removeWindowListener(Map.frame.getWindowListeners()[Map.frame.getWindowListeners().length-1]);    //removes the WindowAdapter getWindowAdapter()
                     e.getWindow().dispose();
