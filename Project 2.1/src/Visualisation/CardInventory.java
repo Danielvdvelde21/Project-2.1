@@ -21,7 +21,6 @@ public class CardInventory {
     private boolean menuClosed;
     private boolean allowTrading;
     private boolean attacking;
-    private boolean tradingCompleted;
 
     private ArrayList<Card> selectedCards = new ArrayList<>();
     private ArrayList<JLabel> selectedLabels = new ArrayList<>();
@@ -41,7 +40,6 @@ public class CardInventory {
         ArrayList<Card> playerCards = currentPlayer.getHand();
         menuClosed = true;
         f = new JFrame("Inventory");
-        tradingCompleted = false;
 
         if(playerCards != null) { //fixing frame size
             f.setSize(140*playerCards.size()+90, 325);
@@ -115,8 +113,13 @@ public class CardInventory {
                 if (allowTrading) {
                     if (attacking) {
                         if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
+                            // Return cards to stack
+                            game.getCardStack().returnCards(selectedCards);
+                            // Remove cards from player hand
                             currentPlayer.getHand().removeAll(selectedCards);
+                            // Deselect card list
                             selectedCards.clear();
+                            // Player has 1 more completed set
                             currentPlayer.incrementSetsOwned();
 
                             f.remove(panel1);
@@ -126,20 +129,20 @@ public class CardInventory {
                             f.add(panel1);
                             f.repaint();
                             f.setVisible(true);
-                            tradingCompleted = true;
                         } else {
                             errorLabel.setText("[NOT A VALID SET SELECTED]");
                             errorLabel.setVisible(true);
                         }
                     } else {
                         if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
+                            // Return cards to stack
+                            game.getCardStack().returnCards(selectedCards);
+                            // Remove cards from player hand
                             currentPlayer.getHand().removeAll(selectedCards);
+                            // Deselect card list
                             selectedCards.clear();
+                            // Player has 1 more completed set
                             currentPlayer.incrementSetsOwned();
-
-                            if (currentPlayer.getHand().size() < 3) {
-                                tradingCompleted = true;
-                            }
 
                             f.remove(panel1);
                             for(JLabel label : selectedLabels) {
@@ -189,14 +192,6 @@ public class CardInventory {
 
     public void tradingAllowed(boolean b) {
         allowTrading = b;
-    }
-
-    public boolean isTradingCompleted() {
-        return tradingCompleted;
-    }
-
-    public void setTradingCompleted(boolean b) {
-        tradingCompleted = b;
     }
 
     public void setGame(Game g) {

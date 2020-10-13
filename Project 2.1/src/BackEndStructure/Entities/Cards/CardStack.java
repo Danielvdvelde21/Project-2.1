@@ -13,48 +13,48 @@ public class CardStack {
         stack.add(new Card("WILDCARD", "WILDCARD",0));
         stack.add(new Card("WILDCARD", "WILDCARD",1));
 
-        stack.add(new Card("ALASKA", "Infantry",2));
-        stack.add(new Card("AFGHANISTAN", "Cavalry",3));
-        stack.add(new Card("ALBERTA", "Cavalry",4));
-        stack.add(new Card("ARGENTINA", "Infantry",5));
-        stack.add(new Card("BRAZIL", "Artillery",6));
-        stack.add(new Card("CENTRAL AFRICA", "Infantry",7));
-        stack.add(new Card("CENTRAL AMERICA", "Artillery",8));
-        stack.add(new Card("CHINA", "Infantry",9));
-        stack.add(new Card("EAST AFRICA", "Infantry",10));
-        stack.add(new Card("EASTERN AUSTRALIA", "Artillery",11));
-        stack.add(new Card("EASTERN CANADA", "Cavalry",12));
-        stack.add(new Card("EASTERN UNITED STATES", "Artillery",13));
-        stack.add(new Card("EGYPT", "Infantry",14));
-        stack.add(new Card("GREAT BRITAIN", "Artillery",15));
-        stack.add(new Card("GREENLAND", "Cavalry",16));
-        stack.add(new Card("ICELAND", "Infantry",17));
-        stack.add(new Card("INDIA", "Cavalry",18));
-        stack.add(new Card("INDONESIA", "Artillery",19));
-        stack.add(new Card("IRKUTSK", "Cavalry",20));
-        stack.add(new Card("JAPAN", "Artillery",21));
-        stack.add(new Card("KAMCHATKA", "Infantry",22));
-        stack.add(new Card("MADAGASCAR", "Cavalry",23));
-        stack.add(new Card("MIDDLE EAST", "Infantry",24));
-        stack.add(new Card("MONGOLIA", "Infantry",25));
-        stack.add(new Card("NEW GUINEA", "Infantry",26));
-        stack.add(new Card("NORTH AFRICA", "Cavalry",27));
-        stack.add(new Card("NORTHERN EUROPE", "Artillery",28));
-        stack.add(new Card("NORTHWEST TERRITORY", "Artillery",29));
-        stack.add(new Card("ONTARIO", "Cavalry",30));
-        stack.add(new Card("PERU", "Infantry",31));
-        stack.add(new Card("RUSSIA", "Cavalry",32));
-        stack.add(new Card("SCANDINAVIA", "Cavalry",33));
-        stack.add(new Card("SIBERIA", "Infantry",34));
-        stack.add(new Card("SOUTH AFRICA", "Artillery",35));
-        stack.add(new Card("SOUTHEAST ASIA", "Infantry",36));
-        stack.add(new Card("SOUTHERN EUROPE", "Artillery",37));
-        stack.add(new Card("URAL", "Cavalry",38));
-        stack.add(new Card("VENEZUELA", "Infantry",39));
-        stack.add(new Card("WESTERN AUSTRALIA", "Artillery",40));
-        stack.add(new Card("WESTERN EUROPE", "Artillery",41));
-        stack.add(new Card("WESTERN UNITED STATES", "Artillery",42));
-        stack.add(new Card("YAKUTSK", "Cavalry",43));
+        stack.add(new Card("Alaska", "Infantry",2));
+        stack.add(new Card("Afghanistan", "Cavalry",3));
+        stack.add(new Card("Alberta", "Cavalry",4));
+        stack.add(new Card("Argentina", "Infantry",5));
+        stack.add(new Card("Brazil", "Artillery",6));
+        stack.add(new Card("Central America", "Infantry",7));
+        stack.add(new Card("Central America", "Artillery",8));
+        stack.add(new Card("China", "Infantry",9));
+        stack.add(new Card("East Africa", "Infantry",10));
+        stack.add(new Card("Eastern Australia", "Artillery",11));
+        stack.add(new Card("Eastern Canada", "Cavalry",12));
+        stack.add(new Card("Eastern United States", "Artillery",13));
+        stack.add(new Card("Egypt", "Infantry",14));
+        stack.add(new Card("Great Britain", "Artillery",15));
+        stack.add(new Card("Greenland", "Cavalry",16));
+        stack.add(new Card("Iceland", "Infantry",17));
+        stack.add(new Card("India", "Cavalry",18));
+        stack.add(new Card("Indonesia", "Artillery",19));
+        stack.add(new Card("Irkutsk", "Cavalry",20));
+        stack.add(new Card("Japan", "Artillery",21));
+        stack.add(new Card("Kamchatka", "Infantry",22));
+        stack.add(new Card("Madagascar", "Cavalry",23));
+        stack.add(new Card("Middle East", "Infantry",24));
+        stack.add(new Card("Mongolia", "Infantry",25));
+        stack.add(new Card("New Guinea", "Infantry",26));
+        stack.add(new Card("North Africa", "Cavalry",27));
+        stack.add(new Card("Northern Europe", "Artillery",28));
+        stack.add(new Card("Northwest Territory", "Artillery",29));
+        stack.add(new Card("Ontario", "Cavalry",30));
+        stack.add(new Card("Peru", "Infantry",31));
+        stack.add(new Card("Russia", "Cavalry",32));
+        stack.add(new Card("Scandinavia", "Cavalry",33));
+        stack.add(new Card("Siberia", "Infantry",34));
+        stack.add(new Card("South Africa", "Artillery",35));
+        stack.add(new Card("Southeast Asia", "Infantry",36));
+        stack.add(new Card("Southern Europe", "Artillery",37));
+        stack.add(new Card("Ural", "Cavalry",38));
+        stack.add(new Card("Venezuela", "Infantry",39));
+        stack.add(new Card("Western Australia", "Artillery",40));
+        stack.add(new Card("Western Europe", "Artillery",41));
+        stack.add(new Card("Western United States", "Artillery",42));
+        stack.add(new Card("Yakutsk", "Cavalry",43));
     }
 
     public void shuffle() {
@@ -67,8 +67,8 @@ public class CardStack {
         return tempCard;
     }
 
-    public void returnCards(Card[] usedCards) {
-        stack.addAll(Arrays.asList(usedCards));
+    public void returnCards(ArrayList<Card> usedCards) {
+        stack.addAll(usedCards);
         shuffle();
     }
 

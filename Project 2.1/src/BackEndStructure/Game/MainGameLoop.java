@@ -194,7 +194,6 @@ public class MainGameLoop {
         }
 
         // For the next player reset trading
-        cardInventory.setTradingCompleted(false);
         cardInventory.tradingAllowed(false);
 
         return game.getSetValue(player.getSetsTurnedIn());
