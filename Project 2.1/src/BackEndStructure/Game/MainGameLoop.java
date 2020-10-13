@@ -181,16 +181,15 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-//        cardInventory.tradingAllowed(true);
-//        cardInventory.setCurrentPlayer(player);
-//        cardInventory.getInventory();
-//        while (!cardInventory.isTradingCompleted()) {
-//            delay();
-//        }
-//        int value = game.getSetValue(player.getSetsTurnedIn());
-//        cardInventory.tradingAllowed(false);
-//        return value;
-        return 1;
+        cardInventory.tradingAllowed(true);
+        cardInventory.setCurrentPlayer(player);
+        cardInventory.getInventory();
+        while (!cardInventory.isTradingCompleted()) {
+            delay();
+        }
+        int value = game.getSetValue(player.getSetsTurnedIn());
+        cardInventory.tradingAllowed(false);
+        return value;
     }
 
     private void attacking(Player player) {
@@ -215,12 +214,12 @@ public class MainGameLoop {
                             // TODO IF PLAYER CONQUERES A TERRITORY INCREMENT HIS TERRITORIESOWNEDCOUNT
                             isGameOver(player);
                             // TODO if player eliminates a player he receives their cards
-//                            cardInventory.attacking(true);
-//                            while (cardInventory.isTradingCompleted()) {
-//                                delay();
-//                            }
-//                            placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
-//                            cardInventory.attacking(false);
+                            cardInventory.attacking(true);
+                            while (cardInventory.isTradingCompleted()) {
+                                delay();
+                            }
+                            placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
+                            cardInventory.attacking(false);
                             // TODO if player gets more then 6 cards --> turn in sets such that he has less than 4 cards but ones he has 4,3 or less cards stop trading
                             // TODO IF LESS THEN 6 CARDS HE CANT TRADE!
                             // TODO if at least one territory is captured player receives a card
