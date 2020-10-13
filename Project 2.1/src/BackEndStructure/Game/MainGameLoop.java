@@ -63,6 +63,12 @@ public class MainGameLoop {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
+                cardInventory.setCurrentPlayer(p);
+                p.addToHand(new Card("1", "WILDCARD",0));
+                p.addToHand(new Card("1", "WILDCARD",1));
+                p.addToHand(new Card("1", "Infantry",2));
+                p.addToHand(new Card("1", "Infantry",3));
+                p.addToHand(new Card("1", "Infantry",4));
             }
             round++;
         }
@@ -139,7 +145,7 @@ public class MainGameLoop {
 
     private void playerTurn(Player player) {
         // Gain troops at start of turn
-        placeReceivedTroops(player, recievedTroops(player));
+        placeReceivedTroops(player, receivedTroops(player));
 
         // Player can start attacking different territories
         playerTurn.resetTurn();
@@ -156,7 +162,7 @@ public class MainGameLoop {
         }
     }
 
-    private int recievedTroops(Player player) {
+    private int receivedTroops(Player player) {
         // Troops for turning in cards
         int cards = turningInCards(player);
 
@@ -172,12 +178,10 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-        // Check if the player got more than 4 cards in his hand
-        if (player.getHand().size() > 4) {
-            // Player must turn in at least 1 set
-            // Show Inventory
-            cardInventory.getInventory(player.getHand());
-        }
+        cardInventory.setStartTurn(true);
+        cardInventory.setCurrentPlayer(player);
+        cardInventory.getInventory();
+        cardInventory.setStartTurn(false);
         // TODO IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
         return 1;
     }

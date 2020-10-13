@@ -40,7 +40,4 @@ public class Player {
 
     public ArrayList<Card> getHand() { return hand; }
     public void addToHand(Card c) { hand.add(c); }
-    public void turnInSet(Card[] cards, ArrayList<Card> stack) {
-        // TODO
-    }
 }

@@ -72,29 +72,4 @@ public class CardStack {
         shuffle();
     }
 
-    public boolean isSet(Card[] cards) {
-        int countInfantry = 0;
-        int countCavalry = 0;
-        int countArtillery = 0;
-
-        for(Card c : cards) {
-            if(c.getCardType().equals("WILDCARD")) {
-                return true;
-            }
-            if(c.getCardType().equals("Infantry")) {
-                countInfantry++;
-                continue;
-            }
-            if(c.getCardType().equals("Cavalry")) {
-                countCavalry++;
-                continue;
-            }
-            if(c.getCardType().equals("Artillery")) {
-                countArtillery++;
-            }
-        }
-        return countInfantry >= 3 || countCavalry >= 3 || countArtillery >= 3 || (countInfantry > 0 && countCavalry > 0 && countArtillery > 0);
-    }
-
-
 }
