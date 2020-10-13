@@ -211,6 +211,7 @@ public class MainGameLoop {
                     if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                         if (graph.isAdjecent(attacker, defender)) {
                             // TODO COMBAT
+                            game.getDice().oneFight(1,1);
                             map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
                             map.updateTroopCount(defender.getTerritory().getTerritoryNumber(),  defender.getTerritory().getNumberOfTroops());
                             map.deselectTerritory();

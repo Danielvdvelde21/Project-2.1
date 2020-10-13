@@ -106,7 +106,7 @@ public class CardInventory {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (allowTrading) {
                     if (attacking) {
-                        if (setHandler.isSet(game, currentPlayer, selectedCards) && selectedCards.size() == 3) {
+                        if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
                             currentPlayer.getHand().removeAll(selectedCards);
                             currentPlayer.incrementSetsOwned();
                             tradingCompleted = true;
@@ -115,7 +115,7 @@ public class CardInventory {
                             errorLabel.setVisible(true);
                         }
                     } else {
-                        if (setHandler.isSet(game, currentPlayer, selectedCards) && selectedCards.size() == 3) {
+                        if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
                             currentPlayer.getHand().removeAll(selectedCards);
                             currentPlayer.incrementSetsOwned();
                             if (currentPlayer.getHand().size() < 3) {
