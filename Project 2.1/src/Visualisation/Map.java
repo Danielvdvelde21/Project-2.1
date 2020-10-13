@@ -100,9 +100,8 @@ public class Map {
     // -----------------------------------------------------------------------------------------------------------------
     // Creates the map
     public void createMap() {
-        //JFrame frame = new JFrame("RISK");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setSize(frameX, frameY);
+        frame.setLocation(80, 7);
         frame.setSize(frameX+200, frameY+150);
         frame.setResizable(false);
         JPanel p = new JPanel();

@@ -181,7 +181,7 @@ public class CardInventory {
         JPanel p = new JPanel();
         p.setBackground(Color.LIGHT_GRAY);
         p.add(cardInventory);
-        p.setBounds(new Rectangle(Map.frameX, 218, 200, 40));
+        p.setBounds(new Rectangle(Map.frameX, 218, 200, 100));
         Map.frame.add(p);
     }
 

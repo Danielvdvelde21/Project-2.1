@@ -36,6 +36,9 @@ public class MainGameLoop {
     // For updating the card inventory
     private CardInventory cardInventory = new CardInventory();
 
+    // For updating the dice panel
+    private DicePanel dicePanel = new DicePanel();
+
     // -----------------------------------------------------------------------------------------------------------------
 
     public MainGameLoop(int players, String[] playerNames) {
