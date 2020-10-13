@@ -158,6 +158,7 @@ public class MainGameLoop {
     }
 
     private void placeReceivedTroops(Player player, int troops) {
+        narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         for (int i = 0; i < troops; i++) {
             placementTurn(player);
         }
@@ -222,10 +223,10 @@ public class MainGameLoop {
                             // TODO COMBAT
                             narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
                             // game.getDice().oneFight();
-                            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
-                            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(),  defender.getTerritory().getNumberOfTroops());
                             attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops());
                             defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops());
+                            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
+                            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(),  defender.getTerritory().getNumberOfTroops());
 
                             if (defender.getTerritory().getNumberOfTroops() == 0) {
                                 oneTerritoryCaptured = true;
@@ -254,8 +255,14 @@ public class MainGameLoop {
 
     // Logic that needs to happen after a territory is captured
     private void territoryCaptured(Player player, Vertex defender) {
+        // Player gets the territory
         player.increaseTerritoriesOwned();
+        defender.getTerritory().setOwner(player.getName());
+        map.setTroopCountColor(defender.getTerritory().getTerritoryNumber(), player);
+
+        // defender loses his territory
         decreaseTerritories(defender);
+
         isGameOver(player);
         if (isEliminated(defender)) {
             receiveCards(player, defender);
@@ -277,8 +284,6 @@ public class MainGameLoop {
             delay();
         }
         placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
-        cardInventory.attacking(false);
-        cardInventory.tradingAllowed(false);
     }
 
     private void fortifyTerritory(Player player) {

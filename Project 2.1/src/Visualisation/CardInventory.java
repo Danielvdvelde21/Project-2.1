@@ -143,6 +143,9 @@ public class CardInventory {
                             selectedCards.clear();
                             // Player has 1 more completed set
                             currentPlayer.incrementSetsOwned();
+                            // Allow trading is set to false (player can only turn in one set
+                            attacking = false;
+                            allowTrading = false;
 
                             f.remove(panel1);
                             for(JLabel label : selectedLabels) {
