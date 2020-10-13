@@ -23,6 +23,7 @@ public class CardInventory {
     private boolean tradingCompleted;
 
     private ArrayList<Card> selectedCards = new ArrayList<>();
+    private ArrayList<JLabel> selectedLabels = new ArrayList<>();
 
     private WindowAdapter getWindowAdapter() {
         return new WindowAdapter() {
@@ -60,7 +61,7 @@ public class CardInventory {
         f.setAlwaysOnTop(true);
         f.setResizable(false);
         Map.frame.addWindowListener(getWindowAdapter());    //gives error if Map.frame is activated
-        Map.frame.setCursor(3); //wait cursor
+        Map.frame.setCursor(Cursor.getPredefinedCursor(3)); //wait cursor
 
         JPanel panell = new JPanel();
         JPanel panel1 = new JPanel();
@@ -83,11 +84,13 @@ public class CardInventory {
                         cardLabel.setBorder(BorderFactory.createLineBorder(Color.green, 2, true));
                         i = 1;
                         selectedCards.add(card);
+                        selectedLabels.add(cardLabel);
                     }
                     else if(i == 1) {
                         cardLabel.setBorder(null);
                         i = 0;
                         selectedCards.remove(card);
+                        selectedLabels.remove(cardLabel);
                     }
                 }
             });
@@ -109,6 +112,9 @@ public class CardInventory {
                         if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
                             currentPlayer.getHand().removeAll(selectedCards);
                             currentPlayer.incrementSetsOwned();
+                            for(JLabel label : selectedLabels) {
+                                panel1.remove(label);
+                            }
                             tradingCompleted = true;
                         } else {
                             errorLabel.setText("[NOT A VALID SET SELECTED]");
@@ -119,6 +125,9 @@ public class CardInventory {
                             currentPlayer.getHand().removeAll(selectedCards);
                             currentPlayer.incrementSetsOwned();
                             if (currentPlayer.getHand().size() < 3) {
+                                for(JLabel label : selectedLabels) {
+                                    panel1.remove(label);
+                                }
                                 tradingCompleted = true;
                             }
                         } else {
