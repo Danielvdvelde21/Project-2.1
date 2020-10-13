@@ -25,10 +25,9 @@ public class MainGameLoop {
     private int unownedTerritories = 42;
     private boolean noMoreUnownedTerritories = false;
 
-
     // -----------------------------------------------------------------------------------------------------------------
     // Updating visual variables
-    private final Narrator narrator = new Narrator();
+    private final Narrator narrator;
 
     // For updating the player turn label (current player)
     private PlayerTurn playerTurn = new PlayerTurn();
@@ -42,6 +41,8 @@ public class MainGameLoop {
         this.game = new Game(players, playerNames);
         this.map = game.getMap();
         this.graph = game.getGraph();
+        this.narrator = game.getNarrator();
+        cardInventory.setGame(game);
 
         // TODO with actual dice
         game.setPlayerOrder(game.getDice().getPlayOrder(game.getPlayers()));
@@ -66,7 +67,7 @@ public class MainGameLoop {
 
                 cardInventory.setCurrentPlayer(p);
                 cardInventory.tradingAllowed(true);
-                p.addToHand(new Card("1", "WILDCARD", 0));
+                p.addToHand(new Card("India", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
@@ -181,15 +182,22 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-        cardInventory.tradingAllowed(true);
+        // Set the player's inventory
         cardInventory.setCurrentPlayer(player);
+        // Only now allow trading, player is not attacking
+        cardInventory.tradingAllowed(true);
+        cardInventory.attacking(false);
+
         cardInventory.getInventory();
         while (!cardInventory.isTradingCompleted()) {
             delay();
         }
-        int value = game.getSetValue(player.getSetsTurnedIn());
+
+        // For the next player reset trading
+        cardInventory.setTradingCompleted(false);
         cardInventory.tradingAllowed(false);
-        return value;
+
+        return game.getSetValue(player.getSetsTurnedIn());
     }
 
     private void attacking(Player player) {

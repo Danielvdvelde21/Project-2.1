@@ -3,6 +3,7 @@ package Visualisation;
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Cards.SetHandler;
 import BackEndStructure.Entities.Player;
+import BackEndStructure.Game.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class CardInventory {
     private JFrame f;
 
     private final SetHandler setHandler = new SetHandler();
+    private Game game;
 
     private Player currentPlayer;
     private boolean allowTrading;
@@ -104,16 +106,18 @@ public class CardInventory {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (allowTrading) {
                     if (attacking) {
-                        if (setHandler.isSet(currentPlayer, selectedCards) && selectedCards.size() == 3) {
+                        if (setHandler.isSet(game, currentPlayer, selectedCards) && selectedCards.size() == 3) {
                             currentPlayer.getHand().removeAll(selectedCards);
+                            currentPlayer.incrementSetsOwned();
                             tradingCompleted = true;
                         } else {
                             errorLabel.setText("[NOT A VALID SET SELECTED]");
                             errorLabel.setVisible(true);
                         }
                     } else {
-                        if (setHandler.isSet(currentPlayer, selectedCards) && selectedCards.size() == 3) {
+                        if (setHandler.isSet(game, currentPlayer, selectedCards) && selectedCards.size() == 3) {
                             currentPlayer.getHand().removeAll(selectedCards);
+                            currentPlayer.incrementSetsOwned();
                             if (currentPlayer.getHand().size() < 3) {
                                 tradingCompleted = true;
                             }
@@ -153,7 +157,6 @@ public class CardInventory {
     }
 
     public void attacking(boolean b) {
-        tradingAllowed(b);
         attacking = b;
     }
 
@@ -165,4 +168,11 @@ public class CardInventory {
         return tradingCompleted;
     }
 
+    public void setTradingCompleted(boolean b) {
+        tradingCompleted = b;
+    }
+
+    public void setGame(Game g) {
+        game = g;
+    }
 }

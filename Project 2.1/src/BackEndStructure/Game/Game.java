@@ -7,6 +7,7 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territories;
 import BackEndStructure.Graph.Territory;
 import Visualisation.Map;
+import Visualisation.Narrator;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ public class Game {
 
     // the Board
     private final Map map;
+
+    // Narrator of the game
+    private final Narrator narrator = new Narrator();
 
     // All the territories in a graph (with edges)
     private final Graph graph;
@@ -31,7 +35,7 @@ public class Game {
     // Number of troops players start with
     private int startingTroops;
 
-    private int[] setValues = new int[]{4,6,8,10,12,15};
+    private int[] setValues = new int[]{0,4,6,8,10,12,15};
 
     public Game(int numberOfPlayers, String[] names) {
         // How manny troops each player gets from the start
@@ -96,6 +100,8 @@ public class Game {
     public Dice getDice() {
         return dice;
     }
+
+    public Narrator getNarrator() { return narrator; }
 
     // Checks how many continents a player has
     public void hasContinents(Player player) {
@@ -191,7 +197,7 @@ public class Game {
         if (sets > 6) {
             return 15 + (sets-6)*5;
         } else {
-            return setValues[sets-1];
+            return setValues[sets];
         }
     }
 
