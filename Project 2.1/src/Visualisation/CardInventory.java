@@ -112,9 +112,11 @@ public class CardInventory {
                         if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
                             currentPlayer.getHand().removeAll(selectedCards);
                             currentPlayer.incrementSetsOwned();
+                            f.remove(panel1);
                             for(JLabel label : selectedLabels) {
                                 panel1.remove(label);
                             }
+                            f.add(panel1);
                             tradingCompleted = true;
                         } else {
                             errorLabel.setText("[NOT A VALID SET SELECTED]");
@@ -125,9 +127,11 @@ public class CardInventory {
                             currentPlayer.getHand().removeAll(selectedCards);
                             currentPlayer.incrementSetsOwned();
                             if (currentPlayer.getHand().size() < 3) {
+                                f.remove(panel1);
                                 for(JLabel label : selectedLabels) {
                                     panel1.remove(label);
                                 }
+                                f.add(panel1);
                                 tradingCompleted = true;
                             }
                         } else {
