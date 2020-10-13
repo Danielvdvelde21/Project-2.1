@@ -1,18 +1,26 @@
 package Visualisation;
 
 import BackEndStructure.Entities.Cards.Card;
+import BackEndStructure.Entities.Cards.SetHandler;
+import BackEndStructure.Entities.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class CardInventory {
 
     private JFrame f;
+
+    private final SetHandler setHandler = new SetHandler();
+
+    private Player currentPlayer;
+    private boolean allowTrading;
+    private boolean attacking;
+    private boolean tradingCompleted;
+
+    private ArrayList<Card> selectedCards = new ArrayList<>();
 
     private WindowAdapter getWindowAdapter() {
         return new WindowAdapter() {
@@ -20,23 +28,24 @@ public class CardInventory {
             public void windowActivated(WindowEvent windowEvent) {
                 f.setState(JFrame.NORMAL);
                 f.toFront();
-                JOptionPane.showMessageDialog(f, "Error!");
+                JOptionPane.showMessageDialog(f, "Choose cards first BITCH!");
             }
         };
     }
 
-    public void getInventory(ArrayList<Card> cards) {
+    public void getInventory() {
+        ArrayList<Card> playerCards = currentPlayer.getHand();
         f = new JFrame("Inventory");
 
-        if(cards != null) { //fixing frame size
-            f.setSize(140*cards.size()+90, 325);
-            f.setLocation(1200-(140*cards.size()+90), 300);
+        if(playerCards != null) { //fixing frame size
+            f.setSize(140*playerCards.size()+90, 325);
+            f.setLocation(1200-(140*playerCards.size()+90), 300);
         }
 
         f.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
-                if(cards.size() > 4) {
+                if(playerCards.size() > 4) {
                     f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);    //disables close operation
                 }
                 else {
@@ -58,7 +67,7 @@ public class CardInventory {
         panel2.setBackground(Color.LIGHT_GRAY);
         panell.setBackground(Color.LIGHT_GRAY);
 
-        for (Card card : cards) {   //adding all cards in panel1
+        for (Card card : playerCards) {   //adding all cards in panel1
             ImageIcon ii1 = card.getCardImageIcon();
             Image scaledImage = ii1.getImage().getScaledInstance(140, 195, Image.SCALE_SMOOTH);
             ii1 = new ImageIcon(scaledImage);
@@ -71,10 +80,12 @@ public class CardInventory {
                     if(i == 0) {    //selected
                         cardLabel.setBorder(BorderFactory.createLineBorder(Color.green, 2, true));
                         i = 1;
+                        selectedCards.add(card);
                     }
                     else if(i == 1) {
                         cardLabel.setBorder(null);
                         i = 0;
+                        selectedCards.remove(card);
                     }
                 }
             });
@@ -88,9 +99,36 @@ public class CardInventory {
         errorLabel.setVisible(false);
         panell.add(errorLabel);
 
-        turnInSetButton.addActionListener(e -> errorLabel.setVisible(true));    //TODO turn in set button
-        panel2.add(turnInSetButton);
+        turnInSetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (allowTrading) {
+                    if (attacking) {
+                        if (setHandler.isSet(currentPlayer, selectedCards) && selectedCards.size() == 3) {
+                            currentPlayer.getHand().removeAll(selectedCards);
+                            tradingCompleted = true;
+                        } else {
+                            errorLabel.setText("[NOT A VALID SET SELECTED]");
+                            errorLabel.setVisible(true);
+                        }
+                    } else {
+                        if (setHandler.isSet(currentPlayer, selectedCards) && selectedCards.size() == 3) {
+                            currentPlayer.getHand().removeAll(selectedCards);
+                            if (currentPlayer.getHand().size() < 3) {
+                                tradingCompleted = true;
+                            }
+                        } else {
+                            errorLabel.setText("[NOT A VALID SET SELECTED]");
+                            errorLabel.setVisible(true);
+                        }
+                    }
+                } else {
+                    errorLabel.setText("[YOU MAY NOT TRADE RIGHT NOW]");
+                    errorLabel.setVisible(true);
+                }
+            }});
 
+        panel2.add(turnInSetButton);
         f.add(panell, BorderLayout.PAGE_START);
         f.add(panel1, BorderLayout.CENTER);
         f.add(panel2, BorderLayout.AFTER_LAST_LINE);
@@ -100,7 +138,7 @@ public class CardInventory {
     public CardInventory() {
         JButton cardInventory = new JButton("Card Inventory");
         cardInventory.setFont(new Font("Courier New", Font.PLAIN, 14));
-        cardInventory.addActionListener(e -> getInventory(new ArrayList<>()));
+        cardInventory.addActionListener(e -> getInventory());
         cardInventory.setEnabled(true);
 
         JPanel p = new JPanel();
@@ -109,4 +147,22 @@ public class CardInventory {
         p.setBounds(new Rectangle(Map.frameX, 218, 200, 40));
         Map.frame.add(p);
     }
+
+    public void setCurrentPlayer(Player p) {
+        currentPlayer = p;
+    }
+
+    public void attacking(boolean b) {
+        tradingAllowed(b);
+        attacking = b;
+    }
+
+    public void tradingAllowed(boolean b) {
+        allowTrading = b;
+    }
+
+    public boolean isTradingCompleted() {
+        return tradingCompleted;
+    }
+
 }

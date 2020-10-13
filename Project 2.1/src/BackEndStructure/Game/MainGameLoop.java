@@ -64,12 +64,14 @@ public class MainGameLoop {
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
 
+                cardInventory.setCurrentPlayer(p);
+                cardInventory.tradingAllowed(true);
                 p.addToHand(new Card("1", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
                 p.addToHand(new Card("1", "WILDCARD", 0));
-                cardInventory.getInventory(p.getHand());
+                cardInventory.getInventory();
             }
             round++;
         }
