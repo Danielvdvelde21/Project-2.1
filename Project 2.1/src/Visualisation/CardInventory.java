@@ -117,6 +117,7 @@ public class CardInventory {
                                 panel1.remove(label);
                             }
                             f.add(panel1);
+                            f.repaint();
                             f.setVisible(true);
                             tradingCompleted = true;
                         } else {
@@ -133,6 +134,7 @@ public class CardInventory {
                                     panel1.remove(label);
                                 }
                                 f.add(panel1);
+                                f.repaint();
                                 f.setVisible(true);
                                 tradingCompleted = true;
                             }
