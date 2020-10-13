@@ -61,11 +61,10 @@ public class MainGameLoop {
         int round = 34;
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
+                cardInventory.setCurrentPlayer(p);
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
-                cardInventory.setCurrentPlayer(p);
-                p.addToHand(new Card("1","wja", 0));
             }
             round++;
         }
