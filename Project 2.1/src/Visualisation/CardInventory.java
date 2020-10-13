@@ -117,6 +117,7 @@ public class CardInventory {
                                 panel1.remove(label);
                             }
                             f.add(panel1);
+                            f.setVisible(true);
                             tradingCompleted = true;
                         } else {
                             errorLabel.setText("[NOT A VALID SET SELECTED]");
@@ -132,6 +133,7 @@ public class CardInventory {
                                     panel1.remove(label);
                                 }
                                 f.add(panel1);
+                                f.setVisible(true);
                                 tradingCompleted = true;
                             }
                         } else {
