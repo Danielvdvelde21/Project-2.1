@@ -21,6 +21,7 @@ public class MainGameLoop {
 
     // Game state
     private boolean gameOver = false;
+    private Player winner;
 
     private int unownedTerritories = 42;
     private boolean noMoreUnownedTerritories = false;
@@ -50,6 +51,8 @@ public class MainGameLoop {
         placementStage();
         // The game is no about attacking, using cards, fortifying, etc.
         mainGameStage();
+        // Game over
+        narrator.addText("GAME OVER! PLAYER " + winner.getName() + " IS VICTORIOUS");
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -176,12 +179,17 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
+        if(player.getHand().size()>4) {
+            narrator.addText("You have to turn in at least 1 set!");
+        } else {
+            narrator.addText("Do you want to turn in any sets?");
+        }
         // Only now allow trading, player is not attacking
         cardInventory.tradingAllowed(true);
         cardInventory.attacking(false);
 
         cardInventory.getInventory();
-        while (!cardInventory.isTradingCompleted()) {
+        while (cardInventory.getMenuClosed()) {
             delay();
         }
 
@@ -210,28 +218,19 @@ public class MainGameLoop {
                     narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
                     if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                         if (graph.isAdjecent(attacker, defender)) {
+                            map.deselectTerritory();
+
                             // TODO COMBAT
+                            narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
                             // game.getDice().oneFight();
                             map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
                             map.updateTroopCount(defender.getTerritory().getTerritoryNumber(),  defender.getTerritory().getNumberOfTroops());
-                            map.deselectTerritory();
-                            narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
-                            // attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() +- dice);
-                            // defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() +- dice);
+                            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops());
+                            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops());
 
-                            // TODO if player wins do all of this
-                            player.increaseTerritoriesOwned();
-                            oneTerritoryCaptured = true;
-                            decreaseTerritories(defender);
-                            isGameOver(player);
-                            if (isEliminated(defender)) {
-                                receiveCards(player, defender);
-                                eliminatePlayer(defender.getTerritory().getOwner());
-                            }
-
-                            // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
-                            if (player.getHand().size() >= 6) {
-                                turnInCardsAttacking(player);
+                            if (defender.getTerritory().getNumberOfTroops() == 0) {
+                                oneTerritoryCaptured = true;
+                                territoryCaptured(player, defender);
                             }
 
                         } else {
@@ -254,10 +253,28 @@ public class MainGameLoop {
         }
     }
 
+    // Logic that needs to happen after a territory is captured
+    private void territoryCaptured(Player player, Vertex defender) {
+        player.increaseTerritoriesOwned();
+        decreaseTerritories(defender);
+        isGameOver(player);
+        if (isEliminated(defender)) {
+            receiveCards(player, defender);
+            eliminatePlayer(defender.getTerritory().getOwner());
+        }
+
+        // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
+        if (player.getHand().size() >= 6) {
+            turnInCardsAttacking(player);
+        }
+    }
+
+    // Forcing a player to turn in a set during an attacking phase
     public void turnInCardsAttacking(Player player) {
         cardInventory.tradingAllowed(true);
         cardInventory.attacking(true);
-        while (cardInventory.isTradingCompleted()) {
+        cardInventory.getInventory();
+        while (cardInventory.getMenuClosed()) {
             delay();
         }
         placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
@@ -330,6 +347,9 @@ public class MainGameLoop {
 
     private void isGameOver(Player player) {
         gameOver = player.getTerritoriesOwned() == 42;
+        if (gameOver) {
+            winner = player;
+        }
     }
 
     private void unownedTerritoriesLeft() {

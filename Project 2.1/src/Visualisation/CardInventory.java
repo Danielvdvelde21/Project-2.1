@@ -18,6 +18,7 @@ public class CardInventory {
     private Game game;
 
     private Player currentPlayer;
+    private boolean menuClosed;
     private boolean allowTrading;
     private boolean attacking;
     private boolean tradingCompleted;
@@ -38,6 +39,7 @@ public class CardInventory {
 
     public void getInventory() {
         ArrayList<Card> playerCards = currentPlayer.getHand();
+        menuClosed = true;
         f = new JFrame("Inventory");
         tradingCompleted = false;
 
@@ -49,11 +51,12 @@ public class CardInventory {
         f.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
-                if(playerCards.size() > 4) {
+                if(playerCards.size() > 4 && allowTrading) {
                     f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);    //disables close operation
                 }
                 else {
-                    tradingCompleted = true;
+                    menuClosed = false;
+                    selectedCards.clear();
                     Map.frame.setCursor(Cursor.getDefaultCursor()); //resets the cursor
                     Map.frame.removeWindowListener(Map.frame.getWindowListeners()[Map.frame.getWindowListeners().length-1]);    //removes the WindowAdapter getWindowAdapter()
                     e.getWindow().dispose();
@@ -113,7 +116,9 @@ public class CardInventory {
                     if (attacking) {
                         if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
                             currentPlayer.getHand().removeAll(selectedCards);
+                            selectedCards.clear();
                             currentPlayer.incrementSetsOwned();
+
                             f.remove(panel1);
                             for(JLabel label : selectedLabels) {
                                 panel1.remove(label);
@@ -129,17 +134,20 @@ public class CardInventory {
                     } else {
                         if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
                             currentPlayer.getHand().removeAll(selectedCards);
+                            selectedCards.clear();
                             currentPlayer.incrementSetsOwned();
+
                             if (currentPlayer.getHand().size() < 3) {
-                                f.remove(panel1);
-                                for(JLabel label : selectedLabels) {
-                                    panel1.remove(label);
-                                }
-                                f.add(panel1);
-                                f.repaint();
-                                f.setVisible(true);
                                 tradingCompleted = true;
                             }
+
+                            f.remove(panel1);
+                            for(JLabel label : selectedLabels) {
+                                    panel1.remove(label);
+                            }
+                            f.add(panel1);
+                            f.repaint();
+                            f.setVisible(true);
                         } else {
                             errorLabel.setText("[NOT A VALID SET SELECTED]");
                             errorLabel.setVisible(true);
@@ -149,7 +157,6 @@ public class CardInventory {
                     errorLabel.setText("[YOU MAY NOT TRADE RIGHT NOW]");
                     errorLabel.setVisible(true);
                 }
-                selectedCards.clear();
             }});
 
         panel2.add(turnInSetButton);
@@ -195,4 +202,6 @@ public class CardInventory {
     public void setGame(Game g) {
         game = g;
     }
+
+    public boolean getMenuClosed() { return menuClosed; }
 }
