@@ -1,44 +1,59 @@
 package BackEndStructure.Entities;
 
-public class AttackingHandler {
+public class AttackingHandler{
 
-    public static void main(String [] args) {
-        oneFight(3, new int[]{1,5,6}, 2, new int[]{3,4});
+    public static void main(String[] args) {
+        oneFight(3, new int[]{1, 2, 3}, 2, new int[]{6, 4});
         System.out.println("new experiment");
-        oneFight(2, new int[]{1,5,6}, 1, new int[]{3,4});
+        oneFight(2, new int[]{1, 5, 6}, 1, new int[]{3, 6});
     }
 
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
     // AttackValues is always size 3 and DefendValues always size 2
-    public static void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues){
+    public static void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues) {
         int max = 0;
         int ndMax = 0;
         int defMax = 0;
         int defNdMax = 0;
+        int bestADice = 0;
+        int bestDDice = 0;
 
         for (int i = 0; i < 3; i++) {
             if (attackValues[i] > max) {
                 max = attackValues[i];
-            } else if (attackValues[i] > ndMax) {
-                ndMax = attackValues[i];
-            }
-            if (i < 2) {
-                if (defendValues[i] > defMax) {
-                    defMax = defendValues[i];
-                } else if (defendValues[i] > defNdMax) {
-                    defNdMax = defendValues[i];
+                bestADice = i;
+                if (i < 2) {
+                    if (defendValues[i] > defMax) {
+                        defMax = defendValues[i];
+                        bestDDice = i;
+                    }
                 }
             }
         }
 
-        if (attackers == 2 || defenders == 1) {
+        attackValues[bestADice] = 0;
+        defendValues[bestDDice] = 0;
+
+        for (int j = 0; j < 3; j++) {
+            if (attackValues[j] > ndMax) {
+                ndMax = attackValues[j];
+
+                if (j < 2) {
+                    if (defendValues[j] > defNdMax) {
+                        defNdMax = defendValues[j];
+                    }
+                }
+            }
+        }
+        //System.out.println(max + "    " + ndMax + "     " + defMax + "     " + defNdMax);
+
+        if (attackers == 1 || defenders == 1) {
             if (max > defMax) {
                 System.out.println("Defenders lose 1 troop");
             } else {
                 System.out.println("Attackers lose 1 troop");
             }
-        }
-        else {
+        } else {
             if (max > defMax && ndMax > defNdMax) {
                 System.out.println("Defenders lose 2 troops!");
             } else if (defMax >= max && defNdMax >= ndMax) {
@@ -49,8 +64,11 @@ public class AttackingHandler {
         }
 
     }
-
 }
+
+
+
+
 //    // Rolling for combat
 //    public void combat(int attackers, int defenders){
 //        int attackerDeaths = 0;
@@ -134,4 +152,5 @@ public class AttackingHandler {
 //        System.out.println("The attacker has " + attackersAtEnd + " troops left!");
 //        System.out.println("The defender has " + defendersAtEnd + " troops left!");
 //    }
+
 
