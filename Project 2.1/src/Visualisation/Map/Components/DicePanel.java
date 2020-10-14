@@ -260,6 +260,18 @@ public class DicePanel {
         }
     }
 
+    public boolean validAmountOfDiceSelected(int attackingTroops, int defendingTroops) {
+        // numberOfAttackingDice is 1, 2 or 3
+        if (numberOfAttackingDice > attackingTroops) {
+            return false;
+        }
+        // numberOfDefendingDice is 1 or 2
+        if (numberOfDefendingDice > defendingTroops) {
+            return false;
+        }
+        return true;
+    }
+
     public int getNumberOfAttackingDice() {
         return numberOfAttackingDice;
     }

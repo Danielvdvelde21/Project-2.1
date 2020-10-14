@@ -1,6 +1,8 @@
 package Visualisation.Map.Components;
 
 import BackEndStructure.Graph.Territory;
+import BackEndStructure.Graph.Vertex;
+
 import javax.swing.*;
 
 public class FortifyTroops {
@@ -8,9 +10,9 @@ public class FortifyTroops {
     private int troops;
     private boolean canceled = false ;
 
-    public FortifyTroops(Territory from, String s) {
+    public FortifyTroops(Territory from) {
         JFrame frame = new JFrame();
-        String numberOfFortifiedTroops = JOptionPane.showInputDialog(frame, "Input number of troops to " + s + " with");
+        String numberOfFortifiedTroops = JOptionPane.showInputDialog(frame, "Input number of troops to fortify with");
 
         if (numberOfFortifiedTroops == null) {
             canceled = true;
@@ -18,16 +20,38 @@ public class FortifyTroops {
             // If the input is not an integer we get an error
             if (!numberOfFortifiedTroops.matches("[0-9]+")) {
                 JOptionPane.showMessageDialog(frame, "Please input a natural number!", "Error", JOptionPane.WARNING_MESSAGE);
-                setVariables(new FortifyTroops(from, s));
+                setVariables(new FortifyTroops(from));
             } else if (numberOfFortifiedTroops.equals("0")) {
                 JOptionPane.showMessageDialog(frame, "You have to send atleast one troop to this territory!", "Error", JOptionPane.WARNING_MESSAGE);
-                setVariables(new FortifyTroops(from, s));
+                setVariables(new FortifyTroops(from));
             } else if (Integer.parseInt(numberOfFortifiedTroops) >= from.getNumberOfTroops())  {
                 JOptionPane.showMessageDialog(frame, "You can't send that many troops to this territory!", "Error", JOptionPane.WARNING_MESSAGE);
-                setVariables(new FortifyTroops(from, s));
+                setVariables(new FortifyTroops(from));
             } else {
                 troops = Integer.parseInt(numberOfFortifiedTroops);
             }
+        }
+    }
+
+    public FortifyTroops(Vertex from) {
+        JFrame frame = new JFrame();
+        String numberOfFortifiedTroops = JOptionPane.showInputDialog(frame, "Input number of troops to capture with");
+
+        // If the input is not an integer we get an error
+        if (!numberOfFortifiedTroops.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(frame, "Please input a natural number!", "Error", JOptionPane.WARNING_MESSAGE);
+            setVariables(new FortifyTroops(from));
+        } else if (numberOfFortifiedTroops == null) {
+            JOptionPane.showMessageDialog(frame, "Please input an integer", "Error", JOptionPane.WARNING_MESSAGE);
+
+        } else if (numberOfFortifiedTroops.equals("0")) {
+            JOptionPane.showMessageDialog(frame, "You have to send atleast one troop to this territory!", "Error", JOptionPane.WARNING_MESSAGE);
+            setVariables(new FortifyTroops(from));
+        } else if (Integer.parseInt(numberOfFortifiedTroops) >= from.getTerritory().getNumberOfTroops())  {
+            JOptionPane.showMessageDialog(frame, "You can't send that many troops to this territory!", "Error", JOptionPane.WARNING_MESSAGE);
+            setVariables(new FortifyTroops(from));
+        } else {
+            troops = Integer.parseInt(numberOfFortifiedTroops);
         }
     }
 

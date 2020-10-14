@@ -232,34 +232,38 @@ public class MainGameLoop {
                         narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
                         if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                             if (graph.isAdjecent(attacker, defender)) {
-                                // Wait until die are rolled
                                 dicePanel.allowRolling(true);
                                 dicePanel.resetDiceRolls();
                                 narrator.addText("Roll the dice to determine the fight!");
+                                // Wait until die are rolled and valid amount of die is selected
                                 while(!dicePanel.diceRolled()) {
                                     delay();
                                 }
+                                if (dicePanel.validAmountOfDiceSelected(attacker.getTerritory().getNumberOfTroops(), defender.getTerritory().getNumberOfTroops())) {
+                                    // Perform a fight
+                                    game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
 
-                                // Perform a fight
-                                game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+                                    // Update troops counts
+                                    attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
+                                    defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
+                                    map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
+                                    map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
 
-                                // Update troops counts
-                                attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
-                                defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
-                                map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
-                                map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
+                                    narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsDefenders() + ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsAttackers() + ")");
 
-                                narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsDefenders()+ ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsAttackers() +")");
+                                    // Reset classes
+                                    map.deselectTerritory();
+                                    game.getAttackingHandeler().resetTroopsLost();
+                                    dicePanel.allowRolling(false);
 
-                                // Reset classes
-                                map.deselectTerritory();
-                                game.getAttackingHandeler().resetTroopsLost();
-                                dicePanel.allowRolling(false);
-
-                                // If a territory is captured
-                                if (defender.getTerritory().getNumberOfTroops() < 1) {
-                                    oneTerritoryCaptured = true;
-                                    territoryCaptured(player, defender, attacker);
+                                    // If a territory is captured
+                                    if (defender.getTerritory().getNumberOfTroops() < 1) {
+                                        oneTerritoryCaptured = true;
+                                        territoryCaptured(player, defender, attacker);
+                                    }
+                                } else {
+                                    map.deselectTerritory();
+                                    narrator.addText("Invalid amount of dice selected!");
                                 }
                             } else {
                                 map.deselectTerritory();
@@ -302,7 +306,7 @@ public class MainGameLoop {
         }
 
         // How many troops are sent over
-        FortifyTroops popUp = new FortifyTroops(attack.getTerritory(), "capture");
+        FortifyTroops popUp = new FortifyTroops(attack.getTerritory());
         if (!popUp.isCanceled()) {
             attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - popUp.getTroops());
             defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + popUp.getTroops());
@@ -340,7 +344,7 @@ public class MainGameLoop {
                 narrator.addText("Player " + player.getName() + " is fortifying with troops from " + from.getTerritory().getTerritoryName());
                 if (from.getTerritory().getNumberOfTroops() > 1) {
                     if (isTerritoryOwnedBy(from.getTerritory(), player.getName())) {
-                        
+
                         // Wait until a different territory is selected
                         while (graph.get(map.getTerritoryNumber()) == from) {
                             delay();
@@ -350,7 +354,7 @@ public class MainGameLoop {
 
                         if (isTerritoryOwnedBy(to.getTerritory(), player.getName())) {
                             if (graph.isAdjecent(from, to)) {
-                                FortifyTroops popUp = new FortifyTroops(from.getTerritory(), "fortify");
+                                FortifyTroops popUp = new FortifyTroops(from.getTerritory());
                                 if (!popUp.isCanceled()) {
                                     from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - popUp.getTroops());
                                     to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + popUp.getTroops());
