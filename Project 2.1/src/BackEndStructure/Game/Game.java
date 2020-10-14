@@ -1,7 +1,7 @@
 package BackEndStructure.Game;
 
 import BackEndStructure.Entities.Cards.CardStack;
-import BackEndStructure.Entities.Dice;
+import BackEndStructure.Entities.Attacking;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territories;
@@ -26,7 +26,7 @@ public class Game {
     private final Graph graph;
 
     // Attacking Die
-    private Dice dice;
+    private Attacking attacking;
 
     // Cards
     private final CardStack cardStack = new CardStack();
@@ -66,7 +66,7 @@ public class Game {
         this.graph = new Territories().getGraph();
 
         // Instantiate Dice
-        this.dice = new Dice();
+        this.attacking = new Attacking();
 
         // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -102,8 +102,8 @@ public class Game {
         return cardStack;
     }
 
-    public Dice getDice() {
-        return dice;
+    public Attacking getDice() {
+        return attacking;
     }
 
     public Narrator getNarrator() { return narrator; }

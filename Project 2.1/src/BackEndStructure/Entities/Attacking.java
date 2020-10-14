@@ -1,8 +1,8 @@
 package BackEndStructure.Entities;
 
-public class Dice {
+public class Attacking {
 
-    // TODO MAYBE SPLIT CLASS UP INTO ATTACKING AND GETTING PLAYERORDER
+    // TODO connect to main game loop
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
     public void oneFight(int attackers, int defenders){
         int[] attackerDice = new int[3];
@@ -52,8 +52,7 @@ public class Dice {
 
     }
 
-
-
+}
 //    // Rolling for combat
 //    public void combat(int attackers, int defenders){
 //        int attackerDeaths = 0;
@@ -138,4 +137,3 @@ public class Dice {
 //        System.out.println("The defender has " + defendersAtEnd + " troops left!");
 //    }
 
-}
