@@ -1,6 +1,6 @@
 package BackEndStructure.Entities;
 
-public class Attacking {
+public class AttackingHandler {
 
     public static void main(String [] args) {
         oneFight(3, new int[]{1,5,6}, 2, new int[]{3,4});
@@ -31,7 +31,7 @@ public class Attacking {
             }
         }
 
-        if (attackers == 1 || defenders == 2) {
+        if (attackers == 2 || defenders == 1) {
             if (max > defMax) {
                 System.out.println("Defenders lose 1 troop");
             } else {

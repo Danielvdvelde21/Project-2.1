@@ -95,12 +95,12 @@ public class MainGameLoop {
                 Territory t = graph.get(map.getTerritoryNumber()).getTerritory();
                 if (isTerritoryOwnedBy(t, "unowned")) {
                     validTerritoryChosen = true;
-                } else if (isTerritoryOwnedBy(t, player.getName()) && noMoreUnownedTerritories){
+                } else if (isTerritoryOwnedBy(t, player.getName()) && noMoreUnownedTerritories) {
                     validTerritoryChosen = true;
                 } else if (isTerritoryOwnedBy(t, player.getName()) && !noMoreUnownedTerritories) {
                     map.deselectTerritory();
                     narrator.addText("Please select unowned territories first!");
-                }  else {
+                } else {
                     map.deselectTerritory();
                     narrator.addText("This territory already belongs to a player!");
                 }
@@ -135,14 +135,14 @@ public class MainGameLoop {
 
         // Update the Map
         narrator.addText(player.getName() + " put a troop on " + t.getTerritoryName());
-        map.updateTroopCount(territoryNumber,  t.getNumberOfTroops());
+        map.updateTroopCount(territoryNumber, t.getNumberOfTroops());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     // MainGameStage
 
     private void mainGameStage() {
-        while(!gameOver) {
+        while (!gameOver) {
             for (Player p : game.getPlayers()) {
                 playerTurn.setPlayerTurn(p);
                 // Set the player's inventory
@@ -177,7 +177,7 @@ public class MainGameLoop {
         int cards = turningInCards(player);
 
         // Troops for territories owned
-        int terri = player.getTerritoriesOwned()/3;
+        int terri = player.getTerritoriesOwned() / 3;
 
         // Troops for continents owned
         game.hasContinents(player);
@@ -188,24 +188,27 @@ public class MainGameLoop {
     }
 
     private int turningInCards(Player player) {
-        if(player.getHand().size()>4) {
-            narrator.addText("You have to turn in at least 1 set!");
-        } else {
-            narrator.addText("Do you want to turn in any sets?");
+        if(player.getHand().size() >= 3) {
+            if (player.getHand().size() > 4) {
+                narrator.addText("You have to turn in at least 1 set!");
+            } else {
+                narrator.addText("Do you want to turn in any sets?");
+            }
+            // Only now allow trading, player is not attacking
+            cardInventory.tradingAllowed(true);
+            cardInventory.attacking(false);
+
+            cardInventory.getInventory();
+            while (cardInventory.getMenuClosed()) {
+                delay();
+            }
+
+            // For the next player reset trading
+            cardInventory.tradingAllowed(false);
+
+            return game.getSetValue(player.getSetsTurnedIn());
         }
-        // Only now allow trading, player is not attacking
-        cardInventory.tradingAllowed(true);
-        cardInventory.attacking(false);
-
-        cardInventory.getInventory();
-        while (cardInventory.getMenuClosed()) {
-            delay();
-        }
-
-        // For the next player reset trading
-        cardInventory.tradingAllowed(false);
-
-        return game.getSetValue(player.getSetsTurnedIn());
+        return 0;
     }
 
     private void attacking(Player player) {
@@ -213,42 +216,47 @@ public class MainGameLoop {
         narrator.addText("Brace yourself! Player " + player.getName() + " is attacking different players!");
         map.deselectTerritory();
 
-        while(!playerTurn.hasTurnEnded() && !gameOver) {
+        while (!playerTurn.hasTurnEnded() && !gameOver) {
             delay();
             if (territorySelected()) {
                 Vertex attacker = graph.get(map.getTerritoryNumber()); // Attacking territory
                 narrator.addText("Player " + player.getName() + " is trying to attack with " + attacker.getTerritory().getTerritoryName());
                 if (isTerritoryOwnedBy(attacker.getTerritory(), player.getName())) {
-                    // Wait until a different territory is selected
-                    while (graph.get(map.getTerritoryNumber()) == attacker) {
-                        delay();
-                    }
-                    Vertex defender = graph.get(map.getTerritoryNumber()); // Defending territory
-                    narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
-                    if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
-                        if (graph.isAdjecent(attacker, defender)) {
-                            map.deselectTerritory();
+                    if (attacker.getTerritory().getNumberOfTroops() > 1) {
+                        // Wait until a different territory is selected
+                        while (graph.get(map.getTerritoryNumber()) == attacker) {
+                            delay();
+                        }
+                        Vertex defender = graph.get(map.getTerritoryNumber()); // Defending territory
+                        narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
+                        if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
+                            if (graph.isAdjecent(attacker, defender)) {
+                                map.deselectTerritory();
 
-                            // TODO COMBAT
-                            narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
-                            // game.getDice().oneFight();
-                            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops());
-                            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops());
-                            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(),  attacker.getTerritory().getNumberOfTroops());
-                            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(),  defender.getTerritory().getNumberOfTroops());
+                                // TODO COMBAT
+                                game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+                                attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops());
+                                defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops());
+                                map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
+                                map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
+                                narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
 
-                            if (defender.getTerritory().getNumberOfTroops() == 0) {
-                                oneTerritoryCaptured = true;
-                                territoryCaptured(player, defender);
+                                if (defender.getTerritory().getNumberOfTroops() == 0) {
+                                    oneTerritoryCaptured = true;
+                                    territoryCaptured(player, defender);
+                                }
+
+                            } else {
+                                map.deselectTerritory();
+                                narrator.addText("These territories are not adjacent to each other");
                             }
-
                         } else {
                             map.deselectTerritory();
-                            narrator.addText("These territories are not adjacent to each other");
+                            narrator.addText("You cant attack yourself!");
                         }
                     } else {
                         map.deselectTerritory();
-                        narrator.addText("You cant attack yourself!");
+                        narrator.addText("Please choose a territory that has more than 1 troop!");
                     }
                 } else {
                     map.deselectTerritory();
@@ -305,29 +313,34 @@ public class MainGameLoop {
             if (territorySelected()) {
                 Vertex from = graph.get(map.getTerritoryNumber()); // Territory that sends troops
                 narrator.addText("Player " + player.getName() + " is fortifying with troops from " + from.getTerritory().getTerritoryName());
-                if (isTerritoryOwnedBy(from.getTerritory(), player.getName())) {
-                    // Wait until a different territory is selected
-                    while (graph.get(map.getTerritoryNumber()) == from) {
-                        delay();
-                    }
-                    Vertex to = graph.get(map.getTerritoryNumber()); // Territory that gets troops
-                    narrator.addText("Player " + player.getName() + " is trying to fortify " + to.getTerritory().getTerritoryName() + " with troops from " + from.getTerritory().getTerritoryName());
+                if (from.getTerritory().getNumberOfTroops() > 1) {
+                    if (isTerritoryOwnedBy(from.getTerritory(), player.getName())) {
+                        // Wait until a different territory is selected
+                        while (graph.get(map.getTerritoryNumber()) == from) {
+                            delay();
+                        }
+                        Vertex to = graph.get(map.getTerritoryNumber()); // Territory that gets troops
+                        narrator.addText("Player " + player.getName() + " is trying to fortify " + to.getTerritory().getTerritoryName() + " with troops from " + from.getTerritory().getTerritoryName());
 
-                    if (isTerritoryOwnedBy(to.getTerritory(), player.getName())) {
-                        if (graph.isAdjecent(from, to)) {
-                            FortifyTroops popUp = new FortifyTroops(from.getTerritory());
-                            if (!popUp.isCanceled()) {
-                                from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - popUp.getTroops());
-                                to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + popUp.getTroops());
-                                map.updateTroopCount(from.getTerritory().getTerritoryNumber(),  from.getTerritory().getNumberOfTroops());
-                                map.updateTroopCount(to.getTerritory().getTerritoryNumber(),  to.getTerritory().getNumberOfTroops());
-                                fortified = true;
-                                narrator.addText("Player " + player.getName() + " send " + popUp.getTroops() + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
+                        if (isTerritoryOwnedBy(to.getTerritory(), player.getName())) {
+                            if (graph.isAdjecent(from, to)) {
+                                FortifyTroops popUp = new FortifyTroops(from.getTerritory());
+                                if (!popUp.isCanceled()) {
+                                    from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - popUp.getTroops());
+                                    to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + popUp.getTroops());
+                                    map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
+                                    map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
+                                    fortified = true;
+                                    narrator.addText("Player " + player.getName() + " send " + popUp.getTroops() + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
+                                }
+                                map.deselectTerritory();
+                            } else {
+                                map.deselectTerritory();
+                                narrator.addText("These territories are not adjacent to each other");
                             }
-                            map.deselectTerritory();
                         } else {
                             map.deselectTerritory();
-                            narrator.addText("These territories are not adjacent to each other");
+                            narrator.addText("Choose a territory that belongs to you!");
                         }
                     } else {
                         map.deselectTerritory();
@@ -335,7 +348,7 @@ public class MainGameLoop {
                     }
                 } else {
                     map.deselectTerritory();
-                    narrator.addText("Choose a territory that belongs to you!");
+                    narrator.addText("Choose a territory that has more than 1 troops!");
                 }
             }
         }
@@ -346,7 +359,10 @@ public class MainGameLoop {
 
     // Creates a delay
     private void delay() {
-        try { Thread.sleep(100); } catch (InterruptedException ignored) { }
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+        }
     }
 
     // If players throw the same number the one that first threw that number goes first
@@ -355,7 +371,7 @@ public class MainGameLoop {
         ArrayList<Integer> values = new ArrayList<>();
 
         // For each player in the game wait until he rolled the dice
-        for (int i = 0;i<game.getPlayers().size(); i++) {
+        for (int i = 0; i < game.getPlayers().size(); i++) {
             narrator.addText("Player " + game.getPlayers().get(i).getName() + " may roll the dice!");
             playerTurn.setPlayerTurn(game.getPlayers().get(i));
             while (!dicePanel.isDiceRolled()) {
@@ -364,7 +380,7 @@ public class MainGameLoop {
             values.add(dicePanel.getEyesPlayerOrderDice());
             narrator.addText("Player " + game.getPlayers().get(i).getName() + "  rolled " + dicePanel.getEyesPlayerOrderDice());
         }
-        for (int i = 0; i<game.getPlayers().size(); i++) {
+        for (int i = 0; i < game.getPlayers().size(); i++) {
             order.add(game.getPlayers().get(values.indexOf(Collections.max(values))));
             values.set(values.indexOf(Collections.max(values)), 0);
         }
@@ -414,7 +430,7 @@ public class MainGameLoop {
     // Get cards from eliminated player
     private void receiveCards(Player player, Vertex v) {
         for (Player p : game.getPlayers()) {
-            if(p.getName().equals(v.getTerritory().getOwner())) {
+            if (p.getName().equals(v.getTerritory().getOwner())) {
                 player.addToHand(p.getHand());
             }
         }
@@ -422,7 +438,7 @@ public class MainGameLoop {
 
     private void decreaseTerritories(Vertex v) {
         for (Player p : game.getPlayers()) {
-            if(p.getName().equals(v.getTerritory().getOwner())) {
+            if (p.getName().equals(v.getTerritory().getOwner())) {
                 p.decreaseTerritoriesOwned();
             }
         }

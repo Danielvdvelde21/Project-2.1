@@ -230,6 +230,22 @@ public class DicePanel {
         }
     }
 
+    public int getNumberOfAttackingDice() {
+        return numberOfAttackingDice;
+    }
+
+    public int getNumberOfDefendingDice() {
+        return numberOfDefendingDice;
+    }
+
+    public int[] getAttackDieValues() {
+        return new int[] {attackDice1.getDieValue(), attackDice2.getDieValue(), attackDice3.getDieValue()};
+    }
+
+    public int[] getDefendDieValues() {
+        return new int[] {defDice1.getDieValue(), defDice1.getDieValue()};
+    }
+
     public static class Die extends JComponent {
 
         private static final int DOT_DIAM = 6;  //diameter of the dots
