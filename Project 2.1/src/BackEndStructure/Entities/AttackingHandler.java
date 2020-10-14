@@ -6,7 +6,7 @@ public class AttackingHandler {
     private static int lostTroopsAttackers;
 
     public static void main (String[] args) {
-        oneFight(3,new int[]{4,1,6},2,new int[]{1,4});
+        oneFight(3,new int[]{2,2,5},2,new int[]{3,3});
         System.out.println("attackers lost: " + lostTroopsAttackers);
         System.out.println("defenders lost: " + lostTroopsDefenders);
     }
