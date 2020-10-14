@@ -40,15 +40,14 @@ public class AttackingHandler {
         for (int j = 0; j < 3; j++) {
             if (attackValues[j] > ndMax) {
                 ndMax = attackValues[j];
-
-                if (j < 2) {
-                    if (defendValues[j] > defNdMax) {
-                        defNdMax = defendValues[j];
-                    }
+            }
+            if (j < 2) {
+                if (defendValues[j] > defNdMax) {
+                    defNdMax = defendValues[j];
                 }
             }
         }
-        //System.out.println(max + "    " + ndMax + "     " + defMax + "     " + defNdMax);
+        System.out.println(max + "    " + ndMax + "     " + defMax + "     " + defNdMax);
 
         if (attackers == 1 || defenders == 1) {
             if (max > defMax) {
