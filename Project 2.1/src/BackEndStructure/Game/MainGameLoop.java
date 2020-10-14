@@ -7,6 +7,12 @@ import BackEndStructure.Graph.Vertex;
 import Visualisation.Map.Components.*;
 import Visualisation.Map.Map;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 public class MainGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -29,10 +35,10 @@ public class MainGameLoop {
     private final Narrator narrator;
 
     // For updating the player turn label (current player)
-    private PlayerTurn playerTurn = new PlayerTurn();
+    private final PlayerTurn playerTurn = new PlayerTurn();
 
     // For updating the card inventory
-    private CardInventory cardInventory = new CardInventory();
+    private final CardInventory cardInventory = new CardInventory();
 
     // For updating the dice panel
     private DicePanel dicePanel = new DicePanel();
@@ -46,8 +52,9 @@ public class MainGameLoop {
         this.narrator = game.getNarrator();
         cardInventory.setGame(game);
 
-        // TODO with actual dice
-        game.setPlayerOrder(game.getDice().getPlayOrder(game.getPlayers()));
+        determinePlayerOrder();
+        dicePanel.playerOrderObtained();
+        narrator.addText("Player order is " + game.getPlayerOrder());
         // The game starts by every player starting to place troops on the board
         placementStage();
         // The game is no about attacking, using cards, fortifying, etc.
@@ -60,13 +67,12 @@ public class MainGameLoop {
     // PlacementStage
 
     private void placementStage() {
-        narrator.addText("Placement phase");
         // For each player, for StartingTroops amount of rounds
-        int round = 34;
+        int round = 1;
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
-                cardInventory.setCurrentPlayer(p);
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
+                cardInventory.setCurrentPlayer(p);
                 playerTurn.setPlayerTurn(p);
                 placementTurn(p);
             }
@@ -74,12 +80,13 @@ public class MainGameLoop {
         }
     }
 
-    public void placementTurn(Player player) {
+    private void placementTurn(Player player) {
         placeTroop(player, getSelectedTerritoryNumber(player));
     }
 
     // Logic for whether a player can place down a troop on a territory
     private int getSelectedTerritoryNumber(Player player) {
+        map.deselectTerritory();
         boolean validTerritoryChosen = false;
 
         while (!validTerritoryChosen) {
@@ -204,6 +211,7 @@ public class MainGameLoop {
     private void attacking(Player player) {
         boolean oneTerritoryCaptured = false;
         narrator.addText("Brace yourself! Player " + player.getName() + " is attacking different players!");
+        map.deselectTerritory();
 
         while(!playerTurn.hasTurnEnded() && !gameOver) {
             delay();
@@ -277,7 +285,7 @@ public class MainGameLoop {
     }
 
     // Forcing a player to turn in a set during an attacking phase
-    public void turnInCardsAttacking(Player player) {
+    private void turnInCardsAttacking(Player player) {
         cardInventory.tradingAllowed(true);
         cardInventory.attacking(true);
         cardInventory.getInventory();
@@ -288,6 +296,7 @@ public class MainGameLoop {
     }
 
     private void fortifyTerritory(Player player) {
+        map.deselectTerritory();
         narrator.addText("Player " + player.getName() + " is fortifying his territories!");
         boolean fortified = false;
 
@@ -340,6 +349,28 @@ public class MainGameLoop {
         try { Thread.sleep(100); } catch (InterruptedException ignored) { }
     }
 
+    // If players throw the same number the one that first threw that number goes first
+    private void determinePlayerOrder() {
+        ArrayList<Player> order = new ArrayList<>();
+        ArrayList<Integer> values = new ArrayList<>();
+
+        // For each player in the game wait until he rolled the dice
+        for (int i = 0;i<game.getPlayers().size(); i++) {
+            narrator.addText("Player " + game.getPlayers().get(i).getName() + " may roll the dice!");
+            playerTurn.setPlayerTurn(game.getPlayers().get(i));
+            while (!dicePanel.isDiceRolled()) {
+                delay();
+            }
+            values.add(dicePanel.getEyesPlayerOrderDice());
+            narrator.addText("Player " + game.getPlayers().get(i).getName() + "  rolled " + dicePanel.getEyesPlayerOrderDice());
+        }
+        for (int i = 0; i<game.getPlayers().size(); i++) {
+            order.add(game.getPlayers().get(values.indexOf(Collections.max(values))));
+            values.set(values.indexOf(Collections.max(values)), 0);
+        }
+        game.setPlayerOrder(order);
+    }
+
     // If a territory is selected
     private boolean territorySelected() {
         return map.getTerritoryNumber() != -1;
@@ -381,7 +412,7 @@ public class MainGameLoop {
     }
 
     // Get cards from eliminated player
-    public void receiveCards(Player player, Vertex v) {
+    private void receiveCards(Player player, Vertex v) {
         for (Player p : game.getPlayers()) {
             if(p.getName().equals(v.getTerritory().getOwner())) {
                 player.addToHand(p.getHand());

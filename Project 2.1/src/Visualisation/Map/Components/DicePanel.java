@@ -10,24 +10,38 @@ public class DicePanel {
     private int numberOfAttackingDice = 1;
     private int numberOfDefendingDice = 2;
 
+    private final Die attackDice1 = new Die();
+    private final Die attackDice2 = new Die();
+    private final Die attackDice3 = new Die();
+    private final Die defDice1 = new Die();
+    private final Die defDice2 = new Die();
+
+    private final JPanel p1 = new JPanel();   // offence label
+    private final JPanel p1a = new JPanel();  // dice
+    private final JPanel p1b = new JPanel();  // throw button
+    private final JPanel p2 = new JPanel();   // defence label
+    private final JPanel p2a = new JPanel();  // dice
+    private final JPanel p2b = new JPanel();  // throw button
+
+    private final JLabel playerOrder = new JLabel("Player Order Dice:");
+    private final JLabel offence = new JLabel("offence:");
+    private final JLabel defence = new JLabel("Defence:");
+
+    private final JButton next = new JButton(">>");
+    private final JButton next1 = new JButton(">>");
+    private final JButton previous = new JButton("<<");
+    private final JButton previous1 = new JButton("<<");
+
+    private final JButton attackDiceRoll = new JButton("Throw");
+    private final JButton defendDiceRoll = new JButton("Throw");
+
+    private boolean diceRolled;
+
     public DicePanel() {
-        JPanel p1 = new JPanel();   // offence label
-        JPanel p1a = new JPanel();  // dice
-        JPanel p1b = new JPanel();  // throw button
-        JPanel p2 = new JPanel();   // defence label
-        JPanel p2a = new JPanel();  // dice
-        JPanel p2b = new JPanel();  // throw button
-
-        JLabel offence = new JLabel("Offence:");
+        playerOrder.setFont(new Font("Courier New", Font.BOLD, 14));
         offence.setFont(new Font("Courier New", Font.BOLD, 14));
-        JLabel defence = new JLabel("Defence:");
-        defence.setFont(new Font("Courier New", Font.BOLD, 14));
 
-        Die attackDice1 = new Die();
-        Die attackDice2 = new Die();
-        Die attackDice3 = new Die();
-        Die defDice1 = new Die();
-        Die defDice2 = new Die();
+        defence.setFont(new Font("Courier New", Font.BOLD, 14));
 
         p1.setBackground(Color.LIGHT_GRAY);
         p1a.setBackground(Color.LIGHT_GRAY);
@@ -36,7 +50,6 @@ public class DicePanel {
         p2a.setBackground(Color.LIGHT_GRAY);
         p2b.setBackground(Color.LIGHT_GRAY);
 
-        JButton next = new JButton(">>");
         next.setFont(new Font("Courier News", Font.PLAIN, 10));
         next.setBackground(null);
         next.setBorderPainted(false);
@@ -44,7 +57,6 @@ public class DicePanel {
         next.setEnabled(true);
         next.setPreferredSize(next.getPreferredSize());
 
-        JButton previous = new JButton("<<");
         previous.setFont(new Font("Courier News", Font.PLAIN, 10));
         previous.setBackground(null);
         previous.setBorderPainted(false);
@@ -96,7 +108,6 @@ public class DicePanel {
             Map.frame.setVisible(true);
         });
 
-        JButton next1 = new JButton(">>");
         next1.setFont(new Font("Courier News", Font.PLAIN, 10));
         next1.setBackground(null);
         next1.setBorderPainted(false);
@@ -104,7 +115,6 @@ public class DicePanel {
         next1.setEnabled(true);
         next1.setPreferredSize(next.getPreferredSize());
 
-        JButton previous1 = new JButton("<<");
         previous1.setFont(new Font("Courier News", Font.PLAIN, 10));
         previous1.setBackground(null);
         previous1.setBorderPainted(false);
@@ -136,47 +146,19 @@ public class DicePanel {
             Map.frame.setVisible(true);
         });
 
-        JButton attackDiceRoll = new JButton("Throw");
         attackDiceRoll.setFont(new Font("Courier New", Font.PLAIN, 14));
         attackDiceRoll.addActionListener(actionEvent -> {
-            switch (numberOfAttackingDice) {
-                case 1:
-                    attackDice1.rollDie();
-                    break;
-                case 2:
-                    attackDice1.rollDie();
-                    attackDice2.rollDie();
-                    break;
-                case 3:
-                    attackDice1.rollDie();
-                    attackDice2.rollDie();
-                    attackDice3.rollDie();
-            }
-
+            rollAttackDie();
         });
-        JButton defendDiceRoll = new JButton("Throw");
+
         defendDiceRoll.setFont(new Font("Courier New", Font.PLAIN, 14));
         defendDiceRoll.addActionListener(actionEvent -> {
-            switch (numberOfDefendingDice) {
-                case 1:
-                    defDice1.rollDie();
-                    break;
-                case 2:
-                    defDice1.rollDie();
-                    defDice2.rollDie();
-            }
+            rollDefDie();
         });
 
-        p1.add(offence);
+        p1.add(playerOrder);
         p1a.add(attackDice1);
-        p1a.add(next);
         p1b.add(attackDiceRoll);
-
-        p2.add(defence);
-        p2a.add(previous1);
-        p2a.add(defDice1);
-        p2a.add(defDice2);
-        p2b.add(defendDiceRoll);
 
         p1.setBounds(new Rectangle(Map.frameX, 218+100, 300, 40));
         p1a.setBounds(new Rectangle(Map.frameX, 218+140, 300, 80));
@@ -190,6 +172,62 @@ public class DicePanel {
         Map.frame.add(p2);
         Map.frame.add(p2a);
         Map.frame.add(p2b);
+    }
+
+    public void playerOrderObtained() {
+        p1.add(offence);
+        p1.remove(playerOrder);
+        p1a.add(next);
+        p2.add(defence);
+        p2a.add(previous1);
+        p2a.add(defDice1);
+        p2a.add(defDice2);
+        p2b.add(defendDiceRoll);
+    }
+
+    public boolean isDiceRolled() {
+        if (diceRolled) {
+            resetDiceRolled();
+            return true;
+        }
+        return false;
+    }
+
+    private void resetDiceRolled() {
+        diceRolled = false;
+    }
+
+    public int getEyesPlayerOrderDice() {
+        return attackDice1.getDieValue();
+    }
+
+    private void rollAttackDie() {
+        switch (numberOfAttackingDice) {
+            case 1:
+                // For player order
+                diceRolled = true;
+                attackDice1.rollDie();
+                break;
+            case 2:
+                attackDice1.rollDie();
+                attackDice2.rollDie();
+                break;
+            case 3:
+                attackDice1.rollDie();
+                attackDice2.rollDie();
+                attackDice3.rollDie();
+        }
+    }
+
+    private void rollDefDie() {
+        switch (numberOfDefendingDice) {
+            case 1:
+                defDice1.rollDie();
+                break;
+            case 2:
+                defDice1.rollDie();
+                defDice2.rollDie();
+        }
     }
 
     public static class Die extends JComponent {
@@ -208,6 +246,10 @@ public class DicePanel {
         public void rollDie() {
             dieValue = (int) ( 6 * Math.random() + 1);
             repaint();
+        }
+
+        public int getDieValue() {
+            return dieValue;
         }
 
         @Override

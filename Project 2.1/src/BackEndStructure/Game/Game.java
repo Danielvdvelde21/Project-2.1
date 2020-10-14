@@ -82,6 +82,14 @@ public class Game {
         return players;
     }
 
+    public String getPlayerOrder() {
+        String order = "";
+        for (Player p : players) {
+            order += p.getName() + " --> ";
+        }
+        return order.substring(0, order.length()-4);
+    }
+
     public void setPlayerOrder(ArrayList<Player> order) {
         players = order;
     }

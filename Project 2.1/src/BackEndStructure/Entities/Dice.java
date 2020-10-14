@@ -1,7 +1,5 @@
 package BackEndStructure.Entities;
 
-import java.util.ArrayList;
-
 public class Dice {
 
     // TODO MAYBE SPLIT CLASS UP INTO ATTACKING AND GETTING PLAYERORDER
@@ -54,24 +52,7 @@ public class Dice {
 
     }
 
-    // Determines who can start placing infantry
-    public ArrayList<Player> getPlayOrder(ArrayList<Player> players) {
-        // get the order in int
-        int[] playOrderInts = new int[players.size()];
-        // get the output ready
-        int[] list = new int[]{1,2,3,4,5,6};
-        ArrayList<Player> playOrder = new ArrayList<>();
 
-        for(int i = 0; i < players.size(); i++){
-            int winner = (int) (Math.random() * players.size());
-            while(list[winner] == 0){
-                winner = (int) (Math.random() * players.size());
-            }
-            list[winner] = 0;
-            playOrder.add(players.get(winner));
-        }
-        return playOrder;
-    }
 
 //    // Rolling for combat
 //    public void combat(int attackers, int defenders){
@@ -157,24 +138,4 @@ public class Dice {
 //        System.out.println("The defender has " + defendersAtEnd + " troops left!");
 //    }
 
-
-    // tester method of getPlayOrder
-//    public int[] getPlayOrder2(int[] players) {
-//        // get the order in int
-//        int[] playOrderInts = new int[players.length];
-//        // get the output ready
-//        int[] list = new int[]{1,2,3,4,5,6};
-//        int[] playOrder = new int[players.length];
-//
-//        for(int i = 0; i < players.length; i++){
-//            int winner = (int) (Math.random() * players.length);
-//            while(list[winner] == 0){
-//                winner = (int) (Math.random() * players.length);
-//            }
-//            list[winner] = 0;
-//            System.out.println(players[winner]);
-//            playOrder[i] = players[winner];
-//        }
-//        return playOrder;
-//    }
 }
