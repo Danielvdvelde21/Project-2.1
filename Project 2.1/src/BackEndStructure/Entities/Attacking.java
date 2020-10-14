@@ -4,6 +4,8 @@ public class Attacking {
 
     public static void main(String [] args) {
         oneFight(3, new int[]{1,5,6}, 2, new int[]{3,4});
+        System.out.println("new experiment");
+        oneFight(2, new int[]{1,5,6}, 1, new int[]{3,4});
     }
 
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
