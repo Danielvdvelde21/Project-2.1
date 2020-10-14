@@ -2,12 +2,18 @@ package BackEndStructure.Entities;
 
 public class AttackingHandler {
 
-    private int lostTroopsDefenders;
-    private int lostTroopsAttackers;
+    private static int lostTroopsDefenders;
+    private static int lostTroopsAttackers;
+
+    public static void main (String[] args) {
+        oneFight(3,new int[]{4,1,6},2,new int[]{1,4});
+        System.out.println("attackers lost: " + lostTroopsAttackers);
+        System.out.println("defenders lost: " + lostTroopsDefenders);
+    }
 
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
     // AttackValues is always size 3 and DefendValues always size 2
-    public void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues) {
+    public static void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues) {
         int max = 0;
         int ndMax = 0;
         int defMax = 0;
