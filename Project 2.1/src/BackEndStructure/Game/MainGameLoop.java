@@ -306,14 +306,15 @@ public class MainGameLoop {
         }
 
         // How many troops are sent over
-        FortifyTroops popUp = new FortifyTroops(attack.getTerritory());
-        if (!popUp.isCanceled()) {
-            attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - popUp.getTroops());
-            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + popUp.getTroops());
-            map.updateTroopCount(attack.getTerritory().getTerritoryNumber(), attack.getTerritory().getNumberOfTroops());
-            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
-            narrator.addText("Player " + player.getName() + " send " + popUp.getTroops() + " troop(s) from " + attack.getTerritory().getTerritoryName() + " to " + defender.getTerritory().getTerritoryName());
+        TerritoryCaptured popUp = new TerritoryCaptured(attack.getTerritory());
+        while (!popUp.getValidNumberInserted()) {
+            delay();
         }
+        attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - popUp.getTroops());
+        defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + popUp.getTroops());
+        map.updateTroopCount(attack.getTerritory().getTerritoryNumber(), attack.getTerritory().getNumberOfTroops());
+        map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
+        narrator.addText("Player " + player.getName() + " send " + popUp.getTroops() + " troop(s) from " + attack.getTerritory().getTerritoryName() + " to " + defender.getTerritory().getTerritoryName());
 
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
         if (player.getHand().size() >= 6) {
@@ -329,6 +330,8 @@ public class MainGameLoop {
         while (cardInventory.getMenuClosed()) {
             delay();
         }
+        cardInventory.tradingAllowed(false);
+        cardInventory.attacking(false);
         placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
     }
 

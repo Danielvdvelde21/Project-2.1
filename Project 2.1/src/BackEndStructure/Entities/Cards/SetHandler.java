@@ -9,9 +9,6 @@ public class SetHandler {
 
     // Sets are always pairs of 3 cards
     public boolean isSet(Game game, Player player, ArrayList<Card> cards) {
-        // IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
-        checkMatchingTerritories(game, player, cards);
-
         int countInfantry = 0;
         int countCavalry = 0;
         int countArtillery = 0;
@@ -33,7 +30,12 @@ public class SetHandler {
                     countArtillery++;
             }
         }
-        return (countInfantry == 3 || countCavalry == 3 || countArtillery == 3 || (countInfantry == 1 && countCavalry == 1 && countArtillery == 1));
+        if (countInfantry == 3 || countCavalry == 3 || countArtillery == 3 || (countInfantry == 1 && countCavalry == 1 && countArtillery == 1)) {   // IF YOU HAVE A CARD WITH A TERRITORY ON IT THAT YOU OWN RECEIVE +2 TROOPS ON THAT TERRITORY
+            checkMatchingTerritories(game, player, cards);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void checkMatchingTerritories(Game game, Player player, ArrayList<Card> cards) {
