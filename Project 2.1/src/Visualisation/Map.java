@@ -102,7 +102,7 @@ public class Map {
     public void createMap() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocation(80, 7);
-        frame.setSize(frameX+200, frameY+150);
+        frame.setSize(frameX+300, frameY+150);
         frame.setResizable(false);
         JPanel p = new JPanel();
 

@@ -107,63 +107,61 @@ public class CardInventory {
         errorLabel.setVisible(false);
         panell.add(errorLabel);
 
-        turnInSetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (allowTrading) {
-                    if (attacking) {
-                        if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
-                            // Return cards to stack
-                            game.getCardStack().returnCards(selectedCards);
-                            // Remove cards from player hand
-                            currentPlayer.getHand().removeAll(selectedCards);
-                            // Deselect card list
-                            selectedCards.clear();
-                            // Player has 1 more completed set
-                            currentPlayer.incrementSetsOwned();
+        turnInSetButton.addActionListener(actionEvent -> {
+            if (allowTrading) {
+                if (attacking) {
+                    if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
+                        // Return cards to stack
+                        game.getCardStack().returnCards(selectedCards);
+                        // Remove cards from player hand
+                        currentPlayer.getHand().removeAll(selectedCards);
+                        // Deselect card list
+                        selectedCards.clear();
+                        // Player has 1 more completed set
+                        currentPlayer.incrementSetsOwned();
 
-                            f.remove(panel1);
-                            for(JLabel label : selectedLabels) {
-                                panel1.remove(label);
-                            }
-                            f.add(panel1);
-                            f.repaint();
-                            f.setVisible(true);
-                        } else {
-                            errorLabel.setText("[NOT A VALID SET SELECTED]");
-                            errorLabel.setVisible(true);
+                        f.remove(panel1);
+                        for(JLabel label : selectedLabels) {
+                            panel1.remove(label);
                         }
+                        f.add(panel1);
+                        f.repaint();
+                        f.setVisible(true);
                     } else {
-                        if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
-                            // Return cards to stack
-                            game.getCardStack().returnCards(selectedCards);
-                            // Remove cards from player hand
-                            currentPlayer.getHand().removeAll(selectedCards);
-                            // Deselect card list
-                            selectedCards.clear();
-                            // Player has 1 more completed set
-                            currentPlayer.incrementSetsOwned();
-                            // Allow trading is set to false (player can only turn in one set
-                            attacking = false;
-                            allowTrading = false;
-
-                            f.remove(panel1);
-                            for(JLabel label : selectedLabels) {
-                                    panel1.remove(label);
-                            }
-                            f.add(panel1);
-                            f.repaint();
-                            f.setVisible(true);
-                        } else {
-                            errorLabel.setText("[NOT A VALID SET SELECTED]");
-                            errorLabel.setVisible(true);
-                        }
+                        errorLabel.setText("[NOT A VALID SET SELECTED]");
+                        errorLabel.setVisible(true);
                     }
                 } else {
-                    errorLabel.setText("[YOU MAY NOT TRADE RIGHT NOW]");
-                    errorLabel.setVisible(true);
+                    if (selectedCards.size() == 3 && setHandler.isSet(game, currentPlayer, selectedCards)) {
+                        // Return cards to stack
+                        game.getCardStack().returnCards(selectedCards);
+                        // Remove cards from player hand
+                        currentPlayer.getHand().removeAll(selectedCards);
+                        // Deselect card list
+                        selectedCards.clear();
+                        // Player has 1 more completed set
+                        currentPlayer.incrementSetsOwned();
+                        // Allow trading is set to false (player can only turn in one set
+                        attacking = false;
+                        allowTrading = false;
+
+                        f.remove(panel1);
+                        for(JLabel label : selectedLabels) {
+                                panel1.remove(label);
+                        }
+                        f.add(panel1);
+                        f.repaint();
+                        f.setVisible(true);
+                    } else {
+                        errorLabel.setText("[NOT A VALID SET SELECTED]");
+                        errorLabel.setVisible(true);
+                    }
                 }
-            }});
+            } else {
+                errorLabel.setText("[YOU MAY NOT TRADE RIGHT NOW]");
+                errorLabel.setVisible(true);
+            }
+        });
 
         panel2.add(turnInSetButton);
         f.add(panell, BorderLayout.PAGE_START);
@@ -181,7 +179,7 @@ public class CardInventory {
         JPanel p = new JPanel();
         p.setBackground(Color.LIGHT_GRAY);
         p.add(cardInventory);
-        p.setBounds(new Rectangle(Map.frameX, 218, 200, 100));
+        p.setBounds(new Rectangle(Map.frameX, 218, 300, 100));
         Map.frame.add(p);
     }
 

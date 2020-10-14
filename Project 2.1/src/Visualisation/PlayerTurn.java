@@ -18,7 +18,7 @@ public class PlayerTurn {
     public PlayerTurn() {
         JLabel label = new JLabel("Player turn:");
         label.setFont(new Font("Courier New", Font.PLAIN, 14));
-        nameLabel.setFont(new Font("Courier New", Font.PLAIN, 14));
+        nameLabel.setFont(new Font("Courier New", Font.BOLD, 14));
 
         JButton endTurnButton = new JButton("End Turn");
         endTurnButton.setFont(new Font("Courier New", Font.PLAIN, 14));
@@ -33,9 +33,9 @@ public class PlayerTurn {
         p3.add(endTurnButton);
 
         int yStart = 43;
-        p1.setBounds(new Rectangle(Map.frameX, yStart, 200, 40));
-        p2.setBounds(new Rectangle(Map.frameX, yStart+40, 200, 35));
-        p3.setBounds(new Rectangle(Map.frameX, yStart+40+35, 200, 100));
+        p1.setBounds(new Rectangle(Map.frameX, yStart, 300, 40));
+        p2.setBounds(new Rectangle(Map.frameX, yStart+40, 300, 35));
+        p3.setBounds(new Rectangle(Map.frameX, yStart+40+35, 300, 100));
         Map.frame.add(p1);
         Map.frame.add(p2);
         Map.frame.add(p3);
