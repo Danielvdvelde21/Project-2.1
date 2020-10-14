@@ -1,16 +1,13 @@
 package BackEndStructure.Entities;
 
-public class AttackingHandler{
+public class AttackingHandler {
 
-    public static void main(String[] args) {
-        oneFight(3, new int[]{1, 2, 3}, 2, new int[]{6, 4});
-        System.out.println("new experiment");
-        oneFight(2, new int[]{1, 5, 6}, 1, new int[]{3, 6});
-    }
+    private int lostTroopsDefenders;
+    private int lostTroopsAttackers;
 
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
     // AttackValues is always size 3 and DefendValues always size 2
-    public static void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues) {
+    public void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues) {
         int max = 0;
         int ndMax = 0;
         int defMax = 0;
@@ -49,25 +46,37 @@ public class AttackingHandler{
 
         if (attackers == 1 || defenders == 1) {
             if (max > defMax) {
-                System.out.println("Defenders lose 1 troop");
+                lostTroopsDefenders = 1;
             } else {
-                System.out.println("Attackers lose 1 troop");
+                lostTroopsAttackers = 1;
             }
         } else {
             if (max > defMax && ndMax > defNdMax) {
-                System.out.println("Defenders lose 2 troops!");
+                lostTroopsDefenders = 2;
             } else if (defMax >= max && defNdMax >= ndMax) {
-                System.out.println("Attackers lose 2 troops!");
+                lostTroopsAttackers = 2;
             } else {
-                System.out.println("Attackers and Defenders both lose 1 troop");
+                lostTroopsAttackers = 1;
+                lostTroopsDefenders = 1;
             }
         }
 
     }
+
+    public int getLostTroopsDefenders() {
+        return lostTroopsDefenders;
+    }
+
+    public int getLostTroopsAttackers() {
+        return lostTroopsAttackers;
+    }
+
+    public void resetTroopsLost() {
+        lostTroopsAttackers = 0;
+        lostTroopsDefenders = 0;
+    }
+
 }
-
-
-
 
 //    // Rolling for combat
 //    public void combat(int attackers, int defenders){

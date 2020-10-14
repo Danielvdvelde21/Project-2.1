@@ -41,7 +41,7 @@ public class MainGameLoop {
     private final CardInventory cardInventory = new CardInventory();
 
     // For updating the dice panel
-    private DicePanel dicePanel = new DicePanel();
+    private final DicePanel dicePanel = new DicePanel();
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -51,6 +51,7 @@ public class MainGameLoop {
         this.graph = game.getGraph();
         this.narrator = game.getNarrator();
         cardInventory.setGame(game);
+        dicePanel.setGame(game);
 
         determinePlayerOrder();
         dicePanel.playerOrderObtained();
@@ -231,21 +232,35 @@ public class MainGameLoop {
                         narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
                         if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
                             if (graph.isAdjecent(attacker, defender)) {
-                                map.deselectTerritory();
+                                // Wait until die are rolled
+                                dicePanel.allowRolling(true);
+                                dicePanel.resetDiceRolls();
+                                narrator.addText("Roll the dice to determine the fight!");
+                                while(!dicePanel.diceRolled()) {
+                                    delay();
+                                }
 
-                                // TODO COMBAT
+                                // Perform a fight
                                 game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
-                                attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops());
-                                defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops());
+
+                                // Update troops counts
+                                attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
+                                defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
                                 map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
                                 map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
-                                narrator.addText("Player " + player.getName() + " attacked " + attacker.getTerritory().getTerritoryName() + "(-numtroops) with " + defender.getTerritory().getTerritoryName());
 
-                                if (defender.getTerritory().getNumberOfTroops() == 0) {
+                                narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsDefenders()+ ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsAttackers() +")");
+
+                                // Reset classes
+                                map.deselectTerritory();
+                                game.getAttackingHandeler().resetTroopsLost();
+                                dicePanel.allowRolling(false);
+
+                                // If a territory is captured
+                                if (defender.getTerritory().getNumberOfTroops() < 1) {
                                     oneTerritoryCaptured = true;
                                     territoryCaptured(player, defender);
                                 }
-
                             } else {
                                 map.deselectTerritory();
                                 narrator.addText("These territories are not adjacent to each other");
@@ -367,6 +382,7 @@ public class MainGameLoop {
 
     // If players throw the same number the one that first threw that number goes first
     private void determinePlayerOrder() {
+        dicePanel.allowRolling(true);
         ArrayList<Player> order = new ArrayList<>();
         ArrayList<Integer> values = new ArrayList<>();
 
@@ -385,6 +401,8 @@ public class MainGameLoop {
             values.set(values.indexOf(Collections.max(values)), 0);
         }
         game.setPlayerOrder(order);
+        dicePanel.allowRolling(false);
+        dicePanel.playerOrderObtained();
     }
 
     // If a territory is selected

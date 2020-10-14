@@ -1,5 +1,6 @@
 package Visualisation.Map.Components;
 
+import BackEndStructure.Game.Game;
 import Visualisation.Map.Map;
 
 import javax.swing.*;
@@ -35,7 +36,16 @@ public class DicePanel {
     private final JButton attackDiceRoll = new JButton("Throw");
     private final JButton defendDiceRoll = new JButton("Throw");
 
+    private Game game;
+
+    // To determine player order
     private boolean diceRolled;
+
+    // To determine if dice are rolled for an attack
+    private boolean rolledAttack = false;
+    private boolean rolledDefend = false;
+    private boolean rollingAllowed;
+    private boolean order = true;
 
     public DicePanel() {
         playerOrder.setFont(new Font("Courier New", Font.BOLD, 14));
@@ -175,6 +185,8 @@ public class DicePanel {
     }
 
     public void playerOrderObtained() {
+        order = false;
+
         p1.add(offence);
         p1.remove(playerOrder);
         p1a.add(next);
@@ -202,31 +214,49 @@ public class DicePanel {
     }
 
     private void rollAttackDie() {
-        switch (numberOfAttackingDice) {
-            case 1:
-                // For player order
-                diceRolled = true;
-                attackDice1.rollDie();
-                break;
-            case 2:
-                attackDice1.rollDie();
-                attackDice2.rollDie();
-                break;
-            case 3:
-                attackDice1.rollDie();
-                attackDice2.rollDie();
-                attackDice3.rollDie();
+        if (rollingAllowed) {
+            if (!rolledAttack || order) {
+                rolledAttack = true;
+                switch (numberOfAttackingDice) {
+                    case 1:
+                        // For player order
+                        diceRolled = true;
+                        attackDice1.rollDie();
+                        break;
+                    case 2:
+                        attackDice1.rollDie();
+                        attackDice2.rollDie();
+                        break;
+                    case 3:
+                        attackDice1.rollDie();
+                        attackDice2.rollDie();
+                        attackDice3.rollDie();
+                }
+            } else {
+                game.getNarrator().addText("You may only roll the attacker die once!");
+            }
+        } else {
+            game.getNarrator().addText("You may not roll the die right now!");
         }
     }
 
     private void rollDefDie() {
-        switch (numberOfDefendingDice) {
-            case 1:
-                defDice1.rollDie();
-                break;
-            case 2:
-                defDice1.rollDie();
-                defDice2.rollDie();
+        if (rollingAllowed) {
+            if (!rolledDefend) {
+                rolledDefend = true;
+                switch (numberOfDefendingDice) {
+                    case 1:
+                        defDice1.rollDie();
+                        break;
+                    case 2:
+                        defDice1.rollDie();
+                        defDice2.rollDie();
+                }
+            } else {
+                game.getNarrator().addText("You may only roll the defender die once!");
+            }
+        } else {
+            game.getNarrator().addText("You may not roll the die right now!");
         }
     }
 
@@ -244,6 +274,23 @@ public class DicePanel {
 
     public int[] getDefendDieValues() {
         return new int[] {defDice1.getDieValue(), defDice1.getDieValue()};
+    }
+
+    public boolean diceRolled() {
+        return rolledAttack && rolledDefend;
+    }
+
+    public void resetDiceRolls() {
+        rolledAttack = false;
+        rolledDefend = false;
+    }
+
+    public void allowRolling(boolean b) {
+        rollingAllowed = b;
+    }
+
+    public void setGame(Game g) {
+        game = g;
     }
 
     public static class Die extends JComponent {
