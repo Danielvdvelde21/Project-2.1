@@ -1,13 +1,11 @@
 package BackEndStructure.Game;
 
-import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
-import Visualisation.*;
-
-import java.util.ArrayList;
+import Visualisation.Map.Components.*;
+import Visualisation.Map.Map;
 
 public class MainGameLoop {
 

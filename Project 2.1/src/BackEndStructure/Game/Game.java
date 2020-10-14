@@ -5,9 +5,8 @@ import BackEndStructure.Entities.Dice;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territories;
-import BackEndStructure.Graph.Territory;
-import Visualisation.Map;
-import Visualisation.Narrator;
+import Visualisation.Map.Map;
+import Visualisation.Map.Components.Narrator;
 
 import java.awt.*;
 import java.util.ArrayList;

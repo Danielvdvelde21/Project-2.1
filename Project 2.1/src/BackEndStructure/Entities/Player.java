@@ -1,7 +1,6 @@
 package BackEndStructure.Entities;
 
 import BackEndStructure.Entities.Cards.Card;
-import Visualisation.CardInventory;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -1,4 +1,6 @@
-package Visualisation;
+package Visualisation.Map.Components;
+
+import Visualisation.Map.Map;
 
 import javax.swing.*;
 import java.awt.*;

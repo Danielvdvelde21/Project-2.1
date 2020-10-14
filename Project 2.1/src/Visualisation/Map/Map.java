@@ -1,4 +1,4 @@
-package Visualisation;
+package Visualisation.Map;
 
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;

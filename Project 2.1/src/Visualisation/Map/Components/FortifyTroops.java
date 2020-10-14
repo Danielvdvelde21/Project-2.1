@@ -1,4 +1,4 @@
-package Visualisation;
+package Visualisation.Map.Components;
 
 import BackEndStructure.Graph.Territory;
 import javax.swing.*;

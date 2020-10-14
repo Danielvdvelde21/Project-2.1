@@ -1,9 +1,10 @@
-package Visualisation;
+package Visualisation.Map.Components;
 
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Cards.SetHandler;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
+import Visualisation.Map.Map;
 
 import javax.swing.*;
 import java.awt.*;

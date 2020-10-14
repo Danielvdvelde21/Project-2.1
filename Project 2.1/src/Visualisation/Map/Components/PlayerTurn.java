@@ -1,11 +1,10 @@
-package Visualisation;
+package Visualisation.Map.Components;
 
 import BackEndStructure.Entities.Player;
+import Visualisation.Map.Map;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PlayerTurn {
     private final JLabel nameLabel = new JLabel();
