@@ -2,33 +2,29 @@ package BackEndStructure.Entities;
 
 public class Attacking {
 
-    // TODO connect to main game loop
+    public static void main(String [] args) {
+        oneFight(3, new int[]{1,5,6}, 2, new int[]{3,4});
+    }
+
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
-    public void oneFight(int attackers, int defenders){
-        int[] attackerDice = new int[3];
-        int[] defendersDice = new int[2];
+    // AttackValues is always size 3 and DefendValues always size 2
+    public static void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues){
         int max = 0;
         int ndMax = 0;
         int defMax = 0;
         int defNdMax = 0;
-        for (int i = 0; i < attackers; i++) {
-            attackerDice[i] = (int) (Math.random() * 6 + 1);
-        }
-        for (int i = 0; i < defenders; i++) {
-            defendersDice[i] = (int) (Math.random() * 6 + 1);
-        }
 
         for (int i = 0; i < 3; i++) {
-            if (attackerDice[i] > max) {
-                max = attackerDice[i];
-            } else if (attackerDice[i] > ndMax) {
-                ndMax = attackerDice[i];
+            if (attackValues[i] > max) {
+                max = attackValues[i];
+            } else if (attackValues[i] > ndMax) {
+                ndMax = attackValues[i];
             }
             if (i < 2) {
-                if (defendersDice[i] > defMax) {
-                    defMax = defendersDice[i];
-                } else if (defendersDice[i] > defNdMax) {
-                    defNdMax = defendersDice[i];
+                if (defendValues[i] > defMax) {
+                    defMax = defendValues[i];
+                } else if (defendValues[i] > defNdMax) {
+                    defNdMax = defendValues[i];
                 }
             }
         }
