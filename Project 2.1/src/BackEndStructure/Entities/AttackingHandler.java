@@ -25,11 +25,11 @@ public class AttackingHandler {
             if (attackValues[i] > max) {
                 max = attackValues[i];
                 bestADice = i;
-                if (i < 2) {
-                    if (defendValues[i] > defMax) {
-                        defMax = defendValues[i];
-                        bestDDice = i;
-                    }
+            }
+            if (i < 2) {
+                if (defendValues[i] > defMax) {
+                    defMax = defendValues[i];
+                    bestDDice = i;
                 }
             }
         }
@@ -47,7 +47,7 @@ public class AttackingHandler {
                 }
             }
         }
-        System.out.println(max + "    " + ndMax + "     " + defMax + "     " + defNdMax);
+        // System.out.println(max + "    " + ndMax + "     " + defMax + "     " + defNdMax);
 
         if (attackers == 1 || defenders == 1) {
             if (max > defMax) {
