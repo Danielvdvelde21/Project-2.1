@@ -259,7 +259,7 @@ public class MainGameLoop {
                                 // If a territory is captured
                                 if (defender.getTerritory().getNumberOfTroops() < 1) {
                                     oneTerritoryCaptured = true;
-                                    territoryCaptured(player, defender);
+                                    territoryCaptured(player, defender, attacker);
                                 }
                             } else {
                                 map.deselectTerritory();
@@ -286,7 +286,7 @@ public class MainGameLoop {
     }
 
     // Logic that needs to happen after a territory is captured
-    private void territoryCaptured(Player player, Vertex defender) {
+    private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
         // Player gets the territory
         player.increaseTerritoriesOwned();
         defender.getTerritory().setOwner(player.getName());
@@ -299,6 +299,16 @@ public class MainGameLoop {
         if (isEliminated(defender)) {
             receiveCards(player, defender);
             eliminatePlayer(defender.getTerritory().getOwner());
+        }
+
+        // How many troops are sent over
+        FortifyTroops popUp = new FortifyTroops(attack.getTerritory(), "capture");
+        if (!popUp.isCanceled()) {
+            attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - popUp.getTroops());
+            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + popUp.getTroops());
+            map.updateTroopCount(attack.getTerritory().getTerritoryNumber(), attack.getTerritory().getNumberOfTroops());
+            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
+            narrator.addText("Player " + player.getName() + " send " + popUp.getTroops() + " troop(s) from " + attack.getTerritory().getTerritoryName() + " to " + defender.getTerritory().getTerritoryName());
         }
 
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
@@ -330,6 +340,7 @@ public class MainGameLoop {
                 narrator.addText("Player " + player.getName() + " is fortifying with troops from " + from.getTerritory().getTerritoryName());
                 if (from.getTerritory().getNumberOfTroops() > 1) {
                     if (isTerritoryOwnedBy(from.getTerritory(), player.getName())) {
+                        
                         // Wait until a different territory is selected
                         while (graph.get(map.getTerritoryNumber()) == from) {
                             delay();
@@ -339,7 +350,7 @@ public class MainGameLoop {
 
                         if (isTerritoryOwnedBy(to.getTerritory(), player.getName())) {
                             if (graph.isAdjecent(from, to)) {
-                                FortifyTroops popUp = new FortifyTroops(from.getTerritory());
+                                FortifyTroops popUp = new FortifyTroops(from.getTerritory(), "fortify");
                                 if (!popUp.isCanceled()) {
                                     from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - popUp.getTroops());
                                     to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + popUp.getTroops());

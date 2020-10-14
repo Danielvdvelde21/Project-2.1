@@ -273,7 +273,7 @@ public class DicePanel {
     }
 
     public int[] getDefendDieValues() {
-        return new int[] {defDice1.getDieValue(), defDice1.getDieValue()};
+        return new int[] {defDice1.getDieValue(), defDice2.getDieValue()};
     }
 
     public boolean diceRolled() {
