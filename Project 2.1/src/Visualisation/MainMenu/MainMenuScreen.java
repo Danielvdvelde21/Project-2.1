@@ -109,12 +109,13 @@ public class MainMenuScreen extends Application {
             // Menu 2
             MenuButton singlePlayerBtn = new MenuButton("Single Player");
             singlePlayerBtn.setOnMouseClicked(event -> {
-                getChildren().add(menu3);   //transition menu3
-                getChildren().remove(menu2);
             });
 
             MenuButton multiPlayerBtn = new MenuButton("Multi-Player");
-            multiPlayerBtn.setOnMouseClicked(event -> {});
+            multiPlayerBtn.setOnMouseClicked(event -> {
+                getChildren().add(menu3);   //transition menu3
+                getChildren().remove(menu2);
+            });
 
             MenuButton backBtn = new MenuButton("Back");
             backBtn.setOnMouseClicked(event -> {    //transition to menu1
@@ -158,7 +159,7 @@ public class MainMenuScreen extends Application {
             });
 
             // Menu 3
-            MenuButton singlePlayerOptionBtn = new MenuButton("Single Player:");
+            MenuButton singlePlayerOptionBtn = new MenuButton("Multiplayer:");
             singlePlayerOptionBtn.comboBoxStyle();
             singlePlayerOptionBtn.setOnMouseClicked(event -> {  //transition to menu2
                 getChildren().add(menu2);
