@@ -2,6 +2,7 @@ package Visualisation.MainMenu;
 
 import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -80,6 +82,7 @@ public class MainMenuScreen extends Application {
             VBox menu2 = new VBox(13);  //submenu1 Single or Multi Player
             VBox menu3 = new VBox(13);  //submenu2 num of Players
             VBox menu4 = new VBox(13);  //submenu3 names of Players
+            VBox menu5 = new VBox(13);  //submenu4 help
 
             menu1.setTranslateX(350);
             menu1.setTranslateY(250);
@@ -89,6 +92,8 @@ public class MainMenuScreen extends Application {
             menu3.setTranslateY(250);
             menu4.setTranslateX(350);
             menu4.setTranslateY(250);
+            menu5.setTranslateX(350);
+            menu5.setTranslateY(250);
 
             // Menu 1
             MenuButton playBtn = new MenuButton("Play");
@@ -101,7 +106,10 @@ public class MainMenuScreen extends Application {
             settingsBtn.setOnMouseClicked(event -> {});
 
             MenuButton helpBtn = new MenuButton("Help");
-            helpBtn.setOnMouseClicked(event -> {});
+            helpBtn.setOnMouseClicked(event -> {    //transition to menu5
+                getChildren().add(menu5);
+                getChildren().remove(menu1);
+            });
 
             MenuButton exitBtn = new MenuButton("Exit");
             exitBtn.setOnMouseClicked(event -> System.exit(0));
@@ -112,8 +120,8 @@ public class MainMenuScreen extends Application {
             });
 
             MenuButton multiPlayerBtn = new MenuButton("Multi-Player");
-            multiPlayerBtn.setOnMouseClicked(event -> {
-                getChildren().add(menu3);   //transition menu3
+            multiPlayerBtn.setOnMouseClicked(event -> { //transition to menu3
+                getChildren().add(menu3);
                 getChildren().remove(menu2);
             });
 
@@ -145,7 +153,6 @@ public class MainMenuScreen extends Application {
                     startBtn.addWarning("[DUPLICATE NAMES]");
                 }
                 else {
-                    //System.out.println("Names entered: " + Arrays.toString(playerNames));
                     ps.hide();  //hide menu
                     MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames);
                 }
@@ -159,9 +166,9 @@ public class MainMenuScreen extends Application {
             });
 
             // Menu 3
-            MenuButton singlePlayerOptionBtn = new MenuButton("Multiplayer:");
-            singlePlayerOptionBtn.comboBoxStyle();
-            singlePlayerOptionBtn.setOnMouseClicked(event -> {  //transition to menu2
+            MenuButton multiPlayerOptionBtn = new MenuButton("Multi-player:");
+            multiPlayerOptionBtn.comboBoxStyle();
+            multiPlayerOptionBtn.setOnMouseClicked(event -> {  //transition to menu2
                 getChildren().add(menu2);
                 getChildren().remove(menu3);
             });
@@ -202,9 +209,24 @@ public class MainMenuScreen extends Application {
                 getChildren().remove(menu3);
             });
 
+            //Menu 5
+            MenuButton hyperlink = new MenuButton("Risk Game Rules");
+            hyperlink.setOnMouseClicked(e -> {
+                File file = new File("src/Visualisation/MainMenu/GameRules.pdf");
+                HostServices hostServices = getHostServices();
+                hostServices.showDocument(file.getAbsolutePath());
+            });
+
+            MenuButton back3Btn = new MenuButton("Back");
+            back3Btn.setOnMouseClicked(event -> {    //transition to menu1
+                getChildren().add(menu1);
+                getChildren().remove(menu5);
+            });
+
             menu1.getChildren().addAll(playBtn, settingsBtn, helpBtn, exitBtn);
             menu2.getChildren().addAll(singlePlayerBtn, multiPlayerBtn, backBtn);
-            menu3.getChildren().addAll(singlePlayerOptionBtn, players2Btn, players3Btn, players4Btn, players5Btn, players6Btn);
+            menu3.getChildren().addAll(multiPlayerOptionBtn, players2Btn, players3Btn, players4Btn, players5Btn, players6Btn);
+            menu5.getChildren().addAll(hyperlink, back3Btn);
 
             Rectangle r = new Rectangle(1000, 700); //background for the menu
             r.setFill(Color.GREY);
