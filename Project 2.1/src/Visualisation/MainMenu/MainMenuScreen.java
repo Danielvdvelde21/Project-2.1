@@ -36,7 +36,7 @@ public class MainMenuScreen extends Application {
         ps = primaryStage;
         Pane root = new Pane();
         root.setPrefSize(1000,700);
-        InputStream is = Files.newInputStream(Paths.get("src\\resources\\risk1.jpg"));    //load image
+        InputStream is = Files.newInputStream(Paths.get("src/res/risk1.jpg"));    //load image
         Image img = new Image(is);
         is.close();
 
