@@ -31,7 +31,7 @@ public class Card {
     }
 
     public ImageIcon getCardImageIcon(){
-        ImageIcon imageIcon = new ImageIcon("src\\resources\\Risk Cards\\"+cardImageId+".jpg"); // load the image to a imageIcon
+        ImageIcon imageIcon = new ImageIcon("src/res/Risk Cards/"+cardImageId+".jpg"); // load the image to a imageIcon
         return imageIcon;
     }
 
