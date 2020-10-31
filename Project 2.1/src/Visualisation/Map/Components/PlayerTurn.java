@@ -16,16 +16,22 @@ public class PlayerTurn {
 
     public PlayerTurn() {
         JLabel label = new JLabel("Player turn:");
-        label.setFont(new Font("Courier New", Font.PLAIN, 14));
-        nameLabel.setFont(new Font("Courier New", Font.BOLD, 14));
+        label.setFont(new Font("Courier New", Font.BOLD, 16));
+        label.setForeground(Color.white);
+        nameLabel.setFont(new Font("Courier New", Font.BOLD, 16));
+        nameLabel.setForeground(Color.white);
 
         JButton endTurnButton = new JButton("End Turn");
-        endTurnButton.setFont(new Font("Courier New", Font.PLAIN, 14));
+        endTurnButton.setFont(new Font("Courier New", Font.BOLD, 16));
+        endTurnButton.setBackground(new Color(80, 100, 182));
+        endTurnButton.setForeground(Color.WHITE);
+        endTurnButton.setPreferredSize(new Dimension(170,30));
+        endTurnButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         endTurnButton.addActionListener(e -> turnEnded = true);
 
-        p1.setBackground(Color.LIGHT_GRAY);
-        p2.setBackground(Color.LIGHT_GRAY);
-        p3.setBackground(Color.LIGHT_GRAY);
+        p1.setBackground(Map.themeColor);
+        p2.setBackground(Map.themeColor);
+        p3.setBackground(Map.themeColor);
 
         p1.add(label);
         p2.add(nameLabel);

@@ -132,7 +132,7 @@ public class MainMenuScreen extends Application {
             });
 
             // Menu 4
-            TextInput name1 = new TextInput("Your name:");
+            TextInput name1 = new TextInput("P1's name:");
             TextInput name2 = new TextInput("P2's name:");
             TextInput name3 = new TextInput("P3's name:");
             TextInput name4 = new TextInput("P4's name:");

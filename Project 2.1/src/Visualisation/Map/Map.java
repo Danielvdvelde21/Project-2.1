@@ -35,6 +35,7 @@ public class Map {
     private ArrayList<JLabel> labelList = new ArrayList<>();
 
     public static JFrame frame = new JFrame("RISK");
+    public static Color themeColor = Color.darkGray;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Label for how many troops a territory has
@@ -46,19 +47,19 @@ public class Map {
         nt.setText(String.valueOf(numOfTroops));
 
         Color color = Color.lightGray;
-        Border line = BorderFactory.createLineBorder(color);
+        Border line = BorderFactory.createLineBorder(color, 2, true);
         Border compound = BorderFactory.createCompoundBorder(line, line);
         nt.setBorder(compound);
         nt.setBackground(Color.lightGray);
 
         size = nt.getPreferredSize();
-        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 3, size.height - 2);
+        nt.setBounds(((posX * frameX) / 1100) - size.width / 2, (((posY * frameY) / 700) - size.height / 2) + 20, size.width + 3, size.height - 3);
         return nt;
     }
 
     // Update the troopCount label color
     public void setTroopCountColor(int territoryNumber, Player player) {
-        Border line = BorderFactory.createLineBorder(player.getColor());
+        Border line = BorderFactory.createLineBorder(player.getColor(), 2, true);
         Border compound = BorderFactory.createCompoundBorder(line, line);
         labelList.get(territoryNumber).setBorder(compound);
     }
@@ -68,7 +69,7 @@ public class Map {
         // labelList is alphabetically sorted
         labelList.get(territoryNumber).setText(String.valueOf(troopCount));
         size = labelList.get(territoryNumber).getPreferredSize();
-        labelList.get(territoryNumber).setSize(size.width + 3, size.height - 2);
+        labelList.get(territoryNumber).setSize(size.width + 3, size.height - 3);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -102,12 +103,13 @@ public class Map {
     public void createMap() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocation(80, 7);
-        frame.setSize(frameX+300, frameY+150);
+        frame.setSize(frameX+300, frameY+100);
         frame.setResizable(false);
         JPanel p = new JPanel();
 
         p.setLayout(null);
         p.setBounds(new Rectangle(0, 0, 200, 200));
+        p.setBackground(Color.LIGHT_GRAY);
 
         ImageIcon imageIcon = new ImageIcon("src/res/risk-board.png"); // load the image to a imageIcon
 

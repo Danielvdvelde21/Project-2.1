@@ -25,7 +25,7 @@ public class DicePanel {
     private final JPanel p2b = new JPanel();  // throw button
 
     private final JLabel playerOrder = new JLabel("Player Order Dice:");
-    private final JLabel offence = new JLabel("offence:");
+    private final JLabel offence = new JLabel("Offence:");
     private final JLabel defence = new JLabel("Defence:");
 
     private final JButton next = new JButton(">>");
@@ -48,26 +48,30 @@ public class DicePanel {
     private boolean order = true;
 
     public DicePanel() {
-        playerOrder.setFont(new Font("Courier New", Font.BOLD, 14));
-        offence.setFont(new Font("Courier New", Font.BOLD, 14));
+        playerOrder.setFont(new Font("Courier New", Font.BOLD, 16));
+        playerOrder.setForeground(Color.white);
+        offence.setFont(new Font("Courier New", Font.BOLD, 16));
+        offence.setForeground(Color.white);
+        defence.setFont(new Font("Courier New", Font.BOLD, 16));
+        defence.setForeground(Color.white);
 
-        defence.setFont(new Font("Courier New", Font.BOLD, 14));
+        p1.setBackground(Map.themeColor);
+        p1a.setBackground(Map.themeColor);
+        p1b.setBackground(Map.themeColor);
+        p2.setBackground(Map.themeColor);
+        p2a.setBackground(Map.themeColor);
+        p2b.setBackground(Map.themeColor);
 
-        p1.setBackground(Color.LIGHT_GRAY);
-        p1a.setBackground(Color.LIGHT_GRAY);
-        p1b.setBackground(Color.LIGHT_GRAY);
-        p2.setBackground(Color.LIGHT_GRAY);
-        p2a.setBackground(Color.LIGHT_GRAY);
-        p2b.setBackground(Color.LIGHT_GRAY);
-
-        next.setFont(new Font("Courier News", Font.PLAIN, 10));
+        next.setFont(new Font("Courier News", Font.BOLD, 10));
+        next.setForeground(Color.white);
         next.setBackground(null);
         next.setBorderPainted(false);
         next.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         next.setEnabled(true);
         next.setPreferredSize(next.getPreferredSize());
 
-        previous.setFont(new Font("Courier News", Font.PLAIN, 10));
+        previous.setFont(new Font("Courier News", Font.BOLD, 10));
+        previous.setForeground(Color.white);
         previous.setBackground(null);
         previous.setBorderPainted(false);
         previous.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -118,14 +122,16 @@ public class DicePanel {
             Map.frame.setVisible(true);
         });
 
-        next1.setFont(new Font("Courier News", Font.PLAIN, 10));
+        next1.setFont(new Font("Courier News", Font.BOLD, 10));
+        next1.setForeground(Color.white);
         next1.setBackground(null);
         next1.setBorderPainted(false);
         next1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         next1.setEnabled(true);
         next1.setPreferredSize(next.getPreferredSize());
 
-        previous1.setFont(new Font("Courier News", Font.PLAIN, 10));
+        previous1.setFont(new Font("Courier News", Font.BOLD, 10));
+        previous1.setForeground(Color.white);
         previous1.setBackground(null);
         previous1.setBorderPainted(false);
         previous1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -156,17 +162,26 @@ public class DicePanel {
             Map.frame.setVisible(true);
         });
 
-        attackDiceRoll.setFont(new Font("Courier New", Font.PLAIN, 14));
+        attackDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
+        attackDiceRoll.setBackground(new Color(80, 100, 182));
+        attackDiceRoll.setForeground(Color.WHITE);
+        attackDiceRoll.setPreferredSize(new Dimension(170,30));
+        attackDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         attackDiceRoll.addActionListener(actionEvent -> {
             rollAttackDie();
         });
 
-        defendDiceRoll.setFont(new Font("Courier New", Font.PLAIN, 14));
+
+        defendDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
+        defendDiceRoll.setBackground(new Color(80, 100, 182));
+        defendDiceRoll.setForeground(Color.WHITE);
+        defendDiceRoll.setPreferredSize(new Dimension(170,30));
+        defendDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         defendDiceRoll.addActionListener(actionEvent -> {
             rollDefDie();
         });
 
-        p1.add(playerOrder);
+        p1.add(playerOrder);    //TODO remove before adding Offence label
         p1a.add(attackDice1);
         p1b.add(attackDiceRoll);
 
@@ -187,8 +202,9 @@ public class DicePanel {
     public void playerOrderObtained() {
         order = false;
 
+        p1.removeAll();
         p1.add(offence);
-        p1.remove(playerOrder);
+        p1.repaint();
         p1a.add(next);
         p2.add(defence);
         p2a.add(previous1);
@@ -333,7 +349,7 @@ public class DicePanel {
             int h = dimension.height;
 
             Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(Color.red); //background
+            g2.setColor(Color.WHITE); //background
             g2.fillRect(0, 0, w, h);
             g2.setColor(Color.BLACK);
             g2.drawRect(0, 0, w-1, h-1);    //border
