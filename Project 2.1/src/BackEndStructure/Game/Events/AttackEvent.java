@@ -265,4 +265,7 @@ public class AttackEvent {
     public Player getWinner() {
         return winner;
     }
+
+    public boolean getGameState() { return gameOver; }
+
 }

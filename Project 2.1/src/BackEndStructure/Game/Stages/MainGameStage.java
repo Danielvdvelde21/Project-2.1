@@ -54,10 +54,13 @@ public class MainGameStage {
         // Player can start attacking different territories
         playerTurn.resetTurn();
         attack.attacking(player);
+        gameOver = attack.getGameState();
 
         // Player can fortify 1 territory if he chooses to do so at the end of his turn
-        playerTurn.resetTurn();
-        fortify.fortifyTerritory(player);
+        if (!gameOver) {
+            playerTurn.resetTurn();
+            fortify.fortifyTerritory(player);
+        }
     }
 
     public Player getWinner() {
