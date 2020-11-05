@@ -5,6 +5,9 @@ import BackEndStructure.Entities.AttackingHandler;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territories;
+import Visualisation.Map.Components.CardInventory;
+import Visualisation.Map.Components.DicePanel;
+import Visualisation.Map.Components.PlayerTurn;
 import Visualisation.Map.Map;
 import Visualisation.Map.Components.Narrator;
 
@@ -19,8 +22,11 @@ public class Game {
     // the Board
     private final Map map;
 
-    // Narrator of the game
+    // Visual variables
     private final Narrator narrator = new Narrator();
+    private final PlayerTurn playerTurn = new PlayerTurn();
+    private final CardInventory cardInventory = new CardInventory();
+    private final DicePanel dicePanel = new DicePanel();
 
     // All the territories in a graph (with edges)
     private final Graph graph;
@@ -36,7 +42,7 @@ public class Game {
 
     private int[] setValues = new int[]{0,4,6,8,10,12,15};
 
-    public Game(int numberOfPlayers, String[] names) {
+    public Game(int numberOfPlayers, String[] names, boolean[] bots) {
         // How manny troops each player gets from the start
         switch (numberOfPlayers) {
             case 2:
@@ -70,7 +76,7 @@ public class Game {
 
         // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
-            players.add(new Player(names[i], colors[i]));
+            players.add(new Player(names[i], colors[i], bots[i]));
         }
     }
 
@@ -107,6 +113,12 @@ public class Game {
     }
 
     public Narrator getNarrator() { return narrator; }
+
+    public CardInventory getCardInventory() { return cardInventory; }
+
+    public PlayerTurn getPlayerTurn() { return playerTurn; }
+
+    public DicePanel getDicePanel() { return dicePanel; }
 
     // Checks how many continents a player has
     public void hasContinents(Player player) {

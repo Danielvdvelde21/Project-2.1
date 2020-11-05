@@ -146,6 +146,9 @@ public class MainMenuScreen extends Application {
                 String[] pm = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
                 playerNames = Arrays.copyOf(pm, count-2);
 
+                // TODO which players are bots?
+                boolean bots[] = new boolean[]{true, true, true, true, true, true};
+
                 if(emptyString(playerNames)) {  //name input restrictions
                     startBtn.addWarning("[ENTER NAMES]");
                 }
@@ -154,7 +157,7 @@ public class MainMenuScreen extends Application {
                 }
                 else {
                     ps.hide();  //hide menu
-                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames);
+                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, bots);
                 }
             });
 
