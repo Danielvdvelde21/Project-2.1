@@ -4,8 +4,10 @@ import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -17,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -132,6 +135,12 @@ public class MainMenuScreen extends Application {
             });
 
             // Menu 4
+            Label botLabel = new Label("BOT");
+            botLabel.setFont(Font.font ("Verdana", FontWeight.BOLD, 18));
+            botLabel.setTextFill(Color.DARKRED);
+            botLabel.setTranslateY(5);
+            botLabel.setTranslateX(263);
+
             TextInput name1 = new TextInput("P1's name:");
             TextInput name2 = new TextInput("P2's name:");
             TextInput name3 = new TextInput("P3's name:");
@@ -144,10 +153,18 @@ public class MainMenuScreen extends Application {
                 //getting players' names from TextInput objects
                 int count = menu4.getChildren().size();
                 String[] pm = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
-                playerNames = Arrays.copyOf(pm, count-2);
+                playerNames = Arrays.copyOf(pm, count-3);
 
-                // TODO which players are bots?
-                boolean bots[] = new boolean[]{true, true, true, true, true, true};
+                //getting bot checkBoxes from TextInput objects
+                CheckBox[] checkBoxes  = new CheckBox[]{name1.checkBox, name2.checkBox, name3.checkBox, name4.checkBox, name5.checkBox, name6.checkBox};
+                checkBoxes = Arrays.copyOf(checkBoxes, count-3);
+
+                int i = 0;
+                boolean[] bots = new boolean[count-3];
+                for(CheckBox cb : checkBoxes) {
+                    bots[i] = cb.isSelected();
+                    i++;
+                }
 
                 if(emptyString(playerNames)) {  //name input restrictions
                     startBtn.addWarning("[ENTER NAMES]");
@@ -179,35 +196,35 @@ public class MainMenuScreen extends Application {
             MenuButton players2Btn = new MenuButton("2 Players");
             players2Btn.setOnMouseClicked(event -> {
                 menu4.getChildren().clear();
-                menu4.getChildren().addAll(name1, name2, startBtn, back2Btn);
+                menu4.getChildren().addAll(botLabel, name1, name2, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
             });
             MenuButton players3Btn = new MenuButton("3 Players");
             players3Btn.setOnMouseClicked(event -> {
                 menu4.getChildren().clear();
-                menu4.getChildren().addAll(name1, name2, name3, startBtn, back2Btn);
+                menu4.getChildren().addAll(botLabel, name1, name2, name3, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
             });
             MenuButton players4Btn = new MenuButton("4 Players");
             players4Btn.setOnMouseClicked(event -> {
                 menu4.getChildren().clear();
-                menu4.getChildren().addAll(name1, name2, name3, name4, startBtn, back2Btn);
+                menu4.getChildren().addAll(botLabel, name1, name2, name3, name4, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
             });
             MenuButton players5Btn  = new MenuButton("5 Players");
             players5Btn.setOnMouseClicked(event -> {
                 menu4.getChildren().clear();
-                menu4.getChildren().addAll(name1, name2, name3, name4, name5, startBtn, back2Btn);
+                menu4.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
             });
             MenuButton players6Btn = new MenuButton("6 Players");
             players6Btn.setOnMouseClicked(event -> {
                 menu4.getChildren().clear();
-                menu4.getChildren().addAll(name1, name2, name3, name4, name5, name6, startBtn, back2Btn);
+                menu4.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, name6, startBtn, back2Btn);
                 getChildren().add(menu4);
                 getChildren().remove(menu3);
             });
@@ -319,6 +336,7 @@ public class MainMenuScreen extends Application {
     private static class TextInput extends StackPane {
 
         private TextField tf;
+        private CheckBox checkBox;
 
         public TextInput(String name) {
             tf = new TextField();
@@ -328,11 +346,18 @@ public class MainMenuScreen extends Application {
 
             Label label1 = new Label(name);
             label1.setFont(Font.font(18));
-            label1.setTextFill(Color.GREY);
+            label1.setTextFill(Color.GREY.brighter());
             label1.setTranslateY(5);    //fixing position
 
+            checkBox = new CheckBox(); //Bot player Check Box
+            checkBox.setCursor(Cursor.HAND);
+            checkBox.setStyle("-fx-body-color: black; -fx-faint-focus-color: darkred;");
+            checkBox.setScaleX(1.3);
+            checkBox.setScaleY(1.3);
+            checkBox.setTranslateY(9);  //fixing position
+
             HBox hb = new HBox();
-            hb.getChildren().addAll(label1, tf);
+            hb.getChildren().addAll(label1, tf, checkBox);
             hb.setSpacing(10);
 
             Rectangle r = new Rectangle(300, 35);   //background rectangle
