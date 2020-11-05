@@ -3,6 +3,8 @@ package AI;
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Vertex;
+
 import java.util.ArrayList;
 
 public class AiTemplate {
@@ -13,11 +15,11 @@ public class AiTemplate {
      * @param g This is the current board
      * @param p This is the current player turn
      * @param troops This is the number of troops the bot can place down
-     * @return updated graph
+     * @return A vertex that a troop is placed on
      */
-    public Graph placeTroop(Graph g, Player p, int troops) {
+    public Vertex placeTroop(Graph g, Player p, int troops) {
         // TODO
-        return g;
+        return null;
     }
 
     /**
@@ -25,11 +27,12 @@ public class AiTemplate {
      * Let the bot make a decision on if and how it wants to attack
      * @param g This is the current board
      * @param p This is the current player turn
-     * @return updated graph
+     * @return A vertex array with position 0 attacker and position 1 defender
      */
-    public Graph attack(Graph g, Player p) {
+    public Vertex[] attack(Graph g, Player p) {
         // TODO
-        return g;
+        // TODO set amount of die bot wants to use
+        return null;
     }
 
     /**
@@ -37,11 +40,11 @@ public class AiTemplate {
      * Let the AI make a decision on if and how it wants to reinforce its position
      * @param g This is the current board
      * @param p This is the current player turn
-     * @return updated graph
+     * @return A vertex array with position 0 from and position 1 to
      */
-    public Graph reinforce(Graph g, Player p) {
+    public Vertex[] reinforce(Graph g, Player p) {
         // TODO
-        return g;
+        return null;
     }
 
     /**
