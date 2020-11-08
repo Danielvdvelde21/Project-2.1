@@ -82,23 +82,20 @@ public class MainMenuScreen extends Application {
 
         public GameMenu() {
             VBox menu1 = new VBox(13);  //main menu
-            VBox menu2 = new VBox(13);  //submenu1 Single or Multi Player
-            VBox menu3 = new VBox(13);  //submenu2 num of Players
-            VBox menu4 = new VBox(13);  //submenu3 names of Players
-            VBox menu5 = new VBox(13);  //submenu4 help
+            VBox menu2 = new VBox(13);  //num of Players
+            VBox menu3 = new VBox(13);  //names of Players
+            VBox menu4 = new VBox(13);  //help
 
             menu1.setTranslateX(350);
             menu1.setTranslateY(250);
             menu2.setTranslateX(350);
             menu2.setTranslateY(250);
             menu3.setTranslateX(350);
-            menu3.setTranslateY(250);
+            menu3.setTranslateY(190);
             menu4.setTranslateX(350);
             menu4.setTranslateY(250);
-            menu5.setTranslateX(350);
-            menu5.setTranslateY(250);
 
-            // Menu 1
+            // Menu 1 - main menu
             MenuButton playBtn = new MenuButton("Play");
             playBtn.setOnMouseClicked(event -> {    //transition to menu2
                 getChildren().add(menu2);
@@ -109,32 +106,15 @@ public class MainMenuScreen extends Application {
             settingsBtn.setOnMouseClicked(event -> {});
 
             MenuButton helpBtn = new MenuButton("Help");
-            helpBtn.setOnMouseClicked(event -> {    //transition to menu5
-                getChildren().add(menu5);
+            helpBtn.setOnMouseClicked(event -> {    //transition to menu4
+                getChildren().add(menu4);
                 getChildren().remove(menu1);
             });
 
             MenuButton exitBtn = new MenuButton("Exit");
             exitBtn.setOnMouseClicked(event -> System.exit(0));
 
-            // Menu 2
-            MenuButton singlePlayerBtn = new MenuButton("Single Player");
-            singlePlayerBtn.setOnMouseClicked(event -> {
-            });
-
-            MenuButton multiPlayerBtn = new MenuButton("Multi-Player");
-            multiPlayerBtn.setOnMouseClicked(event -> { //transition to menu3
-                getChildren().add(menu3);
-                getChildren().remove(menu2);
-            });
-
-            MenuButton backBtn = new MenuButton("Back");
-            backBtn.setOnMouseClicked(event -> {    //transition to menu1
-                getChildren().add(menu1);
-                getChildren().remove(menu2);
-            });
-
-            // Menu 4
+            // Menu 4 - names of players
             Label botLabel = new Label("BOT");
             botLabel.setFont(Font.font ("Verdana", FontWeight.BOLD, 18));
             botLabel.setTextFill(Color.DARKRED);
@@ -151,7 +131,7 @@ public class MainMenuScreen extends Application {
             MenuButton startBtn = new MenuButton("Start");
             startBtn.setOnMouseClicked(event -> {
                 //getting players' names from TextInput objects
-                int count = menu4.getChildren().size();
+                int count = menu3.getChildren().size();
                 String[] pm = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
                 playerNames = Arrays.copyOf(pm, count-3);
 
@@ -178,58 +158,61 @@ public class MainMenuScreen extends Application {
                 }
             });
 
-            MenuButton back2Btn = new MenuButton("Back");
-            back2Btn.setOnMouseClicked(event -> {    //transition to menu3
+            MenuButton backBtn = new MenuButton("Back");
+            backBtn.setOnMouseClicked(event -> {    //transition to menu2
                 startBtn.removeWarning();
-                getChildren().add(menu3);
-                getChildren().remove(menu4);
-            });
-
-            // Menu 3
-            MenuButton multiPlayerOptionBtn = new MenuButton("Multi-player:");
-            multiPlayerOptionBtn.comboBoxStyle();
-            multiPlayerOptionBtn.setOnMouseClicked(event -> {  //transition to menu2
                 getChildren().add(menu2);
                 getChildren().remove(menu3);
             });
 
+            // Menu 2 - num of players
             MenuButton players2Btn = new MenuButton("2 Players");
             players2Btn.setOnMouseClicked(event -> {
-                menu4.getChildren().clear();
-                menu4.getChildren().addAll(botLabel, name1, name2, startBtn, back2Btn);
-                getChildren().add(menu4);
-                getChildren().remove(menu3);
-            });
-            MenuButton players3Btn = new MenuButton("3 Players");
-            players3Btn.setOnMouseClicked(event -> {
-                menu4.getChildren().clear();
-                menu4.getChildren().addAll(botLabel, name1, name2, name3, startBtn, back2Btn);
-                getChildren().add(menu4);
-                getChildren().remove(menu3);
-            });
-            MenuButton players4Btn = new MenuButton("4 Players");
-            players4Btn.setOnMouseClicked(event -> {
-                menu4.getChildren().clear();
-                menu4.getChildren().addAll(botLabel, name1, name2, name3, name4, startBtn, back2Btn);
-                getChildren().add(menu4);
-                getChildren().remove(menu3);
-            });
-            MenuButton players5Btn  = new MenuButton("5 Players");
-            players5Btn.setOnMouseClicked(event -> {
-                menu4.getChildren().clear();
-                menu4.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, startBtn, back2Btn);
-                getChildren().add(menu4);
-                getChildren().remove(menu3);
-            });
-            MenuButton players6Btn = new MenuButton("6 Players");
-            players6Btn.setOnMouseClicked(event -> {
-                menu4.getChildren().clear();
-                menu4.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, name6, startBtn, back2Btn);
-                getChildren().add(menu4);
-                getChildren().remove(menu3);
+                menu3.getChildren().clear();
+                menu3.getChildren().addAll(botLabel, name1, name2, startBtn, backBtn);
+                getChildren().add(menu3);
+                getChildren().remove(menu2);
             });
 
-            //Menu 5
+            MenuButton players3Btn = new MenuButton("3 Players");
+            players3Btn.setOnMouseClicked(event -> {
+                menu3.getChildren().clear();
+                menu3.getChildren().addAll(botLabel, name1, name2, name3, startBtn, backBtn);
+                getChildren().add(menu3);
+                getChildren().remove(menu2);
+            });
+
+            MenuButton players4Btn = new MenuButton("4 Players");
+            players4Btn.setOnMouseClicked(event -> {
+                menu3.getChildren().clear();
+                menu3.getChildren().addAll(botLabel, name1, name2, name3, name4, startBtn, backBtn);
+                getChildren().add(menu3);
+                getChildren().remove(menu2);
+            });
+
+            MenuButton players5Btn  = new MenuButton("5 Players");
+            players5Btn.setOnMouseClicked(event -> {
+                menu3.getChildren().clear();
+                menu3.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, startBtn, backBtn);
+                getChildren().add(menu3);
+                getChildren().remove(menu2);
+            });
+
+            MenuButton players6Btn = new MenuButton("6 Players");
+            players6Btn.setOnMouseClicked(event -> {
+                menu3.getChildren().clear();
+                menu3.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, name6, startBtn, backBtn);
+                getChildren().add(menu3);
+                getChildren().remove(menu2);
+            });
+
+            MenuButton back2Btn = new MenuButton("Back");
+            back2Btn.setOnMouseClicked(event -> {    //transition to menu1
+                getChildren().add(menu1);
+                getChildren().remove(menu2);
+            });
+
+            //Menu 4 - help
             MenuButton hyperlink = new MenuButton("Risk Game Rules");
             hyperlink.setOnMouseClicked(e -> {
                 File file = new File("src/Visualisation/MainMenu/GameRules.pdf");
@@ -240,13 +223,12 @@ public class MainMenuScreen extends Application {
             MenuButton back3Btn = new MenuButton("Back");
             back3Btn.setOnMouseClicked(event -> {    //transition to menu1
                 getChildren().add(menu1);
-                getChildren().remove(menu5);
+                getChildren().remove(menu4);
             });
 
             menu1.getChildren().addAll(playBtn, settingsBtn, helpBtn, exitBtn);
-            menu2.getChildren().addAll(singlePlayerBtn, multiPlayerBtn, backBtn);
-            menu3.getChildren().addAll(multiPlayerOptionBtn, players2Btn, players3Btn, players4Btn, players5Btn, players6Btn);
-            menu5.getChildren().addAll(hyperlink, back3Btn);
+            menu2.getChildren().addAll(players2Btn, players3Btn, players4Btn, players5Btn, players6Btn, back2Btn);
+            menu4.getChildren().addAll(hyperlink, back3Btn);
 
             Rectangle r = new Rectangle(1000, 700); //background for the menu
             r.setFill(Color.GREY);
@@ -261,27 +243,6 @@ public class MainMenuScreen extends Application {
         private Text text;
         private Rectangle r;
         private Text w = new Text();
-
-        private void comboBoxStyle() {    //makes button appear pressed
-            r.setTranslateX(10);    //move element in X direction
-            text.setTranslateX(10);
-            r.setFill(Color.WHITE);
-            text.setFill(Color.BLACK);
-
-            setOnMouseEntered(event -> {    //effect when entering the button area
-                r.setTranslateX(10);    //move element in X direction
-                text.setTranslateX(10);
-                r.setFill(Color.WHITE);
-                text.setFill(Color.BLACK);
-            });
-
-            setOnMouseExited(event -> { //reverting the effect when exiting the area
-                r.setTranslateX(0);
-                text.setTranslateX(0);
-                r.setFill(Color.WHITE);
-                text.setFill(Color.BLACK);
-            });
-        }
 
         public void addWarning(String warning) {
             w.setText(warning);
