@@ -1,5 +1,6 @@
 package BackEndStructure.Game;
 
+import AI.AiTemplate;
 import BackEndStructure.Entities.Cards.CardStack;
 import BackEndStructure.Entities.AttackingHandler;
 import BackEndStructure.Entities.Player;
@@ -22,6 +23,9 @@ public class Game {
     // the Board
     private final Map map;
 
+    // AI (bot)
+    private final AiTemplate ai = new AiTemplate();
+
     // Visual variables
     private final Narrator narrator = new Narrator();
     private final PlayerTurn playerTurn = new PlayerTurn();
@@ -40,7 +44,8 @@ public class Game {
     // Number of troops players start with
     private int startingTroops;
 
-    private int[] setValues = new int[]{0,4,6,8,10,12,15};
+    // Troops you receive for sets owned
+    private final int[] setValues = new int[]{0,4,6,8,10,12,15};
 
     public Game(int numberOfPlayers, String[] names, boolean[] bots) {
         // How manny troops each player gets from the start
@@ -119,6 +124,8 @@ public class Game {
     public PlayerTurn getPlayerTurn() { return playerTurn; }
 
     public DicePanel getDicePanel() { return dicePanel; }
+
+    public AiTemplate getAi() { return ai; }
 
     // Checks how many continents a player has
     public void hasContinents(Player player) {

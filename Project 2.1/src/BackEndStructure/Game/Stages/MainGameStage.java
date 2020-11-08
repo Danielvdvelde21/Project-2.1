@@ -1,9 +1,9 @@
 package BackEndStructure.Game.Stages;
 
 import BackEndStructure.Entities.Player;
-import BackEndStructure.Game.Events.AttackEvent;
-import BackEndStructure.Game.Events.FortifyEvent;
-import BackEndStructure.Game.Events.ReceiveTroops;
+import BackEndStructure.Game.Stages.MainGameStageEvents.AttackEvent;
+import BackEndStructure.Game.Stages.MainGameStageEvents.FortifyEvent;
+import BackEndStructure.Game.Stages.MainGameStageEvents.ReceiveTroops;
 import BackEndStructure.Game.Game;
 import Visualisation.Map.Components.*;
 

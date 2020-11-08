@@ -64,8 +64,13 @@ public class MainGameLoop {
         for (int i = 0; i < game.getPlayers().size(); i++) {
             narrator.addText("Player " + game.getPlayers().get(i).getName() + " may roll the dice!");
             playerTurn.setPlayerTurn(game.getPlayers().get(i));
-            while (!dicePanel.isDiceRolled()) {
-                delay();
+            if (game.getPlayers().get(i).isBot()) {
+                dicePanel.rollAttackDie();
+                dicePanel.resetDiceRolled();
+            } else {
+                while (!dicePanel.isDiceRolled()) {
+                    delay();
+                }
             }
             values.add(dicePanel.getEyesPlayerOrderDice());
             narrator.addText("Player " + game.getPlayers().get(i).getName() + "  rolled " + dicePanel.getEyesPlayerOrderDice());

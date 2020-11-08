@@ -46,7 +46,11 @@ public class PlacementStage {
     }
 
     private void placementTurn(Player player) {
-        placeTroop(player, getSelectedTerritoryNumber(player));
+        if (player.isBot()) {
+            game.getAi().placeTroop(graph, player, 1);
+        } else {
+            placeTroop(player, getSelectedTerritoryNumber(player));
+        }
     }
 
     // Logic for whether a player can place down a troop on a territory

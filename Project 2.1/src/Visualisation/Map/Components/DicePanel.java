@@ -221,7 +221,7 @@ public class DicePanel {
         return false;
     }
 
-    private void resetDiceRolled() {
+    public void resetDiceRolled() {
         diceRolled = false;
     }
 
@@ -229,7 +229,7 @@ public class DicePanel {
         return attackDice1.getDieValue();
     }
 
-    private void rollAttackDie() {
+    public void rollAttackDie() {
         if (rollingAllowed) {
             if (!rolledAttack || order) {
                 rolledAttack = true;
@@ -256,7 +256,7 @@ public class DicePanel {
         }
     }
 
-    private void rollDefDie() {
+    public void rollDefDie() {
         if (rollingAllowed) {
             if (!rolledDefend) {
                 rolledDefend = true;

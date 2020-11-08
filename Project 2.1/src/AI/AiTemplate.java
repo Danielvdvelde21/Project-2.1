@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class AiTemplate {
 
+    private int reinforcementTroops;
+
     /**
      * Based on the current board and the amount of troops the bot can place down
      * Let the bot make a decision on where it should place troops
@@ -44,6 +46,7 @@ public class AiTemplate {
      */
     public Vertex[] reinforce(Graph g, Player p) {
         // TODO
+        reinforcementTroops = 1;
         return null;
     }
 
@@ -58,5 +61,7 @@ public class AiTemplate {
         // TODO
         return null;
     }
+
+    public int getReinforcementTroops() { return reinforcementTroops; }
 
 }

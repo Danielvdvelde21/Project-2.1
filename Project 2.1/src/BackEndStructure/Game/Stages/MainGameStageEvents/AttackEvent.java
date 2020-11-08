@@ -1,4 +1,4 @@
-package BackEndStructure.Game.Events;
+package BackEndStructure.Game.Stages.MainGameStageEvents;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
