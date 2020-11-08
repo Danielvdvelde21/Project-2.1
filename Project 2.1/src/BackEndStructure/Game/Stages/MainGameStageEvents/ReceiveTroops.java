@@ -1,5 +1,6 @@
-package BackEndStructure.Game.Events;
+package BackEndStructure.Game.Stages.MainGameStageEvents;
 
+import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
@@ -7,6 +8,8 @@ import BackEndStructure.Graph.Territory;
 import Visualisation.Map.Components.CardInventory;
 import Visualisation.Map.Components.Narrator;
 import Visualisation.Map.Map;
+
+import java.util.ArrayList;
 
 public class ReceiveTroops {
 
@@ -27,7 +30,24 @@ public class ReceiveTroops {
 
     public int receivedTroops(Player player) {
         // Troops for turning in cards
-        int cards = turningInCards(player);
+        int cards;
+        if (player.isBot()) {
+            // Set of cards the bot is going to turn in
+            ArrayList<Card> turnInSet = game.getAi().cards(graph, player);
+
+            // Return cards to stack
+            game.getCardStack().returnCards(turnInSet);
+
+            // Remove cards from player hand
+            player.getHand().removeAll(turnInSet);
+
+            // Player has 1 more completed set
+            player.incrementSetsOwned();
+
+            cards = game.getSetValue(player.getSetsTurnedIn());
+        } else {
+            cards = turningInCards(player);
+        }
 
         // Troops for territories owned
         int terri = player.getTerritoriesOwned() / 3;
@@ -35,6 +55,7 @@ public class ReceiveTroops {
         // Troops for continents owned
         game.hasContinents(player);
         int conti = game.getValueOfContinentsOwned(player.getContinentsOwned());
+
 
         narrator.addText("Player " + player.getName() + " received " + terri + " troop(s) from Territories, " + conti + " troop(s) from Continents and " + cards + " troop(s) from Cards");
         return cards + terri + conti;
@@ -69,8 +90,12 @@ public class ReceiveTroops {
 
     public void placeReceivedTroops(Player player, int troops) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
-        for (int i = 0; i < troops; i++) {
-            placementTurn(player);
+        if (player.isBot()) {
+            game.getAi().placeTroop(graph, player, troops);
+        } else {
+            for (int i = 0; i < troops; i++) {
+                placementTurn(player);
+            }
         }
     }
 
