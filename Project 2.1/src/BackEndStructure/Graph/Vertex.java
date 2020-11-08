@@ -15,5 +15,15 @@ public class Vertex {
         return edgeList;
     }
 
+    public double getBSR() {
+        int bst = 0;
+        for (Edge e : edgeList) {
+            bst += e.getVertex().getTerritory().getNumberOfTroops();
+        }
+        int units = territory.getNumberOfTroops();
+
+        return bst / units;
+    }
+
     public Territory getTerritory() { return territory; }
 }

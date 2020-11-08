@@ -32,6 +32,7 @@ public class AiTemplate {
     public Vertex[] attack(Graph g, Player p) {
         // TODO
         // TODO set amount of die bot wants to use
+        // Probably better to set amount of troops he wants to use in total
         return null;
     }
 
