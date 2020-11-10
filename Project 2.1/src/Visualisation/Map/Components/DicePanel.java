@@ -181,7 +181,7 @@ public class DicePanel {
             rollDefDie();
         });
 
-        p1.add(playerOrder);    //TODO remove before adding Offence label
+        p1.add(playerOrder);
         p1a.add(attackDice1);
         p1b.add(attackDiceRoll);
 
