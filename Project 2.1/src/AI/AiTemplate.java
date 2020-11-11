@@ -45,7 +45,7 @@ public class AiTemplate {
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
         // TODO
-        return false;
+        return true;
     }
 
     // How many troops will be sent over when a territory is captured

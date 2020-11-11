@@ -28,10 +28,10 @@ public class DicePanel {
     private final JLabel offence = new JLabel("Offence:");
     private final JLabel defence = new JLabel("Defence:");
 
-    private final JButton next = new JButton(">>");
-    private final JButton next1 = new JButton(">>");
-    private final JButton previous = new JButton("<<");
-    private final JButton previous1 = new JButton("<<");
+    private final JButton next = new JButton(">>"); // Add attack die
+    private final JButton next1 = new JButton(">>"); // Add defend die
+    private final JButton previous = new JButton("<<"); // Remove attack die
+    private final JButton previous1 = new JButton("<<"); // Remove defend die
 
     private final JButton attackDiceRoll = new JButton("Throw");
     private final JButton defendDiceRoll = new JButton("Throw");
@@ -46,6 +46,9 @@ public class DicePanel {
     private boolean rolledDefend = false;
     private boolean rollingAllowed;
     private boolean order = true;
+
+    // The bot dice are locked
+    private boolean attackingDieLocked = false;
 
     public DicePanel() {
         playerOrder.setFont(new Font("Courier New", Font.BOLD, 16));
@@ -79,47 +82,10 @@ public class DicePanel {
         previous.setPreferredSize(previous.getPreferredSize());
 
         previous.addActionListener(actionEvent ->  {
-            if (p1a.getComponents()[p1a.getComponents().length-1].equals(next)) {
-                p1a.removeAll();
-                p1a.add(attackDice1);
-                p1a.add(next);
-                numberOfAttackingDice = 1;
-            }
-            else {
-                p1a.removeAll();
-                p1a.add(previous);
-                p1a.add(attackDice1);
-                p1a.add(attackDice2);
-                p1a.add(next);
-                numberOfAttackingDice = 2;
-            }
-
-            p1a.repaint();
-            p1a.setVisible(true);
-            Map.frame.repaint();
-            Map.frame.setVisible(true);
+            removeAttackDie();
         });
         next.addActionListener(actionEvent ->  {
-            if (p1a.getComponents().length == 2) {
-                p1a.removeAll();
-                p1a.add(previous);
-                p1a.add(attackDice1);
-                p1a.add(attackDice2);
-                p1a.add(next);
-                numberOfAttackingDice = 2;
-            }
-            else if (p1a.getComponents().length == 4 && p1a.getComponents()[p1a.getComponents().length-1].equals(next)) {
-                p1a.removeAll();
-                p1a.add(previous);
-                p1a.add(attackDice1);
-                p1a.add(attackDice2);
-                p1a.add(attackDice3);
-                numberOfAttackingDice = 3;
-            }
-            p1a.repaint();
-            p1a.setVisible(true);
-            Map.frame.repaint();
-            Map.frame.setVisible(true);
+            addAttackDie();
         });
 
         next1.setFont(new Font("Courier News", Font.BOLD, 10));
@@ -139,27 +105,10 @@ public class DicePanel {
         previous1.setPreferredSize(previous.getPreferredSize());
 
         previous1.addActionListener(actionEvent ->  {
-            p2a.removeAll();
-            p2a.add(defDice1);
-            p2a.add(next1);
-            numberOfDefendingDice = 1;
-
-            p2a.repaint();
-            p2a.setVisible(true);
-            Map.frame.repaint();
-            Map.frame.setVisible(true);
+            removeDefendDie();
         });
         next1.addActionListener(actionEvent ->  {
-            p2a.removeAll();
-            p2a.add(previous1);
-            p2a.add(defDice1);
-            p2a.add(defDice2);
-            numberOfDefendingDice = 2;
-
-            p2a.repaint();
-            p2a.setVisible(true);
-            Map.frame.repaint();
-            Map.frame.setVisible(true);
+            addDefendDie();
         });
 
         attackDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
@@ -219,6 +168,90 @@ public class DicePanel {
             return true;
         }
         return false;
+    }
+
+    public void lockAttackingDie() {
+        attackingDieLocked = true;
+    }
+
+    public void unlockAttackingDie() {
+        attackingDieLocked = false;
+    }
+
+    public void addAttackDie() {
+        if (attackingDieLocked) {
+            game.getNarrator().addText("You can't change the number of attacking dice right now!");
+        } else {
+            if (p1a.getComponents().length == 2) {
+                p1a.removeAll();
+                p1a.add(previous);
+                p1a.add(attackDice1);
+                p1a.add(attackDice2);
+                p1a.add(next);
+                numberOfAttackingDice = 2;
+            } else if (p1a.getComponents().length == 4 && p1a.getComponents()[p1a.getComponents().length - 1].equals(next)) {
+                p1a.removeAll();
+                p1a.add(previous);
+                p1a.add(attackDice1);
+                p1a.add(attackDice2);
+                p1a.add(attackDice3);
+                numberOfAttackingDice = 3;
+            }
+            p1a.repaint();
+            p1a.setVisible(true);
+            Map.frame.repaint();
+            Map.frame.setVisible(true);
+        }
+    }
+
+    public void removeAttackDie() {
+        if (attackingDieLocked) {
+            game.getNarrator().addText("You can't change the number of attacking dice right now!");
+        } else {
+            if (p1a.getComponents()[p1a.getComponents().length - 1].equals(next)) {
+                p1a.removeAll();
+                p1a.add(attackDice1);
+                p1a.add(next);
+                numberOfAttackingDice = 1;
+            } else {
+                p1a.removeAll();
+                p1a.add(previous);
+                p1a.add(attackDice1);
+                p1a.add(attackDice2);
+                p1a.add(next);
+                numberOfAttackingDice = 2;
+            }
+
+            p1a.repaint();
+            p1a.setVisible(true);
+            Map.frame.repaint();
+            Map.frame.setVisible(true);
+        }
+    }
+
+    public void addDefendDie() {
+        p2a.removeAll();
+        p2a.add(previous1);
+        p2a.add(defDice1);
+        p2a.add(defDice2);
+        numberOfDefendingDice = 2;
+
+        p2a.repaint();
+        p2a.setVisible(true);
+        Map.frame.repaint();
+        Map.frame.setVisible(true);
+    }
+
+    public void removeDefendDie() {
+        p2a.removeAll();
+        p2a.add(defDice1);
+        p2a.add(next1);
+        numberOfDefendingDice = 1;
+
+        p2a.repaint();
+        p2a.setVisible(true);
+        Map.frame.repaint();
+        Map.frame.setVisible(true);
     }
 
     public void resetDiceRolled() {
