@@ -26,37 +26,23 @@ public class AiTemplate {
      * @param troops This is the number of troops the bot can place down
      */
     public void placeTroop(Graph g, Player p, int troops) {
-        // Each territory gets a score, the bot will place troops on the territory with the highest score
-        int[] scores = new int[g.getSize()];
+        // Each territory gets a bsr score
+        double[] bsr = new double[g.getSize()];
 
-        // Sum of all the enemy troops that a given territory is surrounded by
-        int surroundingTroops = 0;
-
-        // Iterate over each Vertex (territory)
-        for (int i = 0; i < g.getSize(); i++) {
-            // Iterate over each adjacent territory
-            for (int j = 0; j < g.get(i).getEdges().size(); j++) {
-                // If the territory does not belong to the player, add the troops of that territory to surrounding troops
-                if (!p.getName().equals(g.get(i).getEdges().get(j).getVertex().getTerritory().getOwner())) {
-                    surroundingTroops += g.get(i).getEdges().get(j).getVertex().getTerritory().getNumberOfTroops();
-                }
-            }
-            // Border Security Threat
-            scores[i] = g.get(i).getTerritory().getNumberOfTroops() / surroundingTroops;
-            surroundingTroops = 0;
-        }
-        // Find highest score and the index of the highest score
-        int maxScore = scores[0];
-        int indexMaxScore = 0;
-        for (int i = 0; i < scores.length; i++) {
-            if (scores[i] > maxScore) {
-                maxScore = scores[i];
-                indexMaxScore = i;
+        // For each vertex (territory) that is owned by the bot calculate its BSR
+        for(int i = 0; i < g.getSize(); i++) {
+            // Only calculate BSR for bot-owned territories
+            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+                bsr[i] = g.get(i).getBSR();
+            } else {
+                bsr[i] = -1;
             }
         }
-        // TODO weights
+        // Get the index of the lowest BSR in bsr[]
+        int indexLowestBSR = getLowest(bsr);
+
         // Put the troops on the territory with the highest score
-        g.get(indexMaxScore).getTerritory().setNumberOfTroops(g.get(indexMaxScore).getTerritory().getNumberOfTroops() + troops);
+        g.get(indexLowestBSR).getTerritory().setNumberOfTroops(g.get(indexLowestBSR).getTerritory().getNumberOfTroops() + troops);
     }
 
     /**
@@ -96,16 +82,7 @@ public class AiTemplate {
             else { bsr[i] = -1; }
         }
 
-        double lowest = 0;
-        int lowindex = -1;
-        for (int i = 0; i < bsr.length; i++) {
-            if (bsr[i] != -1) {
-                if (lowest == 0 || lowest > bsr[i]) {
-                    lowest = bsr[i];
-                    lowindex = i;
-                }
-            }
-        }
+        double index = getLowest(bsr);
         // select has the bsr and vertex-id (number) of the territory with the most offensive power/lowest bsr
 
 
@@ -177,6 +154,24 @@ public class AiTemplate {
     public ArrayList<Card> cards(Graph g, Player p) {
         // TODO
         return null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Extra methods
+
+    // Find index of lowest value in double[]
+    private int getLowest(double[] list) {
+        double lowest = list[0];
+        int indexLowestScore = 0;
+        for (int i = 1; i < list.length; i++) {
+            if (list[i] != -1) {
+                if (lowest == 0 || lowest > list[i]) {
+                    lowest = list[i];
+                    indexLowestScore = i;
+                }
+            }
+        }
+        return indexLowestScore;
     }
 
 }

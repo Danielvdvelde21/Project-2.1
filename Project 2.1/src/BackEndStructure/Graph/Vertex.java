@@ -15,6 +15,7 @@ public class Vertex {
         return edgeList;
     }
 
+    // Calculates Border Security Threat for Vertex
     public double getBSR() {
         int bst = 0;
         for (Edge e : edgeList) {
@@ -25,7 +26,7 @@ public class Vertex {
         }
         int units = territory.getNumberOfTroops();
 
-        return bst / units;
+        return (double) bst / units;
     }
 
     public Territory getTerritory() { return territory; }
