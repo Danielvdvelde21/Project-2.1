@@ -86,9 +86,9 @@ public class AiTemplate {
         // TODO
         // Ways to determine attack:
         // BSR (problem is when country is surrounded by a lot of countries)
-        double[] bsr = new double[42];
+        double[] bsr = new double[g.getSize()];
         // Bot-owned
-        for(int i = 0; i < 42; i++) {
+        for(int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
             if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
                 bsr[i] = g.get(i).getBSR();
@@ -96,12 +96,13 @@ public class AiTemplate {
             else { bsr[i] = -1; }
         }
 
-        double[] select = {0, 0};
-        for (int i = 0; i < 42; i++) {
+        double lowest = 0;
+        int lowindex = -1;
+        for (int i = 0; i < bsr.length; i++) {
             if (bsr[i] != -1) {
-                if (select[0] == 0 || select[0] > bsr[i]) {
-                    select[0] = bsr[i];
-                    select[1] = i;
+                if (lowest == 0 || lowest > bsr[i]) {
+                    lowest = bsr[i];
+                    lowindex = i;
                 }
             }
         }

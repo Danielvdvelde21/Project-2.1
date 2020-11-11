@@ -18,7 +18,10 @@ public class Vertex {
     public double getBSR() {
         int bst = 0;
         for (Edge e : edgeList) {
-            bst += e.getVertex().getTerritory().getNumberOfTroops();
+            // Only add enemy-owned territories to the bsr
+            if (!e.getVertex().getTerritory().getOwner().equals(this.territory.getOwner())) {
+                bst += e.getVertex().getTerritory().getNumberOfTroops();
+            }
         }
         int units = territory.getNumberOfTroops();
 
