@@ -36,15 +36,19 @@ public class ReceiveTroops {
             ArrayList<Card> turnInSet = game.getAi().cards(graph, player);
 
             // Return cards to stack
-            game.getCardStack().returnCards(turnInSet);
+            if (turnInSet != null) {
+                game.getCardStack().returnCards(turnInSet);
 
-            // Remove cards from player hand
-            player.getHand().removeAll(turnInSet);
+                // Remove cards from player hand
+                player.getHand().removeAll(turnInSet);
 
-            // Player has 1 more completed set
-            player.incrementSetsOwned();
+                // Player has 1 more completed set
+                player.incrementSetsOwned();
 
-            cards = game.getSetValue(player.getSetsTurnedIn());
+                cards = game.getSetValue(player.getSetsTurnedIn());
+            } else {
+                cards = 0;
+            }
         } else {
             cards = turningInCards(player);
         }
