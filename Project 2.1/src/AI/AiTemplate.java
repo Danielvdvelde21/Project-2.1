@@ -38,6 +38,35 @@ public class AiTemplate {
      */
     public Vertex[] attack(Graph g, Player p) {
         // TODO
+        // Ways to determine attack:
+        // BSR (problem is when country is surrounded by a lot of countries)
+        double[] bsr = new double[42];
+        // Bot-owned
+        for(int i = 0; i < 42; i++) {
+            // Only calculate BSR for bot-owned territories
+            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+                bsr[i] = g.get(i).getBSR();
+            }
+            else { bsr[i] = -1; }
+        }
+
+        double[] select = {0, 0};
+        for (int i = 0; i < 42; i++) {
+            if (bsr[i] != -1) {
+                if (select[0] == 0 || select[0] > bsr[i]) {
+                    select[0] = bsr[i];
+                    select[1] = i;
+                }
+            }
+        }
+        // select has the bsr and vertex-id (number) of the territory with the most offensive power/lowest bsr
+
+
+
+        // Relative amount of troops compared to enemy countries around it (more 1 on 1 comparison)
+
+        // Also need to decide when to stop attacking
+        // If you keep on attacking indefinetely, would end up with 1 troop on every country
         attackerDie = 1;
         return null;
     }
@@ -50,7 +79,9 @@ public class AiTemplate {
 
     // How many troops will be sent over when a territory is captured
     public int getTroopCarryOver() {
-        //TODO
+        // If the attacking country is now only surrounded by friendly territories; send over all but one
+
+        // Otherwise, it'll be tougher (BST?)
         return 1;
     }
 
