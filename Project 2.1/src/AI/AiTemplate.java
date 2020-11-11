@@ -68,6 +68,10 @@ public class AiTemplate {
      * @param p This is the current player turn
      */
     public void placeTroopStartOfGame(Graph g, Player p) {
+        // Iterate over each Vertex (territory)
+        for (int i = 0; i < g.getSize(); i++) {
+            
+        }
         // TODO
     }
 
@@ -83,6 +87,13 @@ public class AiTemplate {
      * @return A vertex array with position 0 attacker and position 1 defender
      */
     public Vertex[] attack(Graph g, Player p) {
+        // Iterate over each Vertex (territory)
+        for (int i = 0; i < g.getSize(); i++) {
+            // Iterate over each adjacent territory
+            for (int j = 0; j < g.get(i).getEdges().size(); j++) {
+
+            }
+        }
         // TODO
         attackerDie = 1;
         return null;
@@ -90,6 +101,13 @@ public class AiTemplate {
 
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
+        // Iterate over each Vertex (territory)
+        for (int i = 0; i < g.getSize(); i++) {
+            // Iterate over each adjacent territory
+            for (int j = 0; j < g.get(i).getEdges().size(); j++) {
+
+            }
+        }
         // TODO
         return true;
     }
@@ -122,6 +140,13 @@ public class AiTemplate {
      * @return A vertex array with position 0 from and position 1 to
      */
     public Vertex[] reinforce(Graph g, Player p) {
+        // Iterate over each Vertex (territory)
+        for (int i = 0; i < g.getSize(); i++) {
+            // Iterate over each adjacent territory
+            for (int j = 0; j < g.get(i).getEdges().size(); j++) {
+
+            }
+        }
         // TODO
         reinforcementTroops = 1;
         return null;
