@@ -47,7 +47,7 @@ public class PlacementStage {
 
     private void placementTurn(Player player) {
         if (player.isBot()) {
-            game.getAi().placeTroop(graph, player, 1);
+            game.getAi().placeTroopStartOfGame(graph, player);
         } else {
             placeTroop(player, getSelectedTerritoryNumber(player));
         }

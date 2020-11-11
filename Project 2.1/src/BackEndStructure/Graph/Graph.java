@@ -39,4 +39,6 @@ public class Graph {
     public Vertex get(int i) {
         return graph.get(i);
     }
+
+    public int getSize() { return graph.size(); }
 }
