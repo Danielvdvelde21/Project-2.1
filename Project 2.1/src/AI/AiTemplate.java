@@ -3,11 +3,13 @@ package AI;
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
+import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class AiTemplate {
 
@@ -82,17 +84,29 @@ public class AiTemplate {
             else { bsr[i] = -1; }
         }
 
-        double index = getLowest(bsr);
-        // select has the bsr and vertex-id (number) of the territory with the most offensive power/lowest bsr
+        int atkIndex = getLowest(bsr);
 
-
-
+        // Attack the neighbouring country with the least amount of troops
+        LinkedList<Edge> edges = g.get(atkIndex).getEdges();
+        int lowesttroops = 10000;
+        int defIndex = 0;
+        for (int i = 0; i < edges.size(); i++) {
+            if (!edges.get(i).getVertex().getTerritory().getOwner().equals(p.getName())) {
+                if (edges.get(i).getVertex().getTerritory().getNumberOfTroops() < lowesttroops) {
+                    lowesttroops = edges.get(i).getVertex().getTerritory().getNumberOfTroops();
+                    defIndex = i;
+                }
+            }
+        }
         // Relative amount of troops compared to enemy countries around it (more 1 on 1 comparison)
 
+        // Find countries neighbouring your territories with very small amount of tro0ps (should show up already)
+
         // Also need to decide when to stop attacking
-        // If you keep on attacking indefinetely, would end up with 1 troop on every country
+        // If you keep on attacking indefinitely, would end up with 1 troop on every country
         attackerDie = 1;
-        return null;
+        Vertex[] duo = {g.get(atkIndex) , edges.get(defIndex).getVertex()};
+        return duo;
     }
 
     // Evaluate when bot stops attacking
