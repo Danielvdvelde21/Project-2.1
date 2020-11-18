@@ -285,12 +285,25 @@ public class AiTemplate {
     }
 
     // For a continent get the number of troops on it
-    private int getTroopsOnContinent(Graph g, Player p, String continent) {
+    private int getCompositionContinent(Graph g, String continent) {
         int [] territories = continentDetector(continent);
 
         int totalTroops = 0;
         for (int t : territories) {
             totalTroops += g.get(t).getTerritory().getNumberOfTroops();
+        }
+        return totalTroops;
+    }
+
+    // For a continent get the number of troops on it for a given player
+    private int getTroopsOnContinent(Graph g, Player p, String continent) {
+        int [] territories = continentDetector(continent);
+
+        int totalTroops = 0;
+        for (int t : territories) {
+            if (g.get(t).getTerritory().getOwner().equals(p.getName())) {
+                totalTroops += g.get(t).getTerritory().getNumberOfTroops();
+            }
         }
         return totalTroops;
     }
