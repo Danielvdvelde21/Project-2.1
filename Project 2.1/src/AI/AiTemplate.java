@@ -239,4 +239,47 @@ public class AiTemplate {
         return (territoryOwnedRatio + troopsOwnedRatio) / 2;
     }
 
+    // For a continent, calculate what percentage is owned by a player
+    private double percentageOfContinentOwned(Graph g, Player p, String continent) {
+        switch (continent) {
+            case "Australia":
+                // 9, 38, 23, 16
+                return continentOwnership(g, p, new int[]{9, 16, 23, 38});
+
+            case "Europe":
+                // 12, 14, 26, 30, 34, 35, 39
+                return continentOwnership(g, p, new int[]{12, 14, 26, 30, 34, 39});
+            case "North America":
+                // 1, 2, 5, 10, 13, 25, 27, 29, 40
+                return continentOwnership(g, p, new int[]{1, 2, 5, 10, 13, 25, 27, 29, 40});
+
+            case "South America":
+                // 3, 4, 28, 37
+                return continentOwnership(g, p, new int[]{3, 4, 28, 37});
+
+            case "Africa":
+                // 7, 8, 11, 20, 24, 33
+                return continentOwnership(g, p, new int[]{7, 8, 11, 20, 24, 33});
+
+            case "Asia":
+                // 0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41
+                return continentOwnership(g, p, new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41});
+        }
+        return -1;
+    }
+
+    // For a continent, calculate what percentage is owned by a player
+    private double continentOwnership(Graph g, Player player, int[] territories) {
+        String n = player.getName();
+        int counter = 0;
+
+        for (int territory : territories) {
+            if (g.get(territory).getTerritory().getOwner().equals(n)) {
+                counter++;
+            }
+        }
+
+        return (double) counter / territories.length;
+    }
+
 }
