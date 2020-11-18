@@ -4,6 +4,7 @@ import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class AiTemplate {
 
     private int reinforcementTroops;
     private int attackerDie;
+    private final String[] continents = new String[]{"Australia", "Africa", "Asia", "North America", "South America", "Europe"};
 
     // -----------------------------------------------------------------------------------------------------------------
     // Placing troops
@@ -239,47 +241,58 @@ public class AiTemplate {
         return (territoryOwnedRatio + troopsOwnedRatio) / 2;
     }
 
-    // For a continent, calculate what percentage is owned by a player
-    private double percentageOfContinentOwned(Graph g, Player p, String continent) {
+    // Detects which continent is selected and returns its corresponding territories
+    private int[] continentDetector(String continent) {
         switch (continent) {
             case "Australia":
                 // 9, 38, 23, 16
-                return continentOwnership(g, p, new int[]{9, 16, 23, 38});
+                return new int[]{9, 16, 23, 38});
 
             case "Europe":
                 // 12, 14, 26, 30, 34, 35, 39
-                return continentOwnership(g, p, new int[]{12, 14, 26, 30, 34, 39});
+                return new int[]{12, 14, 26, 30, 34, 39});
             case "North America":
                 // 1, 2, 5, 10, 13, 25, 27, 29, 40
-                return continentOwnership(g, p, new int[]{1, 2, 5, 10, 13, 25, 27, 29, 40});
+                return new int[]{1, 2, 5, 10, 13, 25, 27, 29, 40});
 
             case "South America":
                 // 3, 4, 28, 37
-                return continentOwnership(g, p, new int[]{3, 4, 28, 37});
+                return new int[]{3, 4, 28, 37});
 
             case "Africa":
                 // 7, 8, 11, 20, 24, 33
-                return continentOwnership(g, p, new int[]{7, 8, 11, 20, 24, 33});
+                return new int[]{7, 8, 11, 20, 24, 33});
 
             case "Asia":
                 // 0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41
-                return continentOwnership(g, p, new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41});
+                return new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41});
         }
-        return -1;
+        throw new IllegalArgumentException("INVALID CONTINENT SELECTED!");
     }
 
     // For a continent, calculate what percentage is owned by a player
-    private double continentOwnership(Graph g, Player player, int[] territories) {
-        String n = player.getName();
-        int counter = 0;
+    private double percentageOfContinentOwned(Graph g, Player p, String continent) {
+        int [] territories = continentDetector(continent);
 
+        int counter = 0;
         for (int territory : territories) {
-            if (g.get(territory).getTerritory().getOwner().equals(n)) {
+            if (g.get(territory).getTerritory().getOwner().equals(p.getName())) {
                 counter++;
             }
         }
 
         return (double) counter / territories.length;
+    }
+
+    // For a continent get the number of troops on it
+    private int getTroopsOnContinent(Graph g, Player p, String continent) {
+        int [] territories = continentDetector(continent);
+
+        int totalTroops = 0;
+        for (int t : territories) {
+            totalTroops += g.get(t).getTerritory().getNumberOfTroops();
+        }
+        return totalTroops;
     }
 
 }
