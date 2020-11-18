@@ -2,10 +2,8 @@ package AI;
 
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
-import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
-import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class AiTemplate {
         double[] bsr = new double[g.getSize()];
 
         // For each vertex (territory) that is owned by the bot calculate its BSR
-        for(int i = 0; i < g.getSize(); i++) {
+        for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
             if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
                 bsr[i] = g.get(i).getBSR();
@@ -76,12 +74,13 @@ public class AiTemplate {
         // BSR (problem is when country is surrounded by a lot of countries)
         double[] bsr = new double[g.getSize()];
         // Bot-owned
-        for(int i = 0; i < g.getSize(); i++) {
+        for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
             if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
                 bsr[i] = g.get(i).getBSR();
+            } else {
+                bsr[i] = -1;
             }
-            else { bsr[i] = -1; }
         }
 
         int atkIndex = getLowest(bsr);
@@ -105,7 +104,7 @@ public class AiTemplate {
         // Also need to decide when to stop attacking
         // If you keep on attacking indefinitely, would end up with 1 troop on every country
         attackerDie = 1;
-        Vertex[] duo = {g.get(atkIndex) , edges.get(defIndex).getVertex()};
+        Vertex[] duo = {g.get(atkIndex), edges.get(defIndex).getVertex()};
         return duo;
     }
 
@@ -186,6 +185,58 @@ public class AiTemplate {
             }
         }
         return indexLowestScore;
+    }
+
+    // Returns the name of the player that is the biggest threat
+    private String biggestThreat(Graph g) {
+        // Determine how many players are in the game based on Graph
+        ArrayList<String> playerNames = new ArrayList<>();
+        for (int i = 0; i < g.getSize(); i++) {
+            if (!playerNames.contains(g.get(i).getTerritory().getOwner())) {
+                playerNames.add(g.get(i).getTerritory().getOwner());
+            }
+        }
+
+        // Estimate the threat for each player
+        double biggestThreat = 0;
+        String biggestThreatName = "";
+
+        for (String playerName : playerNames) {
+            if (biggestThreat > estimateThreat(g, playerName)) {
+                biggestThreat = estimateThreat(g, playerName);
+                biggestThreatName = playerName;
+            }
+        }
+
+        return biggestThreatName;
+    }
+
+    // Estimates how big of a threat a given player is
+    private double estimateThreat(Graph g, String playerName) {
+        // Calculate how many territories player has
+        int territoriesOwned = 0;
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner().equals(playerName)) {
+                territoriesOwned++;
+            }
+        }
+        // Calculate what percentage of territories player has
+        double territoryOwnedRatio = (double) territoriesOwned / g.getSize();
+
+        // Calculate how many troops player has
+        int troopsOwned = 0;
+        int totalTroopsOnBoard = 0;
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner().equals(playerName)) {
+                troopsOwned += g.get(i).getTerritory().getNumberOfTroops();
+            }
+            totalTroopsOnBoard += g.get(i).getTerritory().getNumberOfTroops();
+        }
+
+        // Calculate what percentage of troops player has
+        double troopsOwnedRatio = (double) troopsOwned / totalTroopsOnBoard;
+
+        return (territoryOwnedRatio + troopsOwnedRatio) / 2;
     }
 
 }
