@@ -200,7 +200,7 @@ public class AiTemplate {
                     // Check if the tempSet is a valid set
                     if (isSet(tempSet)) {
                         // Check how many preferredCards the set is using
-                        int prefCardsUsed = 0;
+                        int prefCardsUsed = -1;
                         for (Card c : tempSet) {
                             for (Card prefCard : preferredCards) {
                                 if (c == prefCard) {

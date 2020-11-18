@@ -110,4 +110,6 @@ public class MainGameLoop {
         try { Thread.sleep(100); } catch (InterruptedException ignored) {}
     }
 
+    public Player getWinner() { return winner; }
+
 }
