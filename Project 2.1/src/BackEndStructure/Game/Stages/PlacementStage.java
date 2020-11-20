@@ -32,22 +32,24 @@ public class PlacementStage {
     }
 
     public void placementStage() {
-        // For each player, for StartingTroops amount of rounds
+        // For each player till all countries are chosen
         int round = 1;
+
+        // Till all troops are placed
         while (round != game.getStartingTroops()) {
             for (Player p : game.getPlayers()) {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 cardInventory.setCurrentPlayer(p);
                 playerTurn.setPlayerTurn(p);
-                placementTurn(p);
+                placementCountryTurn(p);
             }
             round++;
         }
     }
 
-    private void placementTurn(Player player) {
+    private void placementCountryTurn(Player player) {
         if (player.isBot()) {
-            game.getAi().placeTroopStartOfGame(graph, player);
+            placeTroop(player, game.getAi().placementDecider(graph, player));
         } else {
             placeTroop(player, getSelectedTerritoryNumber(player));
         }

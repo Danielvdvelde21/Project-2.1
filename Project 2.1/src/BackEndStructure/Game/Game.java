@@ -48,7 +48,7 @@ public class Game {
     private final int[] setValues = new int[]{0,4,6,8,10,12,15};
 
     public Game(int numberOfPlayers, String[] names, boolean[] bots) {
-        // How manny troops each player gets from the start
+        // How many troops each player gets from the start
         switch (numberOfPlayers) {
             case 2:
                 startingTroops = 40;

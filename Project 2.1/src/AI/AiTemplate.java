@@ -58,8 +58,95 @@ public class AiTemplate {
      * @param g This is the current board
      * @param p This is the current player turn
      */
-    public void placeTroopStartOfGame(Graph g, Player p) {
-        // TODO
+    public int placementDecider(Graph g, Player p){
+        Boolean territoryFull = true;
+        int country =0;
+        for(int i =0; i < g.getSize(); i++){
+            if(g.get(i).getTerritory().getOwner().equals("unowned")){
+                territoryFull = false;
+            }
+        }
+        if(territoryFull){
+            return placeTroopsStartOfGame(g,p);
+        }
+        else{
+            return chooseLandStartOfGame(g,p);
+        }
+    }
+
+    public int chooseLandStartOfGame(Graph g, Player p) {
+        String[] continents = new String[]{"Europe","Australia","North America","South America","Africa","Asia"};
+        double[] countries = new double[42];
+
+        for(int i =0; i < countries.length; i++){
+
+            if(g.get(i).getTerritory().getOwner().equals("unowned")){
+                countries[i] = 1;
+            }
+            else{
+                countries[i] = -100;
+            }
+            for(String continent : continents){
+                int[] cont = continentDetector(continent);
+                if(contains(cont, i)){
+                   countries[i] += percentageOfContinentOwned(g,p,continent);
+                   //countries[i] += percentageOfContinentUnOwned(g,continent);
+                }
+            }
+            for(int j = 0; j < 42; j++){
+                if(g.get(j).getTerritory().getOwner().equals(p.getName()) && g.isAdjecent(g.get(j),g.get(i))){
+                    countries[i] += 0.4;
+                }
+            }
+        }
+        int bestPick = 0;
+        double bestGrade = 0;
+        for(int i =0; i < 42; i++){
+            if(countries[i] > bestGrade){
+                bestPick = i;
+                bestGrade = countries[i];
+            }
+        }
+        System.out.println(bestGrade);
+        return bestPick;
+
+    }
+
+    public int placeTroopsStartOfGame(Graph g, Player p){
+        // Each territory gets a bsr score
+        double[] bsr = new double[g.getSize()];
+
+        // For each vertex (territory) that is owned by the bot calculate its BSR
+        for (int i = 0; i < g.getSize(); i++) {
+            // Only calculate BSR for bot-owned territories
+            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+                bsr[i] = g.get(i).getBSR();
+            } else {
+                bsr[i] = -1;
+            }
+        }
+        // Get the index of the lowest BSR in bsr[]
+        int indexLowestBSR = getLowest(bsr);
+
+        return indexLowestBSR;
+    }
+
+    public static boolean contains(final int[] arr, final int key) {
+        return Arrays.stream(arr).anyMatch(i -> i == key);
+    }
+    private double percentageOfContinentUnOwned(Graph g, String continent) {
+        int[] territories = continentDetector(continent);
+
+        int counter = 0;
+        for (int territory : territories) {
+
+                if (g.get(territory).getTerritory().getOwner().equals("unowned")) {
+                    counter++;
+                }
+
+        }
+
+        return (double) counter / territories.length;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
