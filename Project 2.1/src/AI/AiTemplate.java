@@ -157,7 +157,8 @@ public class AiTemplate {
      * @return A vertex array with position 0 attacker and position 1 defender
      */
     public Vertex[] attack(Graph g, Player p) {
-        // Get the continent that you own the most (getting a continent
+        // Get the continent that you own the most (getting a continent)
+        mostOwnedContinent(g, p);
         double[] bsr = new double[g.getSize()];
         // Bot-owned
         for (int i = 0; i < g.getSize(); i++) {
@@ -474,7 +475,6 @@ public class AiTemplate {
     }
 
     private String mostOwnedContinent(Graph g, Player p) {
-        String[] continents = {"Africa","Asia", "Australia", "Europe", "North America", "South America"};
         double percentage = 0.0;
         String highest = "";
         for (String s : continents) {
