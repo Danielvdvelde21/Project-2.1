@@ -88,7 +88,7 @@ public class AiTemplate {
                 int[] cont = continentDetector(continent);
                 if(contains(cont, i)){
                    countries[i] += percentageOfContinentOwned(g,p,continent);
-                   //countries[i] += percentageOfContinentUnOwned(g,p,continent);
+                   countries[i] += percentageOfContinentUnOwned(g,p,continent);
                 }
             }
             for(int j = 0; j < 42; j++){
@@ -134,14 +134,14 @@ public class AiTemplate {
     }
     private double percentageOfContinentUnOwned(Graph g, Player p, String continent) { //TODO Sam
         int[] territories = continentDetector(continent);
-
+        Player tOwner;
         int counter = 0;
         for (int territory : territories) {
-                if (g.get(territory).getTerritory().getOwner()==null||g.get(territory).getTerritory().getOwner()==null) {
+            tOwner=g.get(territory).getTerritory().getOwner();
+                if (tOwner!=null&&tOwner!=p) {
                     counter++;
                 }
         }
-
         return (double) counter / territories.length;
     }
 
