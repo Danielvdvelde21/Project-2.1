@@ -42,7 +42,7 @@ public class SetHandler {
         String territoriesOnCards = "";
         for (int i = 0; i < 42; i++) {
             for (int j = 0; j < 3; j++) {
-                if (game.getGraph().get(i).getTerritory().getOwner().equals(player.getName()) && game.getGraph().get(i).getTerritory().getTerritoryName().equals(cards.get(j).getCardName())) {
+                if (game.getGraph().get(i).getTerritory().getOwner()==player && game.getGraph().get(i).getTerritory().getTerritoryName().equals(cards.get(j).getCardName())) {
                     game.getGraph().get(i).getTerritory().setNumberOfTroops(game.getGraph().get(i).getTerritory().getNumberOfTroops() + 2);
                     game.getMap().updateTroopCount(i, game.getGraph().get(i).getTerritory().getNumberOfTroops());
                     territoriesOnCards += game.getGraph().get(i).getTerritory().getTerritoryName() + ", ";

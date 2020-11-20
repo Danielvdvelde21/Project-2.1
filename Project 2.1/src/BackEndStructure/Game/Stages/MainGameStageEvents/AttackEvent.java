@@ -54,7 +54,7 @@ public class AttackEvent {
                 if (territorySelected(map)) {
                     Vertex attacker = graph.get(map.getTerritoryNumber()); // Attacking territory
                     narrator.addText("Player " + player.getName() + " is trying to attack with " + attacker.getTerritory().getTerritoryName());
-                    if (isTerritoryOwnedBy(attacker.getTerritory(), player.getName())) {
+                    if (isTerritoryOwnedBy(attacker.getTerritory(), player)) {
                         if (attacker.getTerritory().getNumberOfTroops() > 1) {
                             // Wait until a different territory is selected
                             while (graph.get(map.getTerritoryNumber()) == attacker) {
@@ -62,7 +62,7 @@ public class AttackEvent {
                             }
                             Vertex defender = graph.get(map.getTerritoryNumber()); // Defending territory
                             narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
-                            if (!isTerritoryOwnedBy(defender.getTerritory(), player.getName())) {
+                            if (!isTerritoryOwnedBy(defender.getTerritory(), player)) {
                                 if (graph.isAdjecent(attacker, defender)) {
                                     dicePanel.allowRolling(true);
                                     dicePanel.resetDiceRolls();
@@ -306,8 +306,8 @@ public class AttackEvent {
     private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
 
     // If a territory belongs to a player
-    private boolean isTerritoryOwnedBy(Territory t, String name) {
-        return t.getOwner().equals(name);
+    private boolean isTerritoryOwnedBy(Territory t, Player p) {
+        return t.getOwner()==p;
     }
 
     // Logic for whether a player can place down a troop on a territory
@@ -319,7 +319,7 @@ public class AttackEvent {
             delay();
             if (territorySelected(map)) {
                 Territory t = graph.get(map.getTerritoryNumber()).getTerritory();
-                if (isTerritoryOwnedBy(t, player.getName())) {
+                if (isTerritoryOwnedBy(t, player)) {
                     validTerritoryChosen = true;
                 } else {
                     map.deselectTerritory();

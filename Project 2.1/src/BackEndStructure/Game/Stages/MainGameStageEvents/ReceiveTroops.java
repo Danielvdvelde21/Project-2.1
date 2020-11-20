@@ -130,8 +130,8 @@ public class ReceiveTroops {
     private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
 
     // If a territory belongs to a player
-    private boolean isTerritoryOwnedBy(Territory t, String name) {
-        return t.getOwner().equals(name);
+    private boolean isTerritoryOwnedBy(Territory t, Player p) {
+        return t.getOwner()==p;
     }
 
     // Logic for whether a player can place down a troop on a territory
@@ -143,7 +143,7 @@ public class ReceiveTroops {
             delay();
             if (territorySelected(map)) {
                 Territory t = graph.get(map.getTerritoryNumber()).getTerritory();
-                if (isTerritoryOwnedBy(t, player.getName())) {
+                if (isTerritoryOwnedBy(t, player)) {
                     validTerritoryChosen = true;
                 } else {
                     map.deselectTerritory();

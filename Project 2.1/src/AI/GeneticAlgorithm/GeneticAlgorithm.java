@@ -31,7 +31,7 @@ public class GeneticAlgorithm {
             MainGameLoop game = new MainGameLoop(2, new String[]{bot1.getPlayer().getName(), bot2.getPlayer().getName()}, new boolean[]{true, true});
 
             // The individuals get a binary fitness value {0,1}
-            if (game.getWinner().getName().equals(bot1.getPlayer().getName())) {
+            if (game.getWinner()==bot1.getPlayer()) {
                 bot1.setFitness(1);
             } else {
                 bot2.setFitness(1);

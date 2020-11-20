@@ -60,7 +60,7 @@ public class AiTemplate {
         Boolean territoryFull = true;
         int country =0;
         for(int i =0; i < g.getSize(); i++){
-            if(g.get(i).getTerritory().getOwner().equals("unowned")){
+            if(g.get(i).getTerritory().getOwner()==null){
                 territoryFull = false;
             }
         }
@@ -78,7 +78,7 @@ public class AiTemplate {
 
         for(int i =0; i < countries.length; i++){
 
-            if(g.get(i).getTerritory().getOwner().equals("unowned")){
+            if(g.get(i).getTerritory().getOwner()==null){
                 countries[i] = 1;
             }
             else{
@@ -137,7 +137,7 @@ public class AiTemplate {
 
         int counter = 0;
         for (int territory : territories) {
-                if (g.get(territory).getTerritory().getOwner().equals("unowned")||g.get(territory).getTerritory().getOwner().equals("unowned")) {
+                if (g.get(territory).getTerritory().getOwner()==null||g.get(territory).getTerritory().getOwner()==null) {
                     counter++;
                 }
         }

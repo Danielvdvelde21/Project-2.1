@@ -47,7 +47,7 @@ public class FortifyEvent {
                     Vertex from = graph.get(map.getTerritoryNumber()); // Territory that sends troops
                     narrator.addText("Player " + player.getName() + " is fortifying with troops from " + from.getTerritory().getTerritoryName());
                     if (from.getTerritory().getNumberOfTroops() > 1) {
-                        if (isTerritoryOwnedBy(from.getTerritory(), player.getName())) {
+                        if (isTerritoryOwnedBy(from.getTerritory(), player)) {
 
                             // Wait until a different territory is selected
                             while (graph.get(map.getTerritoryNumber()) == from) {
@@ -56,7 +56,7 @@ public class FortifyEvent {
                             Vertex to = graph.get(map.getTerritoryNumber()); // Territory that gets troops
                             narrator.addText("Player " + player.getName() + " is trying to fortify " + to.getTerritory().getTerritoryName() + " with troops from " + from.getTerritory().getTerritoryName());
 
-                            if (isTerritoryOwnedBy(to.getTerritory(), player.getName())) {
+                            if (isTerritoryOwnedBy(to.getTerritory(), player)) {
                                 if (graph.isAdjecent(from, to)) {
                                     FortifyTroops popUp = new FortifyTroops(from.getTerritory());
                                     if (!popUp.isCanceled()) {
@@ -101,8 +101,8 @@ public class FortifyEvent {
     private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
 
     // If a territory belongs to a player
-    private boolean isTerritoryOwnedBy(Territory t, String name) {
-        return t.getOwner().equals(name);
+    private boolean isTerritoryOwnedBy(Territory t, Player p) {
+        return t.getOwner()==p;
     }
 
 }

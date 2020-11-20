@@ -64,11 +64,11 @@ public class PlacementStage {
             delay();
             if (territorySelected(map)) {
                 Territory t = graph.get(map.getTerritoryNumber()).getTerritory();
-                if (isTerritoryOwnedBy(t, "unowned")) {
+                if (t.getOwner()==null) {
                     validTerritoryChosen = true;
-                } else if (isTerritoryOwnedBy(t, player.getName()) && noMoreUnownedTerritories) {
+                } else if (isTerritoryOwnedBy(t, player) && noMoreUnownedTerritories) {
                     validTerritoryChosen = true;
-                } else if (isTerritoryOwnedBy(t, player.getName()) && !noMoreUnownedTerritories) {
+                } else if (isTerritoryOwnedBy(t, player) && !noMoreUnownedTerritories) {
                     map.deselectTerritory();
                     narrator.addText("Please select unowned territories first!");
                 } else {
@@ -89,7 +89,7 @@ public class PlacementStage {
         Territory t = graph.get(territoryNumber).getTerritory();
 
         // If the territory did not have an owner
-        if (isTerritoryOwnedBy(t, "unowned")) {
+        if (t.getOwner()==null) {
             // How many unowned territories are left?
             unownedTerritories--;
             unownedTerritoriesLeft();
@@ -121,8 +121,8 @@ public class PlacementStage {
     private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
 
     // If a territory belongs to a player
-    private boolean isTerritoryOwnedBy(Territory t, String name) {
-        return t.getOwner().equals(name);
+    private boolean isTerritoryOwnedBy(Territory t, Player p) {
+        return t.getOwner()==p;
     }
 
     private void unownedTerritoriesLeft() {

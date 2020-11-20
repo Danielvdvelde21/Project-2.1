@@ -20,7 +20,7 @@ public class Vertex {
         int bst = 0;
         for (Edge e : edgeList) {
             // Only add enemy-owned territories to the bsr
-            if (!e.getVertex().getTerritory().getOwner().equals(this.territory.getOwner())) {
+            if (e.getVertex().getTerritory().getOwner()!=this.territory.getOwner()) {
                 bst += e.getVertex().getTerritory().getNumberOfTroops();
             }
         }
