@@ -150,7 +150,47 @@ public class AiTemplate {
      */
     public Vertex[] reinforce(Graph g, Player p) {
         // TODO
-        reinforcementTroops = 1;
+
+        reinforcementTroops = 0;
+        Vertex to = null;
+        Vertex from = null;
+        int totalTroops = 0;
+        int totalTroopsMax = 0;
+
+        //'aggressive' strategy
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+                totalTroops = g.get(i).getTerritory().getNumberOfTroops();
+                for(int j = 0; j < g.getSize(); j++) {
+                    if (g.isAdjecent(g.get(i), g.get(j))) {
+                        if(g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner().equals(p.getName())) {
+                            totalTroops += g.get(j).getTerritory().getNumberOfTroops();
+                        }
+                    }
+                }
+                if(totalTroops > totalTroopsMax) {
+                    totalTroopsMax = totalTroops;
+                    to = g.get(i);
+                }
+            }
+        }
+
+        if(to != null) {
+            for (int n = 0; n < g.getSize(); n++) {
+                if (g.isAdjecent(to, g.get(n))) {
+                    if (g.get(n).getTerritory().getOwner().equals(p.getName())) {
+                        if(g.get(n).getTerritory().getNumberOfTroops() > 1) {
+                            reinforcementTroops = g.get(n).getTerritory().getNumberOfTroops() - 1;
+                            if(g.get(n).getTerritory().getNumberOfTroops() - reinforcementTroops > 0) {
+                                from = g.get(n);
+                                return new Vertex[] {from, to};
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return null;
     }
 
