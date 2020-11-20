@@ -395,7 +395,7 @@ public class AiTemplate {
         double percentage = 0.0;
         String highest = "";
         for (String s : continents) {
-            if (percentageOfContinentOwned(g, p, s) > percentage && percentageOfContinentOwned(g, p, s) < 99.0) {
+            if (percentageOfContinentOwned(g, p, s) > percentage && percentageOfContinentOwned(g, p, s) < 0.95) {
                 percentage = percentageOfContinentOwned(g, p, s);
                 highest = s;
             }
