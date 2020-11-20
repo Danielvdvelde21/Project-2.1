@@ -1,17 +1,17 @@
 package BackEndStructure.Graph;
 
-public class Territory {
+import BackEndStructure.Entities.Player;
 
+public class Territory {
     private final String territoryName;
     private final int territoryNumber;
     private int numberOfTroops;
-    private String owner;
+    private Player owner;
 
     public Territory(String territoryName, int num) {
         this.territoryName = territoryName;
         this.territoryNumber = num;
         this.numberOfTroops = 0;
-        this.owner = "unowned";
     }
 
     public String getTerritoryName() {
@@ -26,11 +26,11 @@ public class Territory {
         return numberOfTroops;
     }
 
-    public void setOwner(String playerName) {
+    public void setOwner(Player playerName) {
         this.owner = playerName;
     }
 
-    public String getOwner() {
+    public Player getOwner() {
         return owner;
     }
 

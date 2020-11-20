@@ -9,10 +9,10 @@ public class Population {
 
     public Population(int populationSize) {
         for (int i = 0; i < populationSize / 2; i++) {
-            individuals.add(new Individual("bot " + i, Color.red));
+            individuals.add(new Individual("bot " + i, i, Color.red));
         }
         for (int i = populationSize / 2; i < populationSize; i++) {
-            individuals.add(new Individual("bot " + i, Color.blue));
+            individuals.add(new Individual("bot " + i, i, Color.blue));
         }
     }
 

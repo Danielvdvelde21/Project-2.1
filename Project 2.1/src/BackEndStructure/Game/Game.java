@@ -81,7 +81,7 @@ public class Game {
 
         // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
-            players.add(new Player(names[i], colors[i], bots[i]));
+            players.add(new Player(names[i], i, colors[i], bots[i]));
         }
     }
 

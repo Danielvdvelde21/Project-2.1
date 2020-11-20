@@ -199,19 +199,20 @@ public class AttackEvent {
     }
 
     // Logic that needs to happen after a territory is captured
-    private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
+    private void territoryCaptured(Player player, Vertex defender, Vertex attack) { //TODO fix the isEliminated order
         // Player gets the territory
+        Player defenderOwner=defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();
-        defender.getTerritory().setOwner(player.getName());
+        defender.getTerritory().setOwner(player);
         map.setTroopCountColor(defender.getTerritory().getTerritoryNumber(), player);
 
         // defender loses his territory
-        decreaseTerritories(defender);
+        decreaseTerritories(defenderOwner);
 
         isGameOver(player);
-        if (isEliminated(defender)) {
-            receiveCards(player, defender);
-            eliminatePlayer(defender.getTerritory().getOwner());
+        if (isEliminated(defenderOwner)) {
+            receiveCards(player, defenderOwner);
+            eliminatePlayer(defenderOwner);
         }
 
         // How many troops are sent over
@@ -335,47 +336,27 @@ public class AttackEvent {
 
     // Check if vertex is owned by bot
     private boolean ownedByBot(Vertex defender) {
-        String name = defender.getTerritory().getOwner();
-        for (Player p : game.getPlayers()) {
-            if (p.getName().equals(name) && p.isBot()) {
-                return true;
-            }
-        }
-        return false;
+        Player p = defender.getTerritory().getOwner();
+        return p.isBot();
     }
 
     // If a player is defeated
-    private boolean isEliminated(Vertex v) {
-        for (Player p : game.getPlayers()) {
-            if (v.getTerritory().getOwner().equals(p.getName())) {
-                if (p.getTerritoriesOwned() == 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    private boolean isEliminated(Player d) {
+        return d.getTerritoriesOwned() == 0;
     }
 
     // Remove player from player list
-    private void eliminatePlayer(String name) {
-        game.getPlayers().removeIf(p -> p.getName().equals(name));
+    private void eliminatePlayer(Player p) {
+        game.getPlayers().remove(p);
     }
 
     // Get cards from eliminated player
-    private void receiveCards(Player player, Vertex v) {
-        for (Player p : game.getPlayers()) {
-            if (p.getName().equals(v.getTerritory().getOwner())) {
-                player.addToHand(p.getHand());
-            }
-        }
+    private void receiveCards(Player receivingPlayer, Player donatingPlayer) {
+                receivingPlayer.addToHand(donatingPlayer.getHand());
     }
 
-    private void decreaseTerritories(Vertex v) {
-        for (Player p : game.getPlayers()) {
-            if (p.getName().equals(v.getTerritory().getOwner())) {
+    private void decreaseTerritories(Player p) {
                 p.decreaseTerritoriesOwned();
-            }
-        }
     }
 
     private void isGameOver(Player player) {

@@ -96,7 +96,7 @@ public class PlacementStage {
             // Increase player territories owned
             player.increaseTerritoriesOwned();
             // Owner is now player
-            t.setOwner(player.getName());
+            t.setOwner(player);
             // Update map
             map.setTroopCountColor(territoryNumber, player);
         }

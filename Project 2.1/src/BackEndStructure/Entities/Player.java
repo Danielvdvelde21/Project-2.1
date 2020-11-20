@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Player {
     // Player data
     private final String playerName;
+    private final int playerIndex;
     private final Color playerColor;
     private final boolean isBot;
 
@@ -19,10 +20,11 @@ public class Player {
     private ArrayList<Card> hand = new ArrayList<>();
     private int setsTurnedIn;
 
-    public Player(String name, Color col, boolean isBot) {
+    public Player(String name, int playerIndex,Color col, boolean isBot) {
         this.playerName = name;
         this.playerColor = col;
         this.isBot = isBot;
+        this.playerIndex=playerIndex;
     }
 
     // Get Player data

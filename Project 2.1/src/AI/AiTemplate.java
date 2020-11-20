@@ -2,13 +2,11 @@ package AI;
 
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
-import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -37,7 +35,7 @@ public class AiTemplate {
         // For each vertex (territory) that is owned by the bot calculate its BSR
         for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
-            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(i).getTerritory().getOwner()==p) {
                 bsr[i] = g.get(i).getBSR();
             } else {
                 bsr[i] = -1;
@@ -90,11 +88,11 @@ public class AiTemplate {
                 int[] cont = continentDetector(continent);
                 if(contains(cont, i)){
                    countries[i] += percentageOfContinentOwned(g,p,continent);
-                   //countries[i] += percentageOfContinentUnOwned(g,continent);
+                   //countries[i] += percentageOfContinentUnOwned(g,p,continent);
                 }
             }
             for(int j = 0; j < 42; j++){
-                if(g.get(j).getTerritory().getOwner().equals(p.getName()) && g.isAdjecent(g.get(j),g.get(i))){
+                if(g.get(j).getTerritory().getOwner()==p && g.isAdjecent(g.get(j),g.get(i))){
                     countries[i] += 0.4;
                 }
             }
@@ -119,7 +117,7 @@ public class AiTemplate {
         // For each vertex (territory) that is owned by the bot calculate its BSR
         for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
-            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(i).getTerritory().getOwner()==p) {
                 bsr[i] = g.get(i).getBSR();
             } else {
                 bsr[i] = -1;
@@ -134,16 +132,14 @@ public class AiTemplate {
     public static boolean contains(final int[] arr, final int key) {
         return Arrays.stream(arr).anyMatch(i -> i == key);
     }
-    private double percentageOfContinentUnOwned(Graph g, String continent) {
+    private double percentageOfContinentUnOwned(Graph g, Player p, String continent) { //TODO Sam
         int[] territories = continentDetector(continent);
 
         int counter = 0;
         for (int territory : territories) {
-
-                if (g.get(territory).getTerritory().getOwner().equals("unowned")) {
+                if (g.get(territory).getTerritory().getOwner().equals("unowned")||g.get(territory).getTerritory().getOwner().equals("unowned")) {
                     counter++;
                 }
-
         }
 
         return (double) counter / territories.length;
@@ -166,7 +162,7 @@ public class AiTemplate {
         // Bot-owned
         for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
-            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(i).getTerritory().getOwner()==p) {
                 bsr[i] = g.get(i).getBSR();
             } else {
                 bsr[i] = -1;
@@ -180,7 +176,7 @@ public class AiTemplate {
         int lowesttroops = 10000;
         int defIndex = 0;
         for (int i = 0; i < edges.size(); i++) {
-            if (!edges.get(i).getVertex().getTerritory().getOwner().equals(p.getName())) {
+            if (edges.get(i).getVertex().getTerritory().getOwner()!=p) {
                 if (edges.get(i).getVertex().getTerritory().getNumberOfTroops() < lowesttroops) {
                     lowesttroops = edges.get(i).getVertex().getTerritory().getNumberOfTroops();
                     defIndex = i;
@@ -240,11 +236,11 @@ public class AiTemplate {
 
         //'aggressive' strategy
         for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(i).getTerritory().getOwner()==p) {
                 totalTroops = g.get(i).getTerritory().getNumberOfTroops();
                 for(int j = 0; j < g.getSize(); j++) {
                     if (g.isAdjecent(g.get(i), g.get(j))) {
-                        if(g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner().equals(p.getName())) {
+                        if(g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner()==p) {
                             totalTroops += g.get(j).getTerritory().getNumberOfTroops();
                         }
                     }
@@ -259,7 +255,7 @@ public class AiTemplate {
         if(to != null) {
             for (int n = 0; n < g.getSize(); n++) {
                 if (g.isAdjecent(to, g.get(n))) {
-                    if (g.get(n).getTerritory().getOwner().equals(p.getName())) {
+                    if (g.get(n).getTerritory().getOwner()==p) {
                         if(g.get(n).getTerritory().getNumberOfTroops() > 1) {
                             reinforcementTroops = g.get(n).getTerritory().getNumberOfTroops() - 1;
                             if(g.get(n).getTerritory().getNumberOfTroops() - reinforcementTroops > 0) {
@@ -383,35 +379,35 @@ public class AiTemplate {
     }
 
     // Returns the name of the player that is the biggest threat
-    private String biggestThreat(Graph g) {
+    private Player biggestThreat(Graph g) {
         // Determine how many players are in the game based on Graph
-        ArrayList<String> playerNames = new ArrayList<>();
+        ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < g.getSize(); i++) {
-            if (!playerNames.contains(g.get(i).getTerritory().getOwner())) {
-                playerNames.add(g.get(i).getTerritory().getOwner());
+            if (!players.contains(g.get(i).getTerritory().getOwner())) {
+                players.add(g.get(i).getTerritory().getOwner());
             }
         }
 
         // Estimate the threat for each player
         double biggestThreat = 0;
-        String biggestThreatName = "";
+        Player biggestThreatPlayer=players.get(0);
 
-        for (String playerName : playerNames) {
-            if (biggestThreat > estimateThreat(g, playerName)) {
-                biggestThreat = estimateThreat(g, playerName);
-                biggestThreatName = playerName;
+        for (Player player : players) {
+            if (biggestThreat > estimateThreat(g, player)) {
+                biggestThreat = estimateThreat(g, player);
+                biggestThreatPlayer = player;
             }
         }
 
-        return biggestThreatName;
+        return biggestThreatPlayer;
     }
 
     // Estimates how big of a threat a given player is
-    private double estimateThreat(Graph g, String playerName) {
+    private double estimateThreat(Graph g, Player playerName) {
         // Calculate how many territories player has
         int territoriesOwned = 0;
         for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner().equals(playerName)) {
+            if (g.get(i).getTerritory().getOwner()==playerName) {
                 territoriesOwned++;
             }
         }
@@ -422,7 +418,7 @@ public class AiTemplate {
         int troopsOwned = 0;
         int totalTroopsOnBoard = 0;
         for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner().equals(playerName)) {
+            if (g.get(i).getTerritory().getOwner()==playerName) {
                 troopsOwned += g.get(i).getTerritory().getNumberOfTroops();
             }
             totalTroopsOnBoard += g.get(i).getTerritory().getNumberOfTroops();
@@ -469,7 +465,7 @@ public class AiTemplate {
 
         int counter = 0;
         for (int territory : territories) {
-            if (g.get(territory).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(territory).getTerritory().getOwner()==p) {
                 counter++;
             }
         }
@@ -507,7 +503,7 @@ public class AiTemplate {
 
         int totalTroops = 0;
         for (int t : territories) {
-            if (g.get(t).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(t).getTerritory().getOwner()==p) {
                 totalTroops += g.get(t).getTerritory().getNumberOfTroops();
             }
         }
@@ -519,7 +515,7 @@ public class AiTemplate {
         ArrayList<Territory> territoriesOwned = new ArrayList<>();
 
         for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+            if (g.get(i).getTerritory().getOwner()==p) {
                 territoriesOwned.add(g.get(i).getTerritory());
             }
         }

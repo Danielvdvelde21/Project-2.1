@@ -9,8 +9,8 @@ public class Individual {
     private final Player player;
     private int fitness;
 
-    public Individual(String name, Color c) {
-        this.player = new Player(name, c, true);
+    public Individual(String name, int playerIndex, Color c) {
+        this.player = new Player(name, playerIndex, c, true);
         this.fitness = 0;
     }
 
