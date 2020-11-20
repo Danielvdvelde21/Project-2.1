@@ -161,9 +161,7 @@ public class AiTemplate {
      * @return A vertex array with position 0 attacker and position 1 defender
      */
     public Vertex[] attack(Graph g, Player p) {
-        // TODO
-        // Ways to determine attack:
-        // BSR (problem is when country is surrounded by a lot of countries)
+        // Get the continent that you own the most (getting a continent
         double[] bsr = new double[g.getSize()];
         // Bot-owned
         for (int i = 0; i < g.getSize(); i++) {
@@ -189,20 +187,16 @@ public class AiTemplate {
                 }
             }
         }
-        // Relative amount of troops compared to enemy countries around it (more 1 on 1 comparison)
 
-        // Find countries neighbouring your territories with very small amount of tro0ps (should show up already)
-
-        // Also need to decide when to stop attacking
-        // If you keep on attacking indefinitely, would end up with 1 troop on every country
-        attackerDie = 1;
+        attackerDie = 3;
         Vertex[] duo = {g.get(atkIndex), edges.get(defIndex).getVertex()};
         return duo;
     }
 
+
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
-        // TODO
+        //
         return true;
     }
 
@@ -237,7 +231,47 @@ public class AiTemplate {
      */
     public Vertex[] reinforce(Graph g, Player p) {
         // TODO
-        reinforcementTroops = 1;
+
+        reinforcementTroops = 0;
+        Vertex to = null;
+        Vertex from = null;
+        int totalTroops = 0;
+        int totalTroopsMax = 0;
+
+        //'aggressive' strategy
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner().equals(p.getName())) {
+                totalTroops = g.get(i).getTerritory().getNumberOfTroops();
+                for(int j = 0; j < g.getSize(); j++) {
+                    if (g.isAdjecent(g.get(i), g.get(j))) {
+                        if(g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner().equals(p.getName())) {
+                            totalTroops += g.get(j).getTerritory().getNumberOfTroops();
+                        }
+                    }
+                }
+                if(totalTroops > totalTroopsMax) {
+                    totalTroopsMax = totalTroops;
+                    to = g.get(i);
+                }
+            }
+        }
+
+        if(to != null) {
+            for (int n = 0; n < g.getSize(); n++) {
+                if (g.isAdjecent(to, g.get(n))) {
+                    if (g.get(n).getTerritory().getOwner().equals(p.getName())) {
+                        if(g.get(n).getTerritory().getNumberOfTroops() > 1) {
+                            reinforcementTroops = g.get(n).getTerritory().getNumberOfTroops() - 1;
+                            if(g.get(n).getTerritory().getNumberOfTroops() - reinforcementTroops > 0) {
+                                from = g.get(n);
+                                return new Vertex[] {from, to};
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return null;
     }
 
@@ -441,6 +475,19 @@ public class AiTemplate {
         }
 
         return (double) counter / territories.length;
+    }
+
+    private String mostOwnedContinent(Graph g, Player p) {
+        String[] continents = {"Africa","Asia", "Australia", "Europe", "North America", "South America"};
+        double percentage = 0.0;
+        String highest = "";
+        for (String s : continents) {
+            if (percentageOfContinentOwned(g, p, s) > percentage && percentageOfContinentOwned(g, p, s) < 0.95) {
+                percentage = percentageOfContinentOwned(g, p, s);
+                highest = s;
+            }
+        }
+        return highest;
     }
 
     // For a continent get the number of troops on it
