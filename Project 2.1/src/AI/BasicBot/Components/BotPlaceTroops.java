@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 public class BotPlaceTroops extends UsefulMethods {
 
-    private boolean allTerritoriesOwned = false;
-
     // -----------------------------------------------------------------------------------------------------------------
     // Placing troops
 
@@ -28,6 +26,7 @@ public class BotPlaceTroops extends UsefulMethods {
 
         for (int territory = 0; territory < ownedTerritories.size(); territory++) {
             territoryScores[territory] = ownedTerritories.get(territory).getBSR();
+            System.out.println(ownedTerritories.get(territory).getTerritory().getTerritoryName() + " " + territoryScores[territory] );
         }
 
         // Return the index of the territory with the best score
@@ -49,20 +48,20 @@ public class BotPlaceTroops extends UsefulMethods {
      * @param p This is the current player turn
      */
     public int placementDecider(Graph g, Player p) {
-        if (!allTerritoriesOwned) {
-            return placeTroopsStartOfGame(g, p);
-        } else {
-            allTerritoriesOwned(g);
+        if (allTerritoriesOwned(g)) {
             return placeTroop(g, p, 1);
+        } else {
+            return placeTroopsStartOfGame(g, p);
         }
     }
 
-    public void allTerritoriesOwned(Graph g) {
+    public boolean allTerritoriesOwned(Graph g) {
         for (int i = 0; i < g.getSize(); i++) {
             if (g.get(i).getTerritory().getOwner() == null) {
-                allTerritoriesOwned = false;
+                return false;
             }
         }
+        return true;
     }
 
     public int placeTroopsStartOfGame(Graph g, Player p) {
