@@ -25,48 +25,24 @@ public class BotAttacking extends UsefulMethods {
      * @param p This is the current player turn
      * @return A vertex array with position 0 attacker and position 1 defender
      */
-    public Vertex[] attack(Graph g, Player p) {
-        // Get the continent that you own the most (getting a continent)
-        String cont = mostOwnedContinent(g, p);
+    public Vertex[] attackNew(Graph g, Player p) {
+        // Idea: Give countries a grade based on how likely you want to attack them/which country you want to use to attack
+        // Negative scores for enemy countries, positive scores for owned countries
+        double[] countries = new double[g.getSize()];
+        int atk = 0;
+        int def = 0;
 
-        // Calculate bsr for bot-owned territories
-        double[] bsr = new double[g.getSize()];
-        for (int i = 0; i < g.getSize(); i++) {
-            // Only calculate BSR for bot-owned territories
-            if (g.get(i).getTerritory().getOwner().getPlayerIndex() == p.getPlayerIndex()) {
-                bsr[i] = g.get(i).getBSR();
-            } else {
-                bsr[i] = -1;
+        for (int i = 0; i < countries.length; i++) {
+            if (g.get(i).getTerritory().getOwner() == p) {
+                countries[i] = g.get(i).getTerritory().getNumberOfTroops();
+                atk = i;
+            }
+            else {
+                countries[i] = - g.get(i).getTerritory().getNumberOfTroops();
+                def = i;
             }
         }
-
-        int atkIndex = getLowestInCont(bsr, cont);
-
-        // Attack the neighbouring country with the least amount of troops
-        LinkedList<Edge> edges = g.get(atkIndex).getEdges();
-        int lowesttroops = 10000;
-        int defIndex = 0;
-        for (int i = 0; i < edges.size(); i++) {
-            if (edges.get(i).getVertex().getTerritory().getOwner().getPlayerIndex() != p.getPlayerIndex()) {
-                if (edges.get(i).getVertex().getTerritory().getNumberOfTroops() < lowesttroops) {
-                    lowesttroops = edges.get(i).getVertex().getTerritory().getNumberOfTroops();
-                    defIndex = i;
-                }
-            }
-        }
-        int friendlyTroops = g.get(atkIndex).getTerritory().getNumberOfTroops();
-        if (friendlyTroops > 3) {
-            attackerDie = 3;
-        }
-        else if (friendlyTroops == 3) {
-            attackerDie = 2;
-        }
-        else {
-            attackerDie = 1;
-        }
-
-        Vertex[] duo = {g.get(atkIndex), edges.get(defIndex).getVertex()};
-        return duo;
+        return new Vertex[]{g.get(atk), g.get(def)};
     }
 
 
