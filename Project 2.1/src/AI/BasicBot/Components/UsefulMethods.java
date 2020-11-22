@@ -3,6 +3,7 @@ package AI.BasicBot.Components;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
+import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +21,8 @@ public class UsefulMethods {
         Player tOwner;
         int counter = 0;
         for (int territory : territories) {
-            tOwner=g.get(territory).getTerritory().getOwner();
-            if (tOwner!=null&&tOwner!=p) {
+            tOwner = g.get(territory).getTerritory().getOwner();
+            if (tOwner != null && tOwner != p) {
                 counter++;
             }
         }
@@ -42,6 +43,21 @@ public class UsefulMethods {
         }
         return indexLowestScore;
     }
+
+    // Find index of highest value in double[]
+    public int getHighest(double[] list) {
+        int highestIndex = 0;
+        double highest = 0;
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] > highest) {
+                highest = list[i];
+                highestIndex = i;
+            }
+        }
+        return highestIndex;
+    }
+
+
 
     public int getLowestWithoutZero(double[] list) {
         double lowest = 100.0;
@@ -170,6 +186,26 @@ public class UsefulMethods {
         return (double) counter / territories.length;
     }
 
+    // For a continent, calculate what percentage is owned by a player
+    public double[] percentageOfAllContinentOwned(Graph g, Player p) {
+        double[] continentsPercentages = new double[continents.length];
+        int territoriesOwnedInContinent = 0;
+        int continentIndex = 0;
+
+        for(String continent : continents) {
+            int[] territories = continentDetector(continent);
+            for (int territory : territories) {
+                if (g.get(territory).getTerritory().getOwner() == p) {
+                    territoriesOwnedInContinent++;
+                }
+            }
+            continentsPercentages[continentIndex] = (double) territoriesOwnedInContinent / territories.length;
+            continentIndex++;
+        }
+
+        return continentsPercentages;
+    }
+
     public String mostOwnedContinent(Graph g, Player p) {
         double percentage = 0.0;
         String highest = "";
@@ -206,6 +242,18 @@ public class UsefulMethods {
         return totalTroops;
     }
 
+    // Get all owned vertices for a player
+    public ArrayList<Vertex> getOwnedVertices(Graph g, Player p) {
+        ArrayList<Vertex> verticesOwned = new ArrayList<>();
+
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner()==p) {
+                verticesOwned.add(g.get(i));
+            }
+        }
+        return verticesOwned;
+    }
+
     // Get all owned territories for a player
     public ArrayList<Territory> getOwnedTerritories(Graph g, Player p) {
         ArrayList<Territory> territoriesOwned = new ArrayList<>();
@@ -215,7 +263,6 @@ public class UsefulMethods {
                 territoriesOwned.add(g.get(i).getTerritory());
             }
         }
-
         return territoriesOwned;
     }
 
