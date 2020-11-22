@@ -15,6 +15,7 @@ public class AiTemplate {
 
     private int reinforcementTroops;
     private int attackerDie;
+    private int temp;
     private final String[] continents = new String[]{"Australia", "Africa", "Asia", "North America", "South America", "Europe"};
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -157,34 +158,44 @@ public class AiTemplate {
      */
     public Vertex[] attack(Graph g, Player p) {
         // Get the continent that you own the most (getting a continent)
-        mostOwnedContinent(g, p);
+        String cont = mostOwnedContinent(g, p);
+
+        // Calculate bsr for bot-owned territories
         double[] bsr = new double[g.getSize()];
-        // Bot-owned
         for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
-            if (g.get(i).getTerritory().getOwner()==p) {
+            if (g.get(i).getTerritory().getOwner().getPlayerIndex() == p.getPlayerIndex()) {
                 bsr[i] = g.get(i).getBSR();
             } else {
                 bsr[i] = -1;
             }
         }
 
-        int atkIndex = getLowest(bsr);
+        int atkIndex = getLowestInCont(bsr, cont);
 
         // Attack the neighbouring country with the least amount of troops
         LinkedList<Edge> edges = g.get(atkIndex).getEdges();
         int lowesttroops = 10000;
         int defIndex = 0;
         for (int i = 0; i < edges.size(); i++) {
-            if (edges.get(i).getVertex().getTerritory().getOwner()!=p) {
+            if (edges.get(i).getVertex().getTerritory().getOwner().getPlayerIndex() != p.getPlayerIndex()) {
                 if (edges.get(i).getVertex().getTerritory().getNumberOfTroops() < lowesttroops) {
                     lowesttroops = edges.get(i).getVertex().getTerritory().getNumberOfTroops();
                     defIndex = i;
                 }
             }
         }
+        int friendlyTroops = g.get(atkIndex).getTerritory().getNumberOfTroops();
+        if (friendlyTroops > 3) {
+            attackerDie = 3;
+        }
+        else if (friendlyTroops == 3) {
+            attackerDie = 2;
+        }
+        else {
+            attackerDie = 1;
+        }
 
-        attackerDie = 3;
         Vertex[] duo = {g.get(atkIndex), edges.get(defIndex).getVertex()};
         return duo;
     }
@@ -192,7 +203,11 @@ public class AiTemplate {
 
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
-        //
+        if (temp == 5) {
+            temp = 0;
+            return false;
+        }
+        temp++;
         return true;
     }
 
@@ -378,6 +393,38 @@ public class AiTemplate {
         return indexLowestScore;
     }
 
+    private int getLowestWithoutZero(double[] list) {
+        double lowest = 100.0;
+        int indexLowestScore = 0;
+        for (int i = 1; i < list.length; i++) {
+            if (list[i] != -1) {
+                if (lowest > list[i] && list[i] > 0) {
+                    lowest = list[i];
+                    indexLowestScore = i;
+                }
+            }
+        }
+        return indexLowestScore;
+    }
+
+    // Find index of lowest value in double[] and in a specific continent
+    private int getLowestInCont(double[] list, String c) {
+        // Territories in continent
+        int[] terrInCont = continentDetector(c);
+        double lowest = 999.0;
+        int indexLowestScore = terrInCont[0];
+
+        for (int i = 1; i < terrInCont.length; i++) {
+            if (list[terrInCont[i]] != -1) {
+                if (lowest > list[terrInCont[i]] && list[terrInCont[i]] > 0) {
+                    lowest = list[terrInCont[i]];
+                    indexLowestScore = terrInCont[i];
+                }
+            }
+        }
+        return indexLowestScore;
+    }
+
     // Returns the name of the player that is the biggest threat
     private Player biggestThreat(Graph g) {
         // Determine how many players are in the game based on Graph
@@ -477,7 +524,7 @@ public class AiTemplate {
         double percentage = 0.0;
         String highest = "";
         for (String s : continents) {
-            if (percentageOfContinentOwned(g, p, s) > percentage && percentageOfContinentOwned(g, p, s) < 0.95) {
+            if (percentageOfContinentOwned(g, p, s) > percentage && percentageOfContinentOwned(g, p, s) < 0.9) {
                 percentage = percentageOfContinentOwned(g, p, s);
                 highest = s;
             }

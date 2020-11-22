@@ -36,6 +36,8 @@ public class Player {
         return playerColor;
     }
 
+    public int getPlayerIndex() { return playerIndex; }
+
     public boolean isBot() {
         return isBot;
     }
