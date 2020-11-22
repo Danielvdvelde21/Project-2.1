@@ -107,7 +107,6 @@ public class AiTemplate {
         }
         System.out.println(bestGrade);
         return bestPick;
-
     }
 
     public int placeTroopsStartOfGame(Graph g, Player p){
@@ -132,7 +131,7 @@ public class AiTemplate {
     public static boolean contains(final int[] arr, final int key) {
         return Arrays.stream(arr).anyMatch(i -> i == key);
     }
-    private double percentageOfContinentUnOwned(Graph g, Player p, String continent) { //TODO Sam
+    private double percentageOfContinentUnOwned(Graph g, Player p, String continent) {
         int[] territories = continentDetector(continent);
         Player tOwner;
         int counter = 0;
