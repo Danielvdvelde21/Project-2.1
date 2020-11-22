@@ -24,39 +24,35 @@ public class BotReinforcement extends UsefulMethods {
 
         reinforcementTroops = 0;
         Vertex to = null;
-        Vertex from = null;
-        int totalTroops = 0;
+        Vertex from;
+        int totalTroops;
         int totalTroopsMax = 0;
 
         //'aggressive' strategy
         for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner()==p) {
+            if (g.get(i).getTerritory().getOwner()==p) {    //checks territories owned by player
                 totalTroops = g.get(i).getTerritory().getNumberOfTroops();
                 for(int j = 0; j < g.getSize(); j++) {
-                    if (g.isAdjecent(g.get(i), g.get(j))) {
-                        if(g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner()==p) {
-                            totalTroops += g.get(j).getTerritory().getNumberOfTroops();
-                        }
+                    if (g.isAdjecent(g.get(i), g.get(j)) && g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner()==p) {
+                        //checks all adjacent territories owned by player with > 1 troops
+                        totalTroops += g.get(j).getTerritory().getNumberOfTroops(); //total adjacent troops of the territory
                     }
                 }
-                if(totalTroops > totalTroopsMax) {
+                if(totalTroops > totalTroopsMax) {  //chooses the 'to' territory with the most total adjacent troops
                     totalTroopsMax = totalTroops;
                     to = g.get(i);
                 }
             }
         }
 
+        //determining 'from' territory
         if(to != null) {
             for (int n = 0; n < g.getSize(); n++) {
-                if (g.isAdjecent(to, g.get(n))) {
-                    if (g.get(n).getTerritory().getOwner()==p) {
-                        if(g.get(n).getTerritory().getNumberOfTroops() > 1) {
-                            reinforcementTroops = g.get(n).getTerritory().getNumberOfTroops() - 1;
-                            if(g.get(n).getTerritory().getNumberOfTroops() - reinforcementTroops > 0) {
-                                from = g.get(n);
-                                return new Vertex[] {from, to};
-                            }
-                        }
+                if (g.isAdjecent(to, g.get(n)) && g.get(n).getTerritory().getNumberOfTroops() > 1 && g.get(n).getTerritory().getOwner()==p) {
+                    reinforcementTroops = g.get(n).getTerritory().getNumberOfTroops() - 1;
+                    if(g.get(n).getTerritory().getNumberOfTroops() - reinforcementTroops > 0) {
+                        from = g.get(n);
+                        return new Vertex[] {from, to};
                     }
                 }
             }
