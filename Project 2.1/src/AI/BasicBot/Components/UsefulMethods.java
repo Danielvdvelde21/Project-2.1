@@ -57,8 +57,6 @@ public class UsefulMethods {
         return highestIndex;
     }
 
-
-
     public int getLowestWithoutZero(double[] list) {
         double lowest = 100.0;
         int indexLowestScore = 0;

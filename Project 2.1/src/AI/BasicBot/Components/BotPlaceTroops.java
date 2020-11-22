@@ -49,7 +49,7 @@ public class BotPlaceTroops extends UsefulMethods {
      * @param p This is the current player turn
      */
     public int placementDecider(Graph g, Player p) {
-        if (allTerritoriesOwned) {
+        if (!allTerritoriesOwned) {
             return placeTroopsStartOfGame(g, p);
         } else {
             allTerritoriesOwned(g);
