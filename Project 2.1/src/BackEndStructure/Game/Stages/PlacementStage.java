@@ -49,7 +49,7 @@ public class PlacementStage {
 
     private void placementCountryTurn(Player player) {
         if (player.isBot()) {
-            placeTroop(player, game.getAi().placementDecider(graph, player));
+            placeTroop(player, game.getAi().getPlaceTroops().placementDecider(graph, player));
         } else {
             placeTroop(player, getSelectedTerritoryNumber(player));
         }

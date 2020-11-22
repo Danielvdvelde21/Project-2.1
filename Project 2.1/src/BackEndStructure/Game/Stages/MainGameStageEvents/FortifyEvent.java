@@ -30,10 +30,10 @@ public class FortifyEvent {
         boolean fortified = false;
 
         if (player.isBot()) {
-            Vertex[] vertices = game.getAi().reinforce(graph, player);
+            Vertex[] vertices = game.getAi().getBotReinforcement().reinforce(graph, player);
             Vertex from = vertices[0];
             Vertex to = vertices[1];
-            int troopsSend = game.getAi().getReinforcementTroops();
+            int troopsSend = game.getAi().getBotReinforcement().getReinforcementTroops();
 
             from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
             to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);

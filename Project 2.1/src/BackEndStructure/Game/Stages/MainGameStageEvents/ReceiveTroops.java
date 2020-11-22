@@ -33,7 +33,7 @@ public class ReceiveTroops {
         int cards;
         if (player.isBot()) {
             // Set of cards the bot is going to turn in
-            ArrayList<Card> turnInSet = game.getAi().cards(graph, player);
+            ArrayList<Card> turnInSet = game.getAi().getBotCards().cards(graph, player);
 
             // Return cards to stack
             if (turnInSet != null) {
@@ -95,7 +95,7 @@ public class ReceiveTroops {
     public void placeReceivedTroops(Player player, int troops) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot()) {
-            game.getAi().placeTroop(graph, player, troops);
+            game.getAi().getPlaceTroops().placeTroop(graph, player, troops);
         } else {
             for (int i = 0; i < troops; i++) {
                 placementTurn(player);

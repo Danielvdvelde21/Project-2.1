@@ -1,6 +1,5 @@
 package BackEndStructure.Game.Stages.MainGameStageEvents;
 
-import AI.AiTemplate;
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
@@ -45,7 +44,7 @@ public class AttackEvent {
         map.deselectTerritory();
 
         if (player.isBot()) {
-            while (game.getAi().botWantsToAttack(graph, player)) {
+            while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
                 botAttack(player);
             }
         } else {
@@ -123,12 +122,12 @@ public class AttackEvent {
     }
 
     private void botAttack(Player player) {
-        Vertex[] vertices = game.getAi().attack(graph, player);
+        Vertex[] vertices = game.getAi().getBotAttacking().attack(graph, player);
         Vertex attacker = vertices[0];
         Vertex defender = vertices[1];
 
         // Set the amount of dice that the bot wants to use
-        switch (game.getAi().getAttackerDie()) {
+        switch (game.getAi().getBotAttacking().getAttackerDie()) {
             case 1:
                 dicePanel.removeAttackDie();
                 dicePanel.removeAttackDie();
@@ -143,7 +142,7 @@ public class AttackEvent {
                 dicePanel.addAttackDie();
         }
 
-        narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getAttackerDie() + " Dice(s)");
+        narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
 
         // If the bot is attacking another bot, the defending bot will use a much defending dice
         if (ownedByBot(defender)) {
@@ -218,7 +217,7 @@ public class AttackEvent {
         // How many troops are sent over
         int troops;
         if (player.isBot()) {
-            troops = game.getAi().getTroopCarryOver();
+            troops = game.getAi().getBotAttacking().getTroopCarryOver();
         } else {
             TerritoryCaptured popUp = new TerritoryCaptured(attack.getTerritory());
             while (!popUp.getValidNumberInserted()) {
@@ -242,7 +241,7 @@ public class AttackEvent {
     private void turnInCardsAttacking(Player player) {
         if (player.isBot()) {
             // Set of cards the bot is going to turn in
-            ArrayList<Card> turnInSet = game.getAi().attackingCard(graph, player);
+            ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
 
             // Return cards to stack
             game.getCardStack().returnCards(turnInSet);
@@ -271,7 +270,7 @@ public class AttackEvent {
     public void placeReceivedTroops(Player player, int troops) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot()) {
-            game.getAi().placeTroop(graph, player, troops);
+            game.getAi().getPlaceTroops().placeTroop(graph, player, troops);
         } else {
             for (int i = 0; i < troops; i++) {
                 placementTurn(player);

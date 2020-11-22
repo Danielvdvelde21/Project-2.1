@@ -1,6 +1,6 @@
 package BackEndStructure.Game;
 
-import AI.AiTemplate;
+import AI.BasicBot.AIMain;
 import BackEndStructure.Entities.Cards.CardStack;
 import BackEndStructure.Entities.AttackingHandler;
 import BackEndStructure.Entities.Player;
@@ -24,7 +24,7 @@ public class Game {
     private final Map map;
 
     // AI (bot)
-    private final AiTemplate ai = new AiTemplate();
+    private final AIMain ai = new AIMain();
 
     // Visual variables
     private final Narrator narrator = new Narrator();
@@ -125,7 +125,7 @@ public class Game {
 
     public DicePanel getDicePanel() { return dicePanel; }
 
-    public AiTemplate getAi() { return ai; }
+    public AIMain getAi() { return ai; }
 
     // Checks how many continents a player has
     public void hasContinents(Player player) {
