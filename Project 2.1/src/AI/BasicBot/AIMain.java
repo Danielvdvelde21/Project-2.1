@@ -1,5 +1,10 @@
 package AI.BasicBot;
 
+import AI.BasicBot.Components.BotAttacking;
+import AI.BasicBot.Components.BotCards;
+import AI.BasicBot.Components.BotPlaceTroops;
+import AI.BasicBot.Components.BotReinforcement;
+
 public class AIMain {
 
     private final BotPlaceTroops placeTroops;
@@ -14,9 +19,7 @@ public class AIMain {
         this.botCards = new BotCards();
     }
 
-    public BotPlaceTroops getPlaceTroops() {
-        return placeTroops;
-    }
+    public BotPlaceTroops getPlaceTroops() { return placeTroops; }
 
     public BotAttacking getBotAttacking() {
         return botAttacking;

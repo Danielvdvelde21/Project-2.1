@@ -1,4 +1,4 @@
-package AI.BasicBot;
+package AI.BasicBot.Components;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;

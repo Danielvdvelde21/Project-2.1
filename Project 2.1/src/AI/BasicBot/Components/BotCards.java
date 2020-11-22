@@ -1,4 +1,4 @@
-package AI.BasicBot;
+package AI.BasicBot.Components;
 
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BotCards extends UsefulMethods {
-
 
     // -----------------------------------------------------------------------------------------------------------------
     // Trading cards
