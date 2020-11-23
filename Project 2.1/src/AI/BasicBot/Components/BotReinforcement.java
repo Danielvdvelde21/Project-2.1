@@ -76,7 +76,7 @@ public class BotReinforcement extends UsefulMethods {
         for(ArrayList<Vertex> cl : clusterList) {
             ArrayList<Vertex> possibleSellers = new ArrayList<>();  //list of all possible 'sellers' in the cluster
             for (Vertex vertex : cl) {
-                if (hasTroopsToSpare(vertex)) {
+                if (hasTroopsToSpare(vertex, g, p)) {
                     possibleSellers.add(vertex);
                 }
             }
@@ -107,11 +107,17 @@ public class BotReinforcement extends UsefulMethods {
         return null;
     }
 
-    private boolean hasTroopsToSpare(Vertex vertex) {   //TODO consider threat
-        if (vertex.getTerritory().getNumberOfTroops() > 1) {
-            return true;
+    private boolean hasTroopsToSpare(Vertex vertex, Graph g, Player p) {
+        //returns true if all adjacent territories are owned by the player
+        if (vertex.getTerritory().getNumberOfTroops() < 2) {
+            return false;
         }
-        return false;
+        for (int j = 0; j < g.getSize(); j++) {
+            if (g.isAdjecent(vertex, g.get(j)) && g.get(j).getTerritory().getOwner() != p) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Vertex buyerAuction(ArrayList<Vertex> buyers) {    //TODO
