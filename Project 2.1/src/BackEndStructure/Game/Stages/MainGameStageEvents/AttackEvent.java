@@ -270,7 +270,9 @@ public class AttackEvent {
     public void placeReceivedTroops(Player player, int troops) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot()) {
-            game.getAi().getPlaceTroops().placeTroop(graph, player, troops);
+            for (int i = 0; i < troops; i++) {
+                game.getAi().getPlaceTroops().placeTroop(graph, player);
+            }
         } else {
             for (int i = 0; i < troops; i++) {
                 placementTurn(player);

@@ -19,14 +19,13 @@ public class BotPlaceTroops extends UsefulMethods {
      * @param p      This is the current player turn
      * @param troops This is the number of troops the bot can place down
      */
-    public int placeTroop(Graph g, Player p, int troops) {
+    public int placeTroop(Graph g, Player p) {
         // Each owned territory is considered and given a score
         ArrayList<Vertex> ownedTerritories = getOwnedVertices(g, p);
         double[] territoryScores = new double[ownedTerritories.size()];
 
         for (int territory = 0; territory < ownedTerritories.size(); territory++) {
             territoryScores[territory] = ownedTerritories.get(territory).getBSR();
-            System.out.println(ownedTerritories.get(territory).getTerritory().getTerritoryName() + " " + territoryScores[territory] );
         }
 
         // Return the index of the territory with the best score
@@ -49,7 +48,7 @@ public class BotPlaceTroops extends UsefulMethods {
      */
     public int placementDecider(Graph g, Player p) {
         if (allTerritoriesOwned(g)) {
-            return placeTroop(g, p, 1);
+            return placeTroop(g, p);
         } else {
             return placeTroopsStartOfGame(g, p);
         }
