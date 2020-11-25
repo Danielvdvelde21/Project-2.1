@@ -4,6 +4,10 @@ import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class BotReinforcement extends UsefulMethods {
 
     private int reinforcementTroops;
@@ -59,6 +63,79 @@ public class BotReinforcement extends UsefulMethods {
         }
 
         return null;
+    }
+
+    public Vertex[] reinforceDefense(Graph g, Player p) {
+        //TODO find all clusters
+        ArrayList<Vertex> cluster = new ArrayList<>();   //chain of all connected owned territories
+        ArrayList<ArrayList<Vertex> > clusterList = new ArrayList<>();   //list of all owned clusters
+
+        //hashMap of possible 'buyers - sellers' from all clusters
+        Map<Vertex, Vertex> buyerSellerMap = new HashMap<>();    //key: buyer, value: seller
+
+        for(ArrayList<Vertex> cl : clusterList) {
+            ArrayList<Vertex> possibleSellers = new ArrayList<>();  //list of all possible 'sellers' in the cluster
+            for (Vertex vertex : cl) {
+                if (hasTroopsToSpare(vertex, g, p)) {
+                    possibleSellers.add(vertex);
+                }
+            }
+            if(possibleSellers != null) {
+                for (Vertex posSeller : possibleSellers) {
+                    ArrayList<Vertex> adj = new ArrayList<>();  //all adjacent territories to 'seller' owned by player
+                    for (int j = 0; j < g.getSize(); j++) {
+                        if (g.isAdjecent(posSeller, g.get(j)) && g.get(j).getTerritory().getOwner() == p) {
+                            adj.add(g.get(j));
+                        }
+                    }
+                    Vertex buyer = buyerAuction(adj);    //most needed reinforcement
+                    if(buyer != null) {
+                        buyerSellerMap.put(buyer, posSeller);
+                    }
+                }
+            }
+        }
+
+        if(buyerSellerMap != null) {
+            //choosing 'buyer' from all possible 'buyers' in all clusters
+            Vertex finalBuyer = buyerAuction(new ArrayList<>(buyerSellerMap.keySet()));
+            Vertex finalSeller = buyerSellerMap.get(finalBuyer);
+            setReinforcementTroops(finalSeller, finalBuyer);
+            return new Vertex[] {finalSeller, finalBuyer};
+        }
+
+        return null;
+    }
+
+    private boolean hasTroopsToSpare(Vertex vertex, Graph g, Player p) {
+        //returns true if all adjacent territories are owned by the player
+        if (vertex.getTerritory().getNumberOfTroops() < 2) {
+            return false;
+        }
+        for (int j = 0; j < g.getSize(); j++) {
+            if (g.isAdjecent(vertex, g.get(j)) && g.get(j).getTerritory().getOwner() != p) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Vertex buyerAuction(ArrayList<Vertex> buyers) {    //TODO
+        //returns territory (vertex) that needs reinforcement the most
+        if(buyers.size() == 1) {
+            return buyers.get(0);
+        }
+        else {
+
+        }
+        return null;
+    }
+
+    private void setReinforcementTroops(Vertex finalSeller, Vertex finalBuyer) {
+        //TODO
+        int sellerTroops = finalSeller.getTerritory().getNumberOfTroops();
+        int buyerTroops = finalBuyer.getTerritory().getNumberOfTroops();
+        reinforcementTroops = 1;
     }
 
     public int getReinforcementTroops() {
