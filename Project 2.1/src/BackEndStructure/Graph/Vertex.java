@@ -25,11 +25,6 @@ public class Vertex {
             }
         }
         int units = territory.getNumberOfTroops();
-
-        if (units == 0) {
-            return 999.0;
-        }
-
         return (double) bst / units;
     }
 

@@ -47,8 +47,9 @@ public class UsefulMethods {
     // Find index of highest value in double[]
     public int getHighest(double[] list) {
         int highestIndex = 0;
-        double highest = 0;
+        double highest = -200;
         for (int i = 0; i < list.length; i++) {
+
             if (list[i] > highest) {
                 highest = list[i];
                 highestIndex = i;
@@ -150,7 +151,7 @@ public class UsefulMethods {
 
             case "Europe":
                 // 12, 14, 26, 30, 34, 35, 39
-                return new int[]{12, 14, 26, 30, 34, 39};
+                return new int[]{12, 14, 26, 30, 34, 35, 39};
             case "North America":
                 // 1, 2, 5, 10, 13, 25, 27, 29, 40
                 return new int[]{1, 2, 5, 10, 13, 25, 27, 29, 40};
@@ -184,7 +185,20 @@ public class UsefulMethods {
         return (double) counter / territories.length;
     }
 
-    // For a continent, calculate what percentage is owned by a player
+    // Find in which continent a Territory belongs
+    public String TBelongsToCont (Graph g, int t){
+        for(String continent: continents){
+            int[] territories = continentDetector(continent);
+            for (int territory : territories) {
+                if(territory == t){
+                    return continent;
+                }
+            }
+        }
+        throw new IllegalArgumentException("NO VALID OPTION FOUND!");
+    }
+
+    // For every continent, calculate what percentage is owned by a player
     public double[] percentageOfAllContinentOwned(Graph g, Player p) {
         double[] continentsPercentages = new double[continents.length];
         int territoriesOwnedInContinent = 0;
@@ -264,4 +278,15 @@ public class UsefulMethods {
         return territoriesOwned;
     }
 
+    public ArrayList<Vertex> getUnOwnedVertices(Graph g) {
+        ArrayList<Vertex> verticesUnOwned = new ArrayList<>();
+
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner()==null) {
+                verticesUnOwned.add(g.get(i));
+            }
+        }
+        return verticesUnOwned;
+    }
 }
+

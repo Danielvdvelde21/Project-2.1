@@ -17,7 +17,7 @@ public class BotPlaceTroops extends UsefulMethods {
      *
      * @param g      This is the current board
      * @param p      This is the current player turn
-     * @param troops This is the number of troops the bot can place down
+     * // @param troops This is the number of troops the bot can place down
      */
     public int placeTroop(Graph g, Player p) {
         // Each owned territory is considered and given a score
@@ -64,37 +64,46 @@ public class BotPlaceTroops extends UsefulMethods {
     }
 
     public int placeTroopsStartOfGame(Graph g, Player p) {
-        double[] countries = new double[42];
+        // Each owned territory is considered and given a score
+        ArrayList<Vertex> unOwnedTerritories = getUnOwnedVertices(g);
+        double[] territoryScores = new double[unOwnedTerritories.size()];
 
-        for (int i = 0; i < countries.length; i++) {
-
-            if (g.get(i).getTerritory().getOwner() == null) {
-                countries[i] = 1;
-            } else {
-                countries[i] = -100;
-            }
-            for (String continent : continents) {
-                int[] cont = continentDetector(continent);
-                if (contains(cont, i)) {
-                    countries[i] += percentageOfContinentOwned(g, p, continent);
-                    countries[i] += percentageOfContinentUnOwned(g, p, continent);
+        for (int territory = 0; territory < unOwnedTerritories.size(); territory++) {
+            System.out.println(unOwnedTerritories.get(territory).getTerritory().getTerritoryName());
+            // Continent owned modifier
+            String continent = TBelongsToCont(g, unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber());
+            territoryScores[territory] += percentageOfContinentOwned(g,p,continent)*6; // MULTIPLIER MIGHT BE WRONG
+            //System.out.println(territoryScores[territory]);
+            // adjecent countries modifier
+            for(int j = 0; j < 42; j++){
+                if(g.get(j).getTerritory().getOwner() == p  && g.isAdjecent(g.get(j),g.get(unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber()))){
+                    territoryScores[territory] += 0.4;
                 }
             }
-            for (int j = 0; j < 42; j++) {
-                if (g.get(j).getTerritory().getOwner() == p && g.isAdjecent(g.get(j), g.get(i))) {
-                    countries[i] += 0.4;
+            System.out.println(territoryScores[territory]);
+            // anti Asia modifier
+            int[] asia = new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41};
+            for(int t : asia){
+                if(unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber() == t){
+                    territoryScores[territory] -= 1;
                 }
             }
+            //System.out.println(territoryScores[territory]);
+
         }
-        int bestPick = 0;
-        double bestGrade = 0;
-        for (int i = 0; i < 42; i++) {
-            if (countries[i] > bestGrade) {
-                bestPick = i;
-                bestGrade = countries[i];
+
+
+        // Return the index of the territory with the best score
+        // System.out.println("here " + getHighest(territoryScores) + "with score = "+ territoryScores[getHighest(territoryScores)]);
+
+        Territory bestTerritory = unOwnedTerritories.get(getHighest(territoryScores)).getTerritory();
+
+
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory() == bestTerritory) {
+                return i;
             }
         }
-        return bestPick;
+        throw new IllegalArgumentException("NO VALID OPTION FOUND!");
     }
-
 }
