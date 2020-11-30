@@ -254,6 +254,16 @@ public class UsefulMethods {
         return totalTroops;
     }
 
+    public int getTotalTroops(Graph g, Player p) {
+        int totalTroops = 0;
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner() == p) {
+                totalTroops += g.get(i).getTerritory().getNumberOfTroops();
+            }
+        }
+        return totalTroops;
+    }
+
     // Get all owned vertices for a player
     public ArrayList<Vertex> getOwnedVertices(Graph g, Player p) {
         ArrayList<Vertex> verticesOwned = new ArrayList<>();

@@ -217,7 +217,7 @@ public class AttackEvent {
         // How many troops are sent over
         int troops;
         if (player.isBot()) {
-            troops = game.getAi().getBotAttacking().getTroopCarryOver();
+            troops = game.getAi().getBotAttacking().getTroopCarryOver(attack);
         } else {
             TerritoryCaptured popUp = new TerritoryCaptured(attack.getTerritory());
             while (!popUp.getValidNumberInserted()) {

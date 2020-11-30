@@ -4,6 +4,7 @@ import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class BotAttacking extends UsefulMethods {
 
         //
         // Troop count
-        // Negative score
+        // TODO
         for (int i = 0; i < countries.length; i++) {
             if (g.get(i).getTerritory().getOwner() != p) {
                 countries[i] -= g.get(i).getTerritory().getNumberOfTroops() / 10.0;
@@ -43,6 +44,7 @@ public class BotAttacking extends UsefulMethods {
 
         // BSR
         // Border Security Risk = troops in surrounding enemy territories / troops on territory itself
+        // TODO
         /*double[] bsr = new double[g.getSize()];
         for (int i = 0; i < g.getSize(); i++) {
             // Only calculate BSR for bot-owned territories
@@ -109,20 +111,33 @@ public class BotAttacking extends UsefulMethods {
 
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
-        if (temp == 5) {
-            temp = 0;
-            return false;
+        int territories = getOwnedTerritories(g, p).size();
+        int troops = getTotalTroops(g, p);
+
+        double ratio = ((double) territories)/troops;
+        if (ratio > 5) {
+            return true;
         }
-        temp++;
         return true;
     }
 
     // How many troops will be sent over when a territory is captured
-    public int getTroopCarryOver() {
-        // If the attacking country is now only surrounded by friendly territories; send over all but one
-
-        // Otherwise, it'll be tougher (BST?)
-        return 1;
+    public int getTroopCarryOver(Vertex attacker) {
+        // Two situations
+        LinkedList<Edge> neighbours = attacker.getEdges();
+        boolean friendlyNeighbours = true;
+        for (Edge e : neighbours) {
+            if (e.getVertex().getTerritory().getOwner() != attacker.getTerritory().getOwner()) {
+                friendlyNeighbours = false;
+            }
+        }
+        // 1. Captured territory was only enemy territory connected to attacking territory; can send over all but 1
+        if (friendlyNeighbours) {
+            return attacker.getTerritory().getNumberOfTroops() - 1;
+        }
+        else {
+            return 1;
+        }
     }
 
     // If a bot eliminates a player and gets his cards --> the bot needs to turn in a set
