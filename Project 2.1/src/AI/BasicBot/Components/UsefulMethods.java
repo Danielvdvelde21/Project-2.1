@@ -298,5 +298,17 @@ public class UsefulMethods {
         }
         return verticesUnOwned;
     }
+
+    // Get all vertices from territories belonging to enemies
+    public ArrayList<Vertex> getEnemyOwnedVertices(Graph g, Player p) {
+        ArrayList<Vertex> verticesUnOwned = new ArrayList<>();
+
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner() != p) {
+                verticesUnOwned.add(g.get(i));
+            }
+        }
+        return verticesUnOwned;
+    }
 }
 

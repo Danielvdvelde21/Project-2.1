@@ -59,6 +59,9 @@ public class BotAttacking extends UsefulMethods {
                     }
                 }
             }
+            if (g.get(i).getTerritory().getNumberOfTroops() <= 1) {
+                surrounded = true;
+            }
             if (surrounded) {
                 // Arbitrarily big negative score; any negative scores will be disregarded during decision making
                 grades[i] = -9999;
@@ -74,7 +77,6 @@ public class BotAttacking extends UsefulMethods {
         // Continent
         // Extra continent = extra troops
         String cont = mostOwnedContinent(g, p);
-        System.out.println(cont);
         int[] countriesInCont = continentDetector(cont);
         for (int i = 0; i < countriesInCont.length; i++) {
             // Check which countries are not yet owned by the bot in the continent
@@ -101,8 +103,7 @@ public class BotAttacking extends UsefulMethods {
 
         double minDef = 9999;
         int minDefIndex = 0;
-        ArrayList<Vertex> unowned = getUnOwnedVertices(g);
-        // TODO bug hier, altijd afghanistan, gaat niet in het binnenste if statement
+        ArrayList<Vertex> unowned = getEnemyOwnedVertices(g, p);
         for (int i = 1; i < grades.length; i++) {
             for (Vertex v : unowned) {
                 if (g.get(i) == v) {
@@ -113,12 +114,10 @@ public class BotAttacking extends UsefulMethods {
                 }
             }
         }
-        System.out.println("Defender: " + g.get(minDefIndex).getTerritory().getTerritoryName());
         LinkedList<Edge> minDefNeighbours = g.get(minDefIndex).getEdges();
         int maxAtk = 0;
         int maxAtkIndex = 0;
         for(int i = 0; i < minDefNeighbours.size(); i++) {
-            System.out.println(minDefNeighbours.get(i).getVertex().getTerritory().getTerritoryName());
             if (minDefNeighbours.get(i).getVertex().getTerritory().getOwner() == p) {
                 if (grades[i] > maxAtk) {
                     maxAtk = minDefNeighbours.get(i).getVertex().getTerritory().getNumberOfTroops();
@@ -126,9 +125,9 @@ public class BotAttacking extends UsefulMethods {
                 }
             }
         }
-        System.out.println("Attacker: " + minDefNeighbours.get(maxAtkIndex).getVertex().getTerritory().getTerritoryName());
-        getAttackerDie();
-
+        // TODO bug that an enemy country gets chosen as attacker; alaska attacking kamchatka
+        // Seems like it chooses the first neighbour, so it doesnt change the atkindex
+        setAttackerDie(minDefNeighbours.get(maxAtkIndex).getVertex());
         return new Vertex[]{minDefNeighbours.get(maxAtkIndex).getVertex(), g.get(minDefIndex)};
     }
 
@@ -141,7 +140,8 @@ public class BotAttacking extends UsefulMethods {
 
         double ratio = ((double) troops)/ territories;
         System.out.println("Ratio: " + ratio);
-        if (ratio > 1.2) {
+        //TODO fix ratio
+        if (ratio > 1) {
             return true;
         }
         return false;
@@ -159,13 +159,9 @@ public class BotAttacking extends UsefulMethods {
         }
         // 1. Captured territory was only enemy territory connected to attacking territory; can send over all but 1
         if (friendlyNeighbours) {
-            if (attacker.getTerritory().getNumberOfTroops() > 1) {
-                return attacker.getTerritory().getNumberOfTroops() - 1;
-            }
-            else {
-                return 1;
-            }
+            return attacker.getTerritory().getNumberOfTroops() - 1;
         }
+        // TODO 2.  Figure out whether other neighbour enemy territories are worth capturing
         else {
             return 1;
         }
@@ -177,8 +173,18 @@ public class BotAttacking extends UsefulMethods {
         return null;
     }
 
-    public int getAttackerDie() {
-        attackerDie = 3;
-        return attackerDie;
+    public void setAttackerDie(Vertex v) {
+        int troops = v.getTerritory().getNumberOfTroops();
+        if (troops > 3) {
+            attackerDie = 3;
+        }
+        else if(troops == 3) {
+            attackerDie = 2;
+        }
+        else {
+            attackerDie = 1;
+        }
     }
+
+    public int getAttackerDie() { return attackerDie; }
 }
