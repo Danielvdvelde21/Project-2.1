@@ -13,7 +13,6 @@ import java.util.LinkedList;
 public class BotAttacking extends UsefulMethods {
 
     private int attackerDie;
-    private int temp;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Attacking
@@ -27,33 +26,50 @@ public class BotAttacking extends UsefulMethods {
      * @return A vertex array with position 0 attacker and position 1 defender
      */
     public Vertex[] attack(Graph g, Player p) {
-        // Idea: Give countries a grade based on how likely you want to attack them/which country you want to use to attack
-        // Negative scores for enemy countries, positive scores for owned countries
-        double[] countries = new double[g.getSize()];
-        int atk = 0;
-        int def = 0;
+        // Attack and defensive strength based on troops
+        // Find weakest defender around strongest attacker and strongest attacker around weakest defender
+        // Decide which of the two would be the better attack
+        // TODO make sure the attack finishes -> in other words, don't want to switch to other target in middle of attack
 
-        //
-        // Troop count
-        // TODO
-        for (int i = 0; i < countries.length; i++) {
-            if (g.get(i).getTerritory().getOwner() != p) {
-                countries[i] -= g.get(i).getTerritory().getNumberOfTroops() / 10.0;
+        double[] grades = new double[g.getSize()];
+
+        // Eliminate enemy territories that are not connected to any friendly territories and
+        // friendly territories only surrounded by other friendly territories
+        boolean owned = true;
+        boolean surrounded = true;
+        LinkedList<Edge> edges = new LinkedList<>();
+        for (int i = 0; i < grades.length; i++) {
+            surrounded = true;
+            edges = g.get(i).getEdges();
+            if (g.get(i).getTerritory().getOwner() == p) {
+                owned = true;
+            }
+            else {
+                owned = false;
+            }
+            for (Edge e : edges) {
+                if (owned) {
+                    if (e.getVertex().getTerritory().getOwner() != p) {
+                        surrounded = false;
+                    }
+                }
+                else {
+                    if (e.getVertex().getTerritory().getOwner() == p) {
+                        surrounded = false;
+                    }
+                }
+            }
+            if (surrounded) {
+                // Arbitrarily big negative score; any negative scores will be disregarded during decision making
+                grades[i] = -9999;
             }
         }
 
-        // BSR
-        // Border Security Risk = troops in surrounding enemy territories / troops on territory itself
-        // TODO
-        /*double[] bsr = new double[g.getSize()];
-        for (int i = 0; i < g.getSize(); i++) {
-            // Only calculate BSR for bot-owned territories
-            if (g.get(i).getTerritory().getOwner() == p) {
-                bsr[i] = g.get(i).getBSR();
-            } else {
-                bsr[i] = -1;
-            }
-        }*/
+        // Troop count
+        // Add to score for the amount of troops on the territory
+        for (int i = 0; i < grades.length; i++) {
+            grades[i] += g.get(i).getTerritory().getNumberOfTroops();
+        }
 
         // Continent
         // Extra continent = extra troops
@@ -63,7 +79,7 @@ public class BotAttacking extends UsefulMethods {
         for (int i = 0; i < countriesInCont.length; i++) {
             // Check which countries are not yet owned by the bot in the continent
             if (g.get(countriesInCont[i]).getTerritory().getOwner() != p) {
-                countries[countriesInCont[i]] += 5.0;
+                grades[countriesInCont[i]] *= 0.9;
             }
         }
 
@@ -77,34 +93,43 @@ public class BotAttacking extends UsefulMethods {
                 for (int j = 0; j < g.getSize(); j++) {
                     // Check if an unowned territory is on one of the bot's cards
                     if (g.get(j).getTerritory().getTerritoryName().equals(cards.get(i).getCardName()) && g.get(j).getTerritory().getOwner() != p) {
-                        countries[i] += 1.0;
+                        grades[i] *= 0.9;
                     }
                 }
             }
         }
 
-        double maxDef = countries[0];
-        int maxDefIndex = 0;
-        for (int i = 1; i < countries.length; i++) {
-            if (countries[i] > maxDef) {
-                maxDef = countries[i];
-                maxDefIndex = i;
+        double minDef = 9999;
+        int minDefIndex = 0;
+        ArrayList<Vertex> unowned = getUnOwnedVertices(g);
+        // TODO bug hier, altijd afghanistan, gaat niet in het binnenste if statement
+        for (int i = 1; i < grades.length; i++) {
+            for (Vertex v : unowned) {
+                if (g.get(i) == v) {
+                    if (grades[i] > 0.0 && minDef > grades[i]) {
+                        minDef = grades[i];
+                        minDefIndex = i;
+                    }
+                }
             }
         }
-        LinkedList<Edge> edges = g.get(maxDefIndex).getEdges();
+        System.out.println("Defender: " + g.get(minDefIndex).getTerritory().getTerritoryName());
+        LinkedList<Edge> minDefNeighbours = g.get(minDefIndex).getEdges();
         int maxAtk = 0;
         int maxAtkIndex = 0;
-        for(int i = 0; i < edges.size(); i++) {
-            if (edges.get(i).getVertex().getTerritory().getOwner() == p) {
-                if (edges.get(i).getVertex().getTerritory().getNumberOfTroops() > maxAtk) {
-                    maxAtk = edges.get(i).getVertex().getTerritory().getNumberOfTroops();
+        for(int i = 0; i < minDefNeighbours.size(); i++) {
+            System.out.println(minDefNeighbours.get(i).getVertex().getTerritory().getTerritoryName());
+            if (minDefNeighbours.get(i).getVertex().getTerritory().getOwner() == p) {
+                if (grades[i] > maxAtk) {
+                    maxAtk = minDefNeighbours.get(i).getVertex().getTerritory().getNumberOfTroops();
                     maxAtkIndex = i;
                 }
             }
         }
+        System.out.println("Attacker: " + minDefNeighbours.get(maxAtkIndex).getVertex().getTerritory().getTerritoryName());
         getAttackerDie();
 
-        return new Vertex[]{edges.get(maxAtkIndex).getVertex(), g.get(maxDefIndex)};
+        return new Vertex[]{minDefNeighbours.get(maxAtkIndex).getVertex(), g.get(minDefIndex)};
     }
 
 
@@ -114,11 +139,12 @@ public class BotAttacking extends UsefulMethods {
         int territories = getOwnedTerritories(g, p).size();
         int troops = getTotalTroops(g, p);
 
-        double ratio = ((double) territories)/troops;
-        if (ratio > 5) {
+        double ratio = ((double) troops)/ territories;
+        System.out.println("Ratio: " + ratio);
+        if (ratio > 1.2) {
             return true;
         }
-        return true;
+        return false;
     }
 
     // How many troops will be sent over when a territory is captured
@@ -133,7 +159,12 @@ public class BotAttacking extends UsefulMethods {
         }
         // 1. Captured territory was only enemy territory connected to attacking territory; can send over all but 1
         if (friendlyNeighbours) {
-            return attacker.getTerritory().getNumberOfTroops() - 1;
+            if (attacker.getTerritory().getNumberOfTroops() > 1) {
+                return attacker.getTerritory().getNumberOfTroops() - 1;
+            }
+            else {
+                return 1;
+            }
         }
         else {
             return 1;
