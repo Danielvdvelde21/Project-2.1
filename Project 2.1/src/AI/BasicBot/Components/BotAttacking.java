@@ -30,41 +30,52 @@ public class BotAttacking extends UsefulMethods {
         // TODO make sure the attack finishes -> in other words, don't want to switch to other target in middle of attack
 
         double[] grades = new double[g.getSize()];
-        // Get the countries you're able to attack: enemy-owned and adjacent to a friendly territory
-        boolean attackable;
+
+        // Eliminate enemy territories that are not connected to any friendly territories and
+        // friendly territories only surrounded by other friendly territories
+        // Also eliminate owned territories with just 1 troop
+        boolean owned;
+        boolean surrounded;
+        boolean singleTroop;
         LinkedList<Edge> edges;
-        for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner() != p) {
-                attackable = false;
-                edges = g.get(i).getEdges();
-                for (Edge e : edges) {
-                    if (e.getVertex().getTerritory().getOwner() == p) {
-                        attackable = true;
+        for (int i = 0; i < grades.length; i++) {
+            surrounded = true;
+            edges = g.get(i).getEdges();
+            owned = g.get(i).getTerritory().getOwner() == p;
+            for (Edge e : edges) {
+                if (owned) {
+                    if (e.getVertex().getTerritory().getOwner() != p) {
+                        surrounded = false;
                     }
                 }
-                if (!attackable) {
-                    grades[i] = -999.0;
+                else {
+                    if (e.getVertex().getTerritory().getOwner() == p) {
+                        surrounded = false;
+                    }
                 }
             }
-            else {
-                grades[i] = -999.0;
+            singleTroop = g.get(i).getTerritory().getNumberOfTroops() <= 1 && g.get(i).getTerritory().getOwner() == p;
+            if (surrounded || singleTroop) {
+                // Arbitrarily big negative score; any negative scores will be disregarded during decision making
+                grades[i] = -9999;
             }
         }
 
+        // Troop count
+        // Add to score for the amount of troops on the territory
+        for (int i = 0; i < grades.length; i++) {
+            grades[i] += g.get(i).getTerritory().getNumberOfTroops();
+        }
+        // BSR? Allied landen
 
         // Continent
         // Extra continent = extra troops
         String cont = mostOwnedContinent(g, p);
         int[] countriesInCont = continentDetector(cont);
         for (int i = 0; i < countriesInCont.length; i++) {
-            grades[i] += 2.0;
-        }
-
-        // Continent denial
-        String[] allContinents = getContinents();
-        for (int i = 0; i < allContinents.length; i++) {
-            if (!allContinents[i].equals(cont)) {
-
+            // Check which countries are not yet owned by the bot in the continent
+            if (g.get(countriesInCont[i]).getTerritory().getOwner() != p) {
+                grades[countriesInCont[i]] *= 0.8;
             }
         }
 
@@ -77,7 +88,7 @@ public class BotAttacking extends UsefulMethods {
                 for (int j = 0; j < g.getSize(); j++) {
                     // Check if an unowned territory is on one of the bot's cards
                     if (g.get(j).getTerritory().getTerritoryName().equals(cards.get(i).getCardName()) && g.get(j).getTerritory().getOwner() != p) {
-                        grades[i] += 0.5;
+                        grades[i] *= 0.9;
                     }
                 }
             }
