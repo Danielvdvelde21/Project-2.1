@@ -24,8 +24,6 @@ public class BotReinforcement extends UsefulMethods {
      * @return A vertex array with position 0 from and position 1 to
      */
     public Vertex[] reinforce(Graph g, Player p) {
-        // TODO
-
         reinforcementTroops = 0;
         Vertex to = null;
         Vertex from;
@@ -66,21 +64,46 @@ public class BotReinforcement extends UsefulMethods {
     }
 
     public Vertex[] reinforceDefense(Graph g, Player p) {
-        //TODO find all clusters
-        ArrayList<Vertex> cluster = new ArrayList<>();   //chain of all connected owned territories
-        ArrayList<ArrayList<Vertex> > clusterList = new ArrayList<>();   //list of all owned clusters
+        ArrayList<ArrayList<Vertex> > clusterList = new ArrayList<>();   //list of all clusters
+        Map<Vertex, Vertex> buyerSellerMap = new HashMap<>();    //hashMap of possible 'buyers - sellers' from all clusters (K:buyer, V:seller)
 
-        //hashMap of possible 'buyers - sellers' from all clusters
-        Map<Vertex, Vertex> buyerSellerMap = new HashMap<>();    //key: buyer, value: seller
+        //finding all clusters
+        for(int i = 0; i < g.getSize(); i++) {
+            ArrayList<Vertex> cluster = new ArrayList<>();   //chain of all connected owned territories
+            if(g.get(i).getTerritory().getOwner() == p) {
+                boolean clusterExists = false;
+                for(ArrayList<Vertex> cl : clusterList) {
+                    if (cl.contains(g.get(i))) {
+                        clusterExists = true;
+                    }
+                }
+                if(!clusterExists) {
+                    cluster.add(g.get(i));
+                    for (int j = 1; j < g.getSize() - 1; j++) {
+                        if (!cluster.contains(g.get(j)) && g.isAdjecent(g.get(i), g.get(j)) && g.get(j).getTerritory().getOwner() == p) {
+                            cluster.add(g.get(j));
+                        }
+                        if (cluster.contains(g.get(j))) {
+                            for (int k = 1; k < g.getSize() - 1; k++) {
+                                if (!cluster.contains(g.get(k)) && g.isAdjecent(g.get(j), g.get(k)) && g.get(k).getTerritory().getOwner() == p) {
+                                    cluster.add(g.get(k));
+                                }
+                            }
+                        }
+                    }
+                    clusterList.add(cluster);
+                }
+            }
+        }
 
-        for(ArrayList<Vertex> cl : clusterList) {
+        for(ArrayList<Vertex> cluster : clusterList) {
             ArrayList<Vertex> possibleSellers = new ArrayList<>();  //list of all possible 'sellers' in the cluster
-            for (Vertex vertex : cl) {
+            for (Vertex vertex : cluster) {
                 if (hasTroopsToSpare(vertex, g, p)) {
                     possibleSellers.add(vertex);
                 }
             }
-            if(possibleSellers != null) {
+            if(possibleSellers.size() != 0) {
                 for (Vertex posSeller : possibleSellers) {
                     ArrayList<Vertex> adj = new ArrayList<>();  //all adjacent territories to 'seller' owned by player
                     for (int j = 0; j < g.getSize(); j++) {
@@ -96,11 +119,11 @@ public class BotReinforcement extends UsefulMethods {
             }
         }
 
-        if(buyerSellerMap != null) {
+        if(buyerSellerMap.size() != 0) {
             //choosing 'buyer' from all possible 'buyers' in all clusters
             Vertex finalBuyer = buyerAuction(new ArrayList<>(buyerSellerMap.keySet()));
             Vertex finalSeller = buyerSellerMap.get(finalBuyer);
-            setReinforcementTroops(finalSeller, finalBuyer);
+            setReinforcementTroops(finalSeller);
             return new Vertex[] {finalSeller, finalBuyer};
         }
 
@@ -120,22 +143,31 @@ public class BotReinforcement extends UsefulMethods {
         return true;
     }
 
-    private Vertex buyerAuction(ArrayList<Vertex> buyers) {    //TODO
-        //returns territory (vertex) that needs reinforcement the most
+    private Vertex buyerAuction(ArrayList<Vertex> buyers) {
         if(buyers.size() == 1) {
             return buyers.get(0);
         }
         else {
-
+            double[] territoryScores = new double[buyers.size()];
+            int i = 0;
+            for(Vertex buyer : buyers) {
+                territoryScores[i] = buyer.getBSR();
+                i++;
+            }
+            //returns vertex with the highest score
+            return buyers.get(getHighest(territoryScores));
         }
-        return null;
     }
 
-    private void setReinforcementTroops(Vertex finalSeller, Vertex finalBuyer) {
-        //TODO
+    private void setReinforcementTroops(Vertex finalSeller) {
         int sellerTroops = finalSeller.getTerritory().getNumberOfTroops();
-        int buyerTroops = finalBuyer.getTerritory().getNumberOfTroops();
-        reinforcementTroops = 1;
+
+        if(sellerTroops == 2) {
+            reinforcementTroops = 1;
+        }
+        else {
+            reinforcementTroops = sellerTroops - 2; //leaving 2 troops on 'seller' territory
+        }
     }
 
     public int getReinforcementTroops() {
