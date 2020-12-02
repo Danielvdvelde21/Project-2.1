@@ -44,9 +44,9 @@ public class AttackEvent {
         map.deselectTerritory();
 
         if (player.isBot()) {
-           while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
-              botAttack(player);
-           }
+            while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
+                botAttack(player);
+            }
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
@@ -126,6 +126,11 @@ public class AttackEvent {
         Vertex attacker = vertices[0];
         Vertex defender = vertices[1];
 
+        if(vertices[0] == null) {
+            // cancel the bot attack, there is no attack
+            return;
+        }
+
         int initialAttack = attacker.getTerritory().getNumberOfTroops();
 
         // Set the amount of dice that the bot wants to use
@@ -143,60 +148,60 @@ public class AttackEvent {
                 dicePanel.addAttackDie();
                 dicePanel.addAttackDie();
         }
-            narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
+        narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
 
-            // If the bot is attacking another bot, the defending bot will use a much defending dice
-            if (ownedByBot(defender)) {
-                if (defender.getTerritory().getNumberOfTroops() > 1) {
-                    dicePanel.addDefendDie();
-                } else {
-                    dicePanel.removeDefendDie();
-                }
+        // If the bot is attacking another bot, the defending bot will use a much defending dice
+        if (ownedByBot(defender)) {
+            if (defender.getTerritory().getNumberOfTroops() > 1) {
+                dicePanel.addDefendDie();
             } else {
-                // Lock the attacking die --> player cant change bots strategy
-                dicePanel.lockAttackingDie();
-
-                dicePanel.allowRolling(true);
-                dicePanel.resetDiceRolls();
-                narrator.addText("Roll the dice to determine the fight!");
-
-                // Wait until die are rolled and valid amount of die is selected
-                while (!dicePanel.diceRolled()) {
-                    delay();
-                }
-
-                // Reset classes
-                map.deselectTerritory();
-                dicePanel.allowRolling(false);
-                dicePanel.unlockAttackingDie();
-
-                // If the defender choose invalid amount of die --> stop this method --> a new iteration will do the same thing
-                if (!dicePanel.validAmountOfDiceSelected(attacker.getTerritory().getNumberOfTroops(), defender.getTerritory().getNumberOfTroops())) {
-                    narrator.addText("Invalid amount of dice selected!");
-                    return;
-                }
+                dicePanel.removeDefendDie();
             }
+        } else {
+            // Lock the attacking die --> player cant change bots strategy
+            dicePanel.lockAttackingDie();
 
-            // Perform a fight
-            game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+            dicePanel.allowRolling(true);
+            dicePanel.resetDiceRolls();
+            narrator.addText("Roll the dice to determine the fight!");
 
-            // Update troops counts
-            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
-            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
-            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
-            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
-
-            narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsDefenders() + ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsAttackers() + ")");
+            // Wait until die are rolled and valid amount of die is selected
+            while (!dicePanel.diceRolled()) {
+                delay();
+            }
 
             // Reset classes
-            game.getAttackingHandeler().resetTroopsLost();
+            map.deselectTerritory();
+            dicePanel.allowRolling(false);
+            dicePanel.unlockAttackingDie();
 
-            // If a territory is captured
-            if (defender.getTerritory().getNumberOfTroops() < 1) {
-                oneTerritoryCaptured = true;
-                territoryCaptured(player, defender, attacker);
+            // If the defender choose invalid amount of die --> stop this method --> a new iteration will do the same thing
+            if (!dicePanel.validAmountOfDiceSelected(attacker.getTerritory().getNumberOfTroops(), defender.getTerritory().getNumberOfTroops())) {
+                narrator.addText("Invalid amount of dice selected!");
                 return;
             }
+        }
+
+        // Perform a fight
+        game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+
+        // Update troops counts
+        attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
+        defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
+        map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
+        map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
+
+        narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsDefenders() + ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsAttackers() + ")");
+
+        // Reset classes
+        game.getAttackingHandeler().resetTroopsLost();
+
+        // If a territory is captured
+        if (defender.getTerritory().getNumberOfTroops() < 1) {
+            oneTerritoryCaptured = true;
+            territoryCaptured(player, defender, attacker);
+            return;
+        }
 
     }
 
@@ -352,11 +357,11 @@ public class AttackEvent {
 
     // Get cards from eliminated player
     private void receiveCards(Player receivingPlayer, Player donatingPlayer) {
-                receivingPlayer.addToHand(donatingPlayer.getHand());
+        receivingPlayer.addToHand(donatingPlayer.getHand());
     }
 
     private void decreaseTerritories(Player p) {
-                p.decreaseTerritoriesOwned();
+        p.decreaseTerritoriesOwned();
     }
 
     private void isGameOver(Player player) {
