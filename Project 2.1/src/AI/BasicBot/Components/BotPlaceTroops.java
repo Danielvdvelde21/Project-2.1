@@ -75,7 +75,7 @@ public class BotPlaceTroops extends UsefulMethods {
             territoryScores[territory] += percentageOfContinentOwned(g,p,continent)*6; // MULTIPLIER MIGHT BE WRONG
             //System.out.println(territoryScores[territory]);
             // adjacent countries modifier
-            for(int j = 0; j < 42; j++){
+            for(int j = 0; j < g.getSize(); j++){
                 if(g.get(j).getTerritory().getOwner() == p  && g.isAdjecent(g.get(j),g.get(unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber()))){
                     territoryScores[territory] += 0.4;
                 }

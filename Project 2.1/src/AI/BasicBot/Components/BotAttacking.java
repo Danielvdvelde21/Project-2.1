@@ -94,6 +94,37 @@ public class BotAttacking extends UsefulMethods {
             }
         }
 
+        for(int i = 0; i < g.getSize(); i++){
+            // A flat bonus for the enemy player being weak, weak being defined as few countries.
+            Player temp = g.get(i).getTerritory().getOwner();
+            int tempLands = 0;
+            for(int j = 0; j < g.getSize(); j++){
+                if(g.get(j).getTerritory().getOwner() == temp){
+                    tempLands += 1;
+                }
+            }
+            if(tempLands < 2){
+                grades[i] += 3;
+            }
+            else if(tempLands <4){
+                grades[i] += 1;
+            }
+            else if(tempLands < 6){
+                grades[i] += 0.5;
+            }
+            // A flat bonus for owning neighbouring countries to the one you are attacking.
+            for (int j = 0; j < g.getSize(); j++) {
+                if (g.get(j).getTerritory().getOwner() == p && g.isAdjecent(g.get(j), g.get(i))) {
+                    grades[i] += 0.4;
+                }
+            }
+            // A flat bonus for there being very little troops on the country
+            if(g.get(i).getTerritory().getNumberOfTroops() < 3){
+                grades[i] += 0.6;
+            }
+        }
+
+
         double maxAtk = 0.0;
         int maxAtkIndex = 0;
 
@@ -123,6 +154,7 @@ public class BotAttacking extends UsefulMethods {
 
         setAttackerDie(g.get(maxAtkIndex));
         return new Vertex[]{g.get(maxAtkIndex), maxAtkNeighbours.get(minDefIndex).getVertex()};
+
     }
 
     // Evaluate when bot stops attacking
