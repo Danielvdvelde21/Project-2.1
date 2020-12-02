@@ -183,17 +183,11 @@ public class BotAttacking extends UsefulMethods {
 
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
-        // I don't like the way I did this
-        ArrayList<Vertex> territories = getOwnedVertices(g, p);
-        boolean minTroop = false;
-        for (int i = 0; i < territories.size(); i++) {
-            if (territories.get(i).getTerritory().getNumberOfTroops() > 3) {
-                minTroop = true;
-                break;
-            }
+        Vertex[] vertices = attack(g, p);
+        if(vertices[0] == null){
+            return false;
         }
-        return minTroop;
-        // don't suicidebomb
+        return true;
     }
 
     // How many troops will be sent over when a territory is captured
