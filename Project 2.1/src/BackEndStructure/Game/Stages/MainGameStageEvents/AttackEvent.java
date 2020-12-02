@@ -143,7 +143,6 @@ public class AttackEvent {
                 dicePanel.addAttackDie();
                 dicePanel.addAttackDie();
         }
-        while (attacker.getTerritory().getNumberOfTroops() > (initialAttack/2) && attacker.getTerritory().getNumberOfTroops() > 1) {
             narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
 
             // If the bot is attacking another bot, the defending bot will use a much defending dice
@@ -198,7 +197,7 @@ public class AttackEvent {
                 territoryCaptured(player, defender, attacker);
                 return;
             }
-        }
+
     }
 
     // Logic that needs to happen after a territory is captured

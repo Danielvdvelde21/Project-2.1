@@ -66,6 +66,7 @@ public class BotAttacking extends UsefulMethods {
         for (int i = 0; i < grades.length; i++) {
             grades[i] += g.get(i).getTerritory().getNumberOfTroops();
         }
+        // BSR? Allied landen
 
         // Continent
         // Extra continent = extra troops
@@ -119,6 +120,7 @@ public class BotAttacking extends UsefulMethods {
                 }
             }
         }
+
         setAttackerDie(g.get(maxAtkIndex));
         return new Vertex[]{g.get(maxAtkIndex), maxAtkNeighbours.get(minDefIndex).getVertex()};
     }
