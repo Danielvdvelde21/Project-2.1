@@ -7,6 +7,7 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -36,19 +37,14 @@ public class BotAttacking extends UsefulMethods {
         // Eliminate enemy territories that are not connected to any friendly territories and
         // friendly territories only surrounded by other friendly territories
         // Also eliminate owned territories with just 1 troop
-        boolean owned = true;
-        boolean surrounded = true;
-        boolean singleTroop = false;
-        LinkedList<Edge> edges = new LinkedList<>();
+        boolean owned;
+        boolean surrounded;
+        boolean singleTroop;
+        LinkedList<Edge> edges;
         for (int i = 0; i < grades.length; i++) {
             surrounded = true;
             edges = g.get(i).getEdges();
-            if (g.get(i).getTerritory().getOwner() == p) {
-                owned = true;
-            }
-            else {
-                owned = false;
-            }
+            owned = g.get(i).getTerritory().getOwner() == p;
             for (Edge e : edges) {
                 if (owned) {
                     if (e.getVertex().getTerritory().getOwner() != p) {
@@ -61,12 +57,7 @@ public class BotAttacking extends UsefulMethods {
                     }
                 }
             }
-            if (g.get(i).getTerritory().getNumberOfTroops() <= 1 && g.get(i).getTerritory().getOwner() == p) {
-                singleTroop = true;
-            }
-            else {
-                singleTroop = false;
-            }
+            singleTroop = g.get(i).getTerritory().getNumberOfTroops() <= 1 && g.get(i).getTerritory().getOwner() == p;
             if (surrounded || singleTroop) {
                 // Arbitrarily big negative score; any negative scores will be disregarded during decision making
                 grades[i] = -9999;
@@ -137,20 +128,17 @@ public class BotAttacking extends UsefulMethods {
         return new Vertex[]{g.get(maxAtkIndex), maxAtkNeighbours.get(minDefIndex).getVertex()};
     }
 
-
-
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
-        int territories = getOwnedTerritories(g, p).size();
-        int troops = getTotalTroops(g, p);
-
-        double ratio = ((double) troops)/ territories;
-        System.out.println("Ratio: " + ratio);
-        //TODO fix ratio
-        if (ratio > 1.05) {
-            return true;
+        ArrayList<Vertex> territories = getOwnedVertices(g, p);
+        boolean minTroop = false;
+        for (int i = 0; i < territories.size(); i++) {
+            if (territories.get(i).getTerritory().getNumberOfTroops() > 3) {
+                minTroop = true;
+                break;
+            }
         }
-        return false;
+        return minTroop;
     }
 
     // How many troops will be sent over when a territory is captured
@@ -161,6 +149,7 @@ public class BotAttacking extends UsefulMethods {
         for (Edge e : neighbours) {
             if (e.getVertex().getTerritory().getOwner() != attacker.getTerritory().getOwner()) {
                 friendlyNeighbours = false;
+                break;
             }
         }
         // 1. Captured territory was only enemy territory connected to attacking territory; can send over all but 1
