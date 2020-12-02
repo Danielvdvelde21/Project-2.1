@@ -29,51 +29,44 @@ public class BotAttacking extends UsefulMethods {
     public Vertex[] attack(Graph g, Player p) {
         // TODO make sure the attack finishes -> in other words, don't want to switch to other target in middle of attack
 
+        double[] grades = new double[g.getSize()];
         // Get the countries you're able to attack: enemy-owned and adjacent to a friendly territory
-        ArrayList<Vertex> attackable = new ArrayList<>();
+        boolean attackable;
         LinkedList<Edge> edges;
         for (int i = 0; i < g.getSize(); i++) {
             if (g.get(i).getTerritory().getOwner() != p) {
+                attackable = false;
                 edges = g.get(i).getEdges();
                 for (Edge e : edges) {
                     if (e.getVertex().getTerritory().getOwner() == p) {
-                        attackable.add(g.get(i));
+                        attackable = true;
                     }
                 }
+                if (!attackable) {
+                    grades[i] = -999.0;
+                }
+            }
+            else {
+                grades[i] = -999.0;
             }
         }
 
-        double[] grades = new double[attackable.size()];
-
-        // Troop count
-        // Add to score for the amount of troops on the territory
-        for (int i = 0; i < grades.length; i++) {
-            grades[i] += g.get(i).getBSR();
-        }
 
         // Continent
         // Extra continent = extra troops
         String cont = mostOwnedContinent(g, p);
         int[] countriesInCont = continentDetector(cont);
         for (int i = 0; i < countriesInCont.length; i++) {
-            // Check which countries are not yet owned by the bot in the continent
-            if (g.get(countriesInCont[i]).getTerritory().getOwner() != p) {
-                grades[countriesInCont[i]] *= 0.8;
-            }
-        }
-
-        // Continent
-        for (int i = 0; i < grades.length; i++) {
-            for (int j = 0; j < countriesInCont.length; j++) {
-                if (attackable.get(i) == g.get(countriesInCont[j])) {
-                    grades[i] += 2.0;
-                }
-            }
+            grades[i] += 2.0;
         }
 
         // Continent denial
+        String[] allContinents = getContinents();
+        for (int i = 0; i < allContinents.length; i++) {
+            if (!allContinents[i].equals(cont)) {
 
-
+            }
+        }
 
         // Cards
         // When turning a set in, get (max) 2 extra armies if you own one of the territories on the card
@@ -84,7 +77,7 @@ public class BotAttacking extends UsefulMethods {
                 for (int j = 0; j < g.getSize(); j++) {
                     // Check if an unowned territory is on one of the bot's cards
                     if (g.get(j).getTerritory().getTerritoryName().equals(cards.get(i).getCardName()) && g.get(j).getTerritory().getOwner() != p) {
-                        grades[i] *= 0.9;
+                        grades[i] += 0.5;
                     }
                 }
             }
