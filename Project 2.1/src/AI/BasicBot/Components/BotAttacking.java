@@ -145,7 +145,7 @@ public class BotAttacking extends UsefulMethods {
         int troops = getTotalTroops(g, p);
 
         double ratio = ((double) troops)/ territories;
-        //System.out.println("Ratio: " + ratio);
+        System.out.println("Ratio: " + ratio);
         //TODO fix ratio
         if (ratio > 1.05) {
             return true;

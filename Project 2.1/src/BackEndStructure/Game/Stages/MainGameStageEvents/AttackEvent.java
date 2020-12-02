@@ -271,13 +271,17 @@ public class AttackEvent {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot()) {
             for (int i = 0; i < troops; i++) {
-                placeTroop(player, game.getAi().getPlaceTroops().placeTroop(graph, player));
+                game.getAi().getPlaceTroops().placeTroop(graph, player);
             }
         } else {
             for (int i = 0; i < troops; i++) {
-                placeTroop(player, getSelectedTerritoryNumber(player));
+                placementTurn(player);
             }
         }
+    }
+
+    private void placementTurn(Player player) {
+        placeTroop(player, getSelectedTerritoryNumber(player));
     }
 
     private void placeTroop(Player player, int territoryNumber) {
