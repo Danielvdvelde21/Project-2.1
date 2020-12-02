@@ -121,6 +121,7 @@ public class BotAttacking extends UsefulMethods {
         }
 
 
+
         double maxAtk = 0.0;
         int maxAtkIndex = 0;
 
@@ -145,6 +146,35 @@ public class BotAttacking extends UsefulMethods {
                     minDef = grades[i];
                     minDefIndex = i;
                 }
+            }
+        }
+
+        // end goal chooser
+        boolean bestAttack = false;
+        int bestAttackers = 0;
+        int bestAttackIsFrom = 0;
+        while(bestAttack){
+            int bestTarget = getHighest(grades);
+            for(int i = 0; i < g.getSize(); i++) {
+                if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
+                    int attackers = g.get(i).getTerritory().getNumberOfTroops();
+                    bestAttackIsFrom = i;
+                    if (attackers > bestAttackers) {
+                        bestAttackers = g.get(i).getTerritory().getNumberOfTroops();
+                    }
+                }
+            }
+            int defenders = g.get(bestTarget).getTerritory().getNumberOfTroops();
+            if(defenders > bestAttackers){
+                grades[bestTarget] += -1000;
+            }
+            else if(getHighest(grades) == bestTarget){
+                grades[bestTarget] += (bestAttackers - defenders) * 0.1;
+                grades[bestTarget] += (bestAttackers/defenders);
+                bestAttack = true;
+            }
+            else{
+                bestAttack = false;
             }
         }
 
