@@ -310,5 +310,9 @@ public class UsefulMethods {
         }
         return verticesUnOwned;
     }
+
+    public String[] getContinents() {
+        return continents;
+    }
 }
 

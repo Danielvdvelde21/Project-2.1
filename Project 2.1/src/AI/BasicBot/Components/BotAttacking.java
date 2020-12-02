@@ -40,6 +40,7 @@ public class BotAttacking extends UsefulMethods {
                 for (Edge e : edges) {
                     if (e.getVertex().getTerritory().getOwner() == p) {
                         attackable = true;
+                        break;
                     }
                 }
                 if (!attackable) {
@@ -62,9 +63,24 @@ public class BotAttacking extends UsefulMethods {
 
         // Continent denial
         String[] allContinents = getContinents();
+        int[] contIndex;
+        Player enemy;
+        boolean hundred;
         for (int i = 0; i < allContinents.length; i++) {
             if (!allContinents[i].equals(cont)) {
-
+                hundred = true;
+                contIndex = continentDetector(allContinents[i]);
+                enemy = g.get(contIndex[0]).getTerritory().getOwner();
+                for (int j = 1; j < contIndex.length; j++) {
+                    if (g.get(contIndex[j]).getTerritory().getOwner() != enemy) {
+                        hundred = false;
+                    }
+                }
+                if (hundred) {
+                    for (int j = 0; j < contIndex.length; j++) {
+                        grades[contIndex[j]] += 1.0;
+                    }
+                }
             }
         }
 
@@ -114,8 +130,7 @@ public class BotAttacking extends UsefulMethods {
         }
 
 
-
-        double maxAtk = 0.0;
+        /*double maxAtk = 0.0;
         int maxAtkIndex = 0;
 
         ArrayList<Vertex> ownedTerritories = getOwnedVertices(g, p);
@@ -140,7 +155,7 @@ public class BotAttacking extends UsefulMethods {
                     minDefIndex = i;
                 }
             }
-        }
+        }*/
 
         // end goal chooser
         boolean bestAttack = false;
