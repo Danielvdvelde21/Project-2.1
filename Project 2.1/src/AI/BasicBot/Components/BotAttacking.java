@@ -35,8 +35,10 @@ public class BotAttacking extends UsefulMethods {
 
         // Eliminate enemy territories that are not connected to any friendly territories and
         // friendly territories only surrounded by other friendly territories
+        // Also eliminate owned territories with just 1 troop
         boolean owned = true;
         boolean surrounded = true;
+        boolean singleTroop = false;
         LinkedList<Edge> edges = new LinkedList<>();
         for (int i = 0; i < grades.length; i++) {
             surrounded = true;
@@ -59,10 +61,13 @@ public class BotAttacking extends UsefulMethods {
                     }
                 }
             }
-            if (g.get(i).getTerritory().getNumberOfTroops() <= 1) {
-                surrounded = true;
+            if (g.get(i).getTerritory().getNumberOfTroops() <= 1 && g.get(i).getTerritory().getOwner() == p) {
+                singleTroop = true;
             }
-            if (surrounded) {
+            else {
+                singleTroop = false;
+            }
+            if (surrounded || singleTroop) {
                 // Arbitrarily big negative score; any negative scores will be disregarded during decision making
                 grades[i] = -9999;
             }
@@ -81,7 +86,7 @@ public class BotAttacking extends UsefulMethods {
         for (int i = 0; i < countriesInCont.length; i++) {
             // Check which countries are not yet owned by the bot in the continent
             if (g.get(countriesInCont[i]).getTerritory().getOwner() != p) {
-                grades[countriesInCont[i]] *= 0.9;
+                grades[countriesInCont[i]] *= 0.8;
             }
         }
 
@@ -101,34 +106,35 @@ public class BotAttacking extends UsefulMethods {
             }
         }
 
-        double minDef = 9999;
-        int minDefIndex = 0;
-        ArrayList<Vertex> unowned = getEnemyOwnedVertices(g, p);
+        double maxAtk = 0.0;
+        int maxAtkIndex = 0;
+
+        ArrayList<Vertex> ownedTerritories = getOwnedVertices(g, p);
         for (int i = 1; i < grades.length; i++) {
-            for (Vertex v : unowned) {
+            for (Vertex v : ownedTerritories) {
                 if (g.get(i) == v) {
-                    if (grades[i] > 0.0 && minDef > grades[i]) {
-                        minDef = grades[i];
-                        minDefIndex = i;
+                    if (grades[i] > maxAtk) {
+                        maxAtk = grades[i];
+                        maxAtkIndex = i;
                     }
                 }
             }
         }
-        LinkedList<Edge> minDefNeighbours = g.get(minDefIndex).getEdges();
-        int maxAtk = 0;
-        int maxAtkIndex = 0;
-        for(int i = 0; i < minDefNeighbours.size(); i++) {
-            if (minDefNeighbours.get(i).getVertex().getTerritory().getOwner() == p) {
-                if (grades[i] > maxAtk) {
-                    maxAtk = minDefNeighbours.get(i).getVertex().getTerritory().getNumberOfTroops();
-                    maxAtkIndex = i;
+
+        LinkedList<Edge> maxAtkNeighbours = g.get(maxAtkIndex).getEdges();
+        int minDef = 9999;
+        int minDefIndex = 0;
+        for(int i = 0; i < maxAtkNeighbours.size(); i++) {
+            if (maxAtkNeighbours.get(i).getVertex().getTerritory().getOwner() != p) {
+                if (grades[i] < minDef && grades[i] > 0.0) {
+                    minDef = maxAtkNeighbours.get(i).getVertex().getTerritory().getNumberOfTroops();
+                    minDefIndex = i;
                 }
             }
         }
-        // TODO bug that an enemy country gets chosen as attacker; alaska attacking kamchatka
-        // Seems like it chooses the first neighbour, so it doesnt change the atkindex
-        setAttackerDie(minDefNeighbours.get(maxAtkIndex).getVertex());
-        return new Vertex[]{minDefNeighbours.get(maxAtkIndex).getVertex(), g.get(minDefIndex)};
+
+        setAttackerDie(g.get(maxAtkIndex));
+        return new Vertex[]{g.get(maxAtkIndex), maxAtkNeighbours.get(minDefIndex).getVertex()};
     }
 
 
@@ -141,7 +147,7 @@ public class BotAttacking extends UsefulMethods {
         double ratio = ((double) troops)/ territories;
         System.out.println("Ratio: " + ratio);
         //TODO fix ratio
-        if (ratio > 1) {
+        if (ratio > 1.05) {
             return true;
         }
         return false;
@@ -169,7 +175,7 @@ public class BotAttacking extends UsefulMethods {
 
     // If a bot eliminates a player and gets his cards --> the bot needs to turn in a set
     public ArrayList<Card> attackingCard(Graph g, Player p) {
-        // TODO
+        // TODO Can't we use the basic method we're already using for turning in cards?
         return null;
     }
 
