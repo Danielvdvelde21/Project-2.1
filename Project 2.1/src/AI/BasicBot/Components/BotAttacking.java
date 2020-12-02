@@ -130,7 +130,7 @@ public class BotAttacking extends UsefulMethods {
         }
 
 
-        double maxAtk = 0.0;
+        /*double maxAtk = 0.0;
         int maxAtkIndex = 0;
 
         ArrayList<Vertex> ownedTerritories = getOwnedVertices(g, p);
@@ -155,7 +155,7 @@ public class BotAttacking extends UsefulMethods {
                     minDefIndex = i;
                 }
             }
-        }
+        }*/
 
         // end goal chooser
         boolean bestAttack = false;
