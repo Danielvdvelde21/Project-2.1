@@ -29,7 +29,6 @@ public class UsefulMethods {
         return (double) counter / territories.length;
     }
 
-
     // Find index of lowest value in double[]
     public int getLowest(double[] list) {
         double lowest = list[0];
@@ -310,10 +309,6 @@ public class UsefulMethods {
             }
         }
         return verticesUnOwned;
-    }
-
-    public String[] getContinents() {
-        return continents;
     }
 }
 
