@@ -126,11 +126,6 @@ public class AttackEvent {
         Vertex attacker = vertices[0];
         Vertex defender = vertices[1];
 
-        if(vertices[0] == null) {
-            // cancel the bot attack, there is no attack
-            return;
-        }
-
         int initialAttack = attacker.getTerritory().getNumberOfTroops();
 
         // Set the amount of dice that the bot wants to use
