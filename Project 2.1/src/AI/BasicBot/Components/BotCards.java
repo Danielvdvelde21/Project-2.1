@@ -68,6 +68,10 @@ public class BotCards extends UsefulMethods {
                 }
             }
         }
+        // Set has to be size 3
+        if (bestSet.size() < 3) {
+            return null;
+        }
         return bestSet;
     }
 

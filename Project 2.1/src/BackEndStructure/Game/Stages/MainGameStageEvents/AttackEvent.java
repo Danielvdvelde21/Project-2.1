@@ -44,9 +44,9 @@ public class AttackEvent {
         map.deselectTerritory();
 
         if (player.isBot()) {
-            while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
-                botAttack(player);
-            }
+//            while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
+//                botAttack(player);
+//            }
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
@@ -275,17 +275,13 @@ public class AttackEvent {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot()) {
             for (int i = 0; i < troops; i++) {
-                game.getAi().getPlaceTroops().placeTroop(graph, player);
+                placeTroop(player, game.getAi().getPlaceTroops().placeTroop(graph, player));
             }
         } else {
             for (int i = 0; i < troops; i++) {
-                placementTurn(player);
+                placeTroop(player, getSelectedTerritoryNumber(player));
             }
         }
-    }
-
-    private void placementTurn(Player player) {
-        placeTroop(player, getSelectedTerritoryNumber(player));
     }
 
     private void placeTroop(Player player, int territoryNumber) {

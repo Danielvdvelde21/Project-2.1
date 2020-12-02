@@ -30,16 +30,18 @@ public class FortifyEvent {
         boolean fortified = false;
 
         if (player.isBot()) {
-            Vertex[] vertices = game.getAi().getBotReinforcement().reinforce(graph, player);
-            Vertex from = vertices[0];
-            Vertex to = vertices[1];
-            int troopsSend = game.getAi().getBotReinforcement().getReinforcementTroops();
+            Vertex[] vertices = game.getAi().getBotReinforcement().reinforceDefense(graph, player);
+            if (vertices != null) {
+                Vertex from = vertices[0];
+                Vertex to = vertices[1];
+                int troopsSend = game.getAi().getBotReinforcement().getReinforcementTroops();
 
-            from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
-            to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
-            map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
-            map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
-            narrator.addText("Player " + player.getName() + " send " + troopsSend + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
+                from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
+                to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
+                map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
+                map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
+                narrator.addText("Player " + player.getName() + " send " + troopsSend + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
+            }
         } else {
             while (!playerTurn.hasTurnEnded() && !fortified) {
                 delay();
@@ -94,15 +96,20 @@ public class FortifyEvent {
 
     // Creates a delay
     private void delay() {
-        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+        }
     }
 
     // If a territory is selected
-    private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
+    private boolean territorySelected(Map map) {
+        return map.getTerritoryNumber() != -1;
+    }
 
     // If a territory belongs to a player
     private boolean isTerritoryOwnedBy(Territory t, Player p) {
-        return t.getOwner()==p;
+        return t.getOwner() == p;
     }
 
 }

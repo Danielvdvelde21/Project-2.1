@@ -41,13 +41,13 @@ public class PlacementStage {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 cardInventory.setCurrentPlayer(p);
                 playerTurn.setPlayerTurn(p);
-                placementCountryTurn(p);
+                placementTurn(p);
             }
             round++;
         }
     }
 
-    private void placementCountryTurn(Player player) {
+    private void placementTurn(Player player) {
         if (player.isBot()) {
             placeTroop(player, game.getAi().getPlaceTroops().placementDecider(graph, player));
         } else {
