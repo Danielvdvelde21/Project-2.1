@@ -66,7 +66,7 @@ public class ReceiveTroops {
     }
 
     private int turningInCards(Player player) {
-        if(player.getHand().size() >= 3) {
+        if (player.getHand().size() >= 3) {
             if (player.getHand().size() > 4) {
                 narrator.addText("You have to turn in at least 1 set!");
             } else {
@@ -121,15 +121,20 @@ public class ReceiveTroops {
 
     // Creates a delay
     private void delay() {
-        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+        }
     }
 
     // If a territory is selected
-    private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
+    private boolean territorySelected(Map map) {
+        return map.getTerritoryNumber() != -1;
+    }
 
     // If a territory belongs to a player
     private boolean isTerritoryOwnedBy(Territory t, Player p) {
-        return t.getOwner()==p;
+        return t.getOwner() == p;
     }
 
     // Logic for whether a player can place down a troop on a territory
