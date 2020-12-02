@@ -29,44 +29,27 @@ public class BotAttacking extends UsefulMethods {
     public Vertex[] attack(Graph g, Player p) {
         // TODO make sure the attack finishes -> in other words, don't want to switch to other target in middle of attack
 
-        double[] grades = new double[g.getSize()];
-
-        // Eliminate enemy territories that are not connected to any friendly territories and
-        // friendly territories only surrounded by other friendly territories
-        // Also eliminate owned territories with just 1 troop
-        boolean owned;
-        boolean surrounded;
-        boolean singleTroop;
+        // Get the countries you're able to attack: enemy-owned and adjacent to a friendly territory
+        ArrayList<Vertex> attackable = new ArrayList<>();
         LinkedList<Edge> edges;
-        for (int i = 0; i < grades.length; i++) {
-            surrounded = true;
-            edges = g.get(i).getEdges();
-            owned = g.get(i).getTerritory().getOwner() == p;
-            for (Edge e : edges) {
-                if (owned) {
-                    if (e.getVertex().getTerritory().getOwner() != p) {
-                        surrounded = false;
-                    }
-                }
-                else {
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getOwner() != p) {
+                edges = g.get(i).getEdges();
+                for (Edge e : edges) {
                     if (e.getVertex().getTerritory().getOwner() == p) {
-                        surrounded = false;
+                        attackable.add(g.get(i));
                     }
                 }
-            }
-            singleTroop = g.get(i).getTerritory().getNumberOfTroops() <= 1 && g.get(i).getTerritory().getOwner() == p;
-            if (surrounded || singleTroop) {
-                // Arbitrarily big negative score; any negative scores will be disregarded during decision making
-                grades[i] = -9999;
             }
         }
+
+        double[] grades = new double[attackable.size()];
 
         // Troop count
         // Add to score for the amount of troops on the territory
         for (int i = 0; i < grades.length; i++) {
-            grades[i] += g.get(i).getTerritory().getNumberOfTroops();
+            grades[i] += g.get(i).getBSR();
         }
-        // BSR? Allied landen
 
         // Continent
         // Extra continent = extra troops
@@ -78,6 +61,19 @@ public class BotAttacking extends UsefulMethods {
                 grades[countriesInCont[i]] *= 0.8;
             }
         }
+
+        // Continent
+        for (int i = 0; i < grades.length; i++) {
+            for (int j = 0; j < countriesInCont.length; j++) {
+                if (attackable.get(i) == g.get(countriesInCont[j])) {
+                    grades[i] += 2.0;
+                }
+            }
+        }
+
+        // Continent denial
+
+
 
         // Cards
         // When turning a set in, get (max) 2 extra armies if you own one of the territories on the card

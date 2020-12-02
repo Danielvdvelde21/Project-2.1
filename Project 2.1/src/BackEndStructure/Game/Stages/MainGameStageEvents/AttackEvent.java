@@ -44,7 +44,9 @@ public class AttackEvent {
         map.deselectTerritory();
 
         if (player.isBot()) {
-            botAttack(player);
+              while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
+                  botAttack(player);
+              }
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
