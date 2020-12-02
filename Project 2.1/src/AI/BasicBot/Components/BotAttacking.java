@@ -27,9 +27,6 @@ public class BotAttacking extends UsefulMethods {
      * @return A vertex array with position 0 attacker and position 1 defender
      */
     public Vertex[] attack(Graph g, Player p) {
-        // Attack and defensive strength based on troops
-        // Find weakest defender around strongest attacker and strongest attacker around weakest defender
-        // Decide which of the two would be the better attack
         // TODO make sure the attack finishes -> in other words, don't want to switch to other target in middle of attack
 
         double[] grades = new double[g.getSize()];
@@ -81,7 +78,6 @@ public class BotAttacking extends UsefulMethods {
             }
         }
 
-
         // Cards
         // When turning a set in, get (max) 2 extra armies if you own one of the territories on the card
         // low weight
@@ -113,23 +109,23 @@ public class BotAttacking extends UsefulMethods {
         }
 
         LinkedList<Edge> maxAtkNeighbours = g.get(maxAtkIndex).getEdges();
-        int minDef = 9999;
+        double minDef = 9999.0;
         int minDefIndex = 0;
         for(int i = 0; i < maxAtkNeighbours.size(); i++) {
             if (maxAtkNeighbours.get(i).getVertex().getTerritory().getOwner() != p) {
                 if (grades[i] < minDef && grades[i] > 0.0) {
-                    minDef = maxAtkNeighbours.get(i).getVertex().getTerritory().getNumberOfTroops();
+                    minDef = grades[i];
                     minDefIndex = i;
                 }
             }
         }
-
         setAttackerDie(g.get(maxAtkIndex));
         return new Vertex[]{g.get(maxAtkIndex), maxAtkNeighbours.get(minDefIndex).getVertex()};
     }
 
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
+        // I don't like the way I did this
         ArrayList<Vertex> territories = getOwnedVertices(g, p);
         boolean minTroop = false;
         for (int i = 0; i < territories.size(); i++) {
@@ -139,6 +135,7 @@ public class BotAttacking extends UsefulMethods {
             }
         }
         return minTroop;
+        // don't suicidebomb
     }
 
     // How many troops will be sent over when a territory is captured
@@ -156,7 +153,7 @@ public class BotAttacking extends UsefulMethods {
         if (friendlyNeighbours) {
             return attacker.getTerritory().getNumberOfTroops() - 1;
         }
-        // TODO 2.  Figure out whether other neighbour enemy territories are worth capturing
+        // TODO 2.  Figure out whether other neighbour enemy territories are worth capturing, for now just send 1 over
         else {
             return 1;
         }
@@ -165,7 +162,13 @@ public class BotAttacking extends UsefulMethods {
     // If a bot eliminates a player and gets his cards --> the bot needs to turn in a set
     public ArrayList<Card> attackingCard(Graph g, Player p) {
         // TODO Can't we use the basic method we're already using for turning in cards?
-        return null;
+        if (p.getHand().size() >= 6) {
+            // trade in cards
+            return null;
+        }
+        else {
+            return null;
+        }
     }
 
     public void setAttackerDie(Vertex v) {
