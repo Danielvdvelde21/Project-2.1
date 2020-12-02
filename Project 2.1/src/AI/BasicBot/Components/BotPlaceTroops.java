@@ -69,7 +69,7 @@ public class BotPlaceTroops extends UsefulMethods {
         double[] territoryScores = new double[unOwnedTerritories.size()];
 
         for (int territory = 0; territory < unOwnedTerritories.size(); territory++) {
-            System.out.println(unOwnedTerritories.get(territory).getTerritory().getTerritoryName());
+            // System.out.println(unOwnedTerritories.get(territory).getTerritory().getTerritoryName());
             // Continent owned modifier
             String continent = TBelongsToCont(g, unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber());
             territoryScores[territory] += percentageOfContinentOwned(g,p,continent)*6; // MULTIPLIER MIGHT BE WRONG
@@ -80,7 +80,8 @@ public class BotPlaceTroops extends UsefulMethods {
                     territoryScores[territory] += 0.4;
                 }
             }
-            System.out.println(territoryScores[territory]);
+            //
+            // System.out.println(territoryScores[territory]);
             // anti Asia modifier
             int[] asia = new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41};
             for(int t : asia){
