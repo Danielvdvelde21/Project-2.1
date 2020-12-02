@@ -156,9 +156,10 @@ public class BotAttacking extends UsefulMethods {
         // end goal chooser
         boolean bestAttack = false;
         int bestAttackers = 0;
+        int bestTarget = 0;
         int bestAttackIsFrom = 0;
         while(bestAttack){
-            int bestTarget = getHighest(grades);
+            bestTarget = getHighest(grades);
             for(int i = 0; i < g.getSize(); i++) {
                 if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
@@ -174,7 +175,7 @@ public class BotAttacking extends UsefulMethods {
             }
             else if(getHighest(grades) == bestTarget){
                 grades[bestTarget] += (bestAttackers - defenders) * 0.1;
-                grades[bestTarget] += (bestAttackers/defenders);
+                grades[bestTarget] += (bestAttackers/defenders) * 0.5;
                 bestAttack = true;
             }
             else{
@@ -182,8 +183,12 @@ public class BotAttacking extends UsefulMethods {
             }
         }
 
-        setAttackerDie(g.get(maxAtkIndex));
-        return new Vertex[]{g.get(maxAtkIndex), maxAtkNeighbours.get(minDefIndex).getVertex()};
+        setAttackerDie(g.get(bestAttackIsFrom));
+
+        if(grades[bestTarget] > 2) {
+            return new Vertex[]{g.get(bestAttackIsFrom), g.get(bestTarget)};
+        }
+        return new Vertex[]{null, null};
 
     }
 
