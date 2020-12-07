@@ -2,6 +2,7 @@ package AI.BasicBot.Components;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class BotReinforcement extends UsefulMethods {
                             adj.add(g.get(j));
                         }
                     }
-                    Vertex buyer = buyerAuction(adj);    //most needed reinforcement
+                    Vertex buyer = buyerAuction(adj, g);    //most needed reinforcement
                     if(buyer != null) {
                         buyerSellerMap.put(buyer, posSeller);
                     }
@@ -103,7 +104,7 @@ public class BotReinforcement extends UsefulMethods {
 
         if(buyerSellerMap.size() != 0) {
             //choosing 'buyer' from all possible 'buyers' in all clusters
-            Vertex finalBuyer = buyerAuction(new ArrayList<>(buyerSellerMap.keySet()));
+            Vertex finalBuyer = buyerAuction(new ArrayList<>(buyerSellerMap.keySet()), g);
             Vertex finalSeller = buyerSellerMap.get(finalBuyer);
             setReinforcementTroops(finalSeller);
             return new Vertex[] {finalSeller, finalBuyer};
@@ -147,11 +148,11 @@ public class BotReinforcement extends UsefulMethods {
         return true;
     }
 
-    private Vertex buyerAuction(ArrayList<Vertex> buyers) {
+    private Vertex buyerAuction(ArrayList<Vertex> buyers, Graph g) {
         if(buyers.size() == 1) {
             return buyers.get(0);
         }
-        else {
+        else if(buyers.size() > 1) {
             double[] territoryScores = new double[buyers.size()];
             int i = 0;
             for(Vertex buyer : buyers) {
@@ -159,8 +160,14 @@ public class BotReinforcement extends UsefulMethods {
                 i++;
             }
             //returns vertex with the highest score
-            return buyers.get(getHighest(territoryScores));
+            Territory bestTerritory = buyers.get(getHighest(territoryScores)).getTerritory();
+            for (int j = 0; j < g.getSize(); j++) {
+                if (g.get(j).getTerritory() == bestTerritory) {
+                    return g.get(j);
+                }
+            }
         }
+        return null;
     }
 
     private void setReinforcementTroops(Vertex finalSeller) {
