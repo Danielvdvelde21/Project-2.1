@@ -73,7 +73,6 @@ public class BotReinforcement extends UsefulMethods {
             if(clusterDoesNotExist(clusterList, ownedTerritory)) {
                 ArrayList<Vertex> cluster = new ArrayList<>();   //chain of all connected owned territories
                 cluster.add(ownedTerritory);
-                ownedTerritories.remove(ownedTerritory);
                 fillCluster(g, ownedTerritories, cluster, ownedTerritory);
                 clusterList.add(cluster);
             }
@@ -126,15 +125,11 @@ public class BotReinforcement extends UsefulMethods {
         return true;
     }
 
-    private void fillCluster(Graph g, ArrayList<Vertex> ownedTerritories, ArrayList<Vertex> cluster, Vertex addedTerritory) {
-        if(ownedTerritories.size() != 0) {
-            for(Vertex vertex : ownedTerritories) {
-                if(g.isAdjecent(addedTerritory, vertex)) {
-                    cluster.add(vertex);
-                    ownedTerritories.remove(vertex);
-                    Vertex newAddedTerritory = vertex;
-                    fillCluster(g, ownedTerritories, cluster, newAddedTerritory);
-                }
+    private void fillCluster(Graph g, ArrayList<Vertex> ownedTerritories, ArrayList<Vertex> cluster, Vertex ownedTerritory) {
+        for(Vertex vertex : ownedTerritories) {
+            if(g.isAdjecent(ownedTerritory, vertex) && !cluster.contains(vertex) ) {
+                cluster.add(vertex);
+                fillCluster(g, ownedTerritories, cluster, vertex);
             }
         }
     }
