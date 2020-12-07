@@ -67,32 +67,15 @@ public class BotReinforcement extends UsefulMethods {
         ArrayList<ArrayList<Vertex> > clusterList = new ArrayList<>();   //list of all clusters
         Map<Vertex, Vertex> buyerSellerMap = new HashMap<>();    //hashMap of possible 'buyers - sellers' from all clusters (K:buyer, V:seller)
 
-        //finding all clusters
-        for(int i = 0; i < g.getSize(); i++) {
-            ArrayList<Vertex> cluster = new ArrayList<>();   //chain of all connected owned territories
-            if(g.get(i).getTerritory().getOwner() == p) {
-                boolean clusterExists = false;
-                for(ArrayList<Vertex> cl : clusterList) {
-                    if (cl.contains(g.get(i))) {
-                        clusterExists = true;
-                    }
-                }
-                if(!clusterExists) {
-                    cluster.add(g.get(i));
-                    for (int j = 1; j < g.getSize() - 1; j++) {
-                        if (!cluster.contains(g.get(j)) && g.isAdjecent(g.get(i), g.get(j)) && g.get(j).getTerritory().getOwner() == p) {
-                            cluster.add(g.get(j));
-                        }
-                        if (cluster.contains(g.get(j))) {
-                            for (int k = 1; k < g.getSize() - 1; k++) {
-                                if (!cluster.contains(g.get(k)) && g.isAdjecent(g.get(j), g.get(k)) && g.get(k).getTerritory().getOwner() == p) {
-                                    cluster.add(g.get(k));
-                                }
-                            }
-                        }
-                    }
-                    clusterList.add(cluster);
-                }
+        //finding clusterList
+        ArrayList<Vertex> ownedTerritories = getOwnedVertices(g, p);
+        for(Vertex ownedTerritory : ownedTerritories) {
+            if(clusterDoesNotExist(clusterList, ownedTerritory)) {
+                ArrayList<Vertex> cluster = new ArrayList<>();   //chain of all connected owned territories
+                cluster.add(ownedTerritory);
+                ownedTerritories.remove(ownedTerritory);
+                fillCluster(g, ownedTerritories, cluster, ownedTerritory);
+                clusterList.add(cluster);
             }
         }
 
@@ -128,6 +111,32 @@ public class BotReinforcement extends UsefulMethods {
         }
 
         return null;
+    }
+
+    private boolean clusterDoesNotExist(ArrayList<ArrayList<Vertex>> clusterList, Vertex territory) {
+        if(clusterList.size() > 0) {
+            for(ArrayList<Vertex> cluster : clusterList) {
+                for(Vertex vertex : cluster) {
+                    if(vertex == territory) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private void fillCluster(Graph g, ArrayList<Vertex> ownedTerritories, ArrayList<Vertex> cluster, Vertex addedTerritory) {
+        if(ownedTerritories.size() != 0) {
+            for(Vertex vertex : ownedTerritories) {
+                if(g.isAdjecent(addedTerritory, vertex)) {
+                    cluster.add(vertex);
+                    ownedTerritories.remove(vertex);
+                    Vertex newAddedTerritory = vertex;
+                    fillCluster(g, ownedTerritories, cluster, newAddedTerritory);
+                }
+            }
+        }
     }
 
     private boolean hasTroopsToSpare(Vertex vertex, Graph g, Player p) {
