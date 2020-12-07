@@ -167,10 +167,9 @@ public class BotAttacking extends UsefulMethods {
             for(int i = 0; i < g.getSize(); i++) {
                 //System.out.println(g.get(i).getTerritory().getTerritoryName() + ": " + grades[i]);
                 if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
-                    System.out.println("Test");
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
 
-                    if (attackers > bestAttackers) {
+                    if (attackers > bestAttackers && attackers > 1) {
                         bestAttackIsFrom = i;
                         bestAttackers = g.get(i).getTerritory().getNumberOfTroops();
                     }
@@ -182,7 +181,7 @@ public class BotAttacking extends UsefulMethods {
             }
             else if(getHighest(grades) == bestTarget){
                 grades[bestTarget] += (bestAttackers - defenders) * 0.1;
-                grades[bestTarget] += (bestAttackers/defenders) * 0.5;
+                //grades[bestTarget] += (bestAttackers/defenders) * 0.5;
                 bestAttack = true;
             }
             else{
