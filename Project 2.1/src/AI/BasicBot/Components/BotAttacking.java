@@ -162,13 +162,16 @@ public class BotAttacking extends UsefulMethods {
         int bestAttackers = 0;
         int bestTarget = 0;
         int bestAttackIsFrom = 0;
-        while(bestAttack){
+        while(!bestAttack){
             bestTarget = getHighest(grades);
             for(int i = 0; i < g.getSize(); i++) {
+                //System.out.println(g.get(i).getTerritory().getTerritoryName() + ": " + grades[i]);
                 if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
+                    System.out.println("Test");
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
-                    bestAttackIsFrom = i;
+
                     if (attackers > bestAttackers) {
+                        bestAttackIsFrom = i;
                         bestAttackers = g.get(i).getTerritory().getNumberOfTroops();
                     }
                 }
@@ -185,6 +188,9 @@ public class BotAttacking extends UsefulMethods {
             else{
                 bestAttack = false;
             }
+        }
+        if (g.get(bestAttackIsFrom) == g.get(bestTarget)) {
+            throw new IllegalArgumentException("Attacker = Defender");
         }
 
         setAttackerDie(g.get(bestAttackIsFrom));

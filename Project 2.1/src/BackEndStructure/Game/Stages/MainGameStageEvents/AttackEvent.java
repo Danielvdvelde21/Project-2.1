@@ -45,7 +45,9 @@ public class AttackEvent {
 
         if (player.isBot()) {
             while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
-                botAttack(player);
+                if (!botAttack(player)) {
+                    break;
+                }
             }
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
@@ -121,14 +123,14 @@ public class AttackEvent {
         }
     }
 
-    private void botAttack(Player player) {
+    private boolean botAttack(Player player) {
         Vertex[] vertices = game.getAi().getBotAttacking().attack(graph, player);
         Vertex attacker = vertices[0];
         Vertex defender = vertices[1];
 
         if(vertices[0] == null) {
             // cancel the bot attack, there is no attack
-            return;
+            return false;
         }
 
         int initialAttack = attacker.getTerritory().getNumberOfTroops();
@@ -178,7 +180,7 @@ public class AttackEvent {
             // If the defender choose invalid amount of die --> stop this method --> a new iteration will do the same thing
             if (!dicePanel.validAmountOfDiceSelected(attacker.getTerritory().getNumberOfTroops(), defender.getTerritory().getNumberOfTroops())) {
                 narrator.addText("Invalid amount of dice selected!");
-                return;
+                return true;
             }
         }
 
@@ -200,8 +202,9 @@ public class AttackEvent {
         if (defender.getTerritory().getNumberOfTroops() < 1) {
             oneTerritoryCaptured = true;
             territoryCaptured(player, defender, attacker);
-            return;
+            return true;
         }
+        return true;
 
     }
 

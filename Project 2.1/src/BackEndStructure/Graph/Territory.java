@@ -20,6 +20,9 @@ public class Territory {
 
     public void setNumberOfTroops(int troops) {
         this.numberOfTroops = troops;
+        if (troops < 0) {
+            throw new IllegalArgumentException("Negative troops");
+        }
     }
 
     public int getNumberOfTroops() {
