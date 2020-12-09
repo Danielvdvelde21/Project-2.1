@@ -55,6 +55,9 @@ public class ReceiveTroops {
 
         // Troops for territories owned
         int terri = player.getTerritoriesOwned() / 3;
+        if (terri < 3) {
+            terri = 3;
+        }
 
         // Troops for continents owned
         game.hasContinents(player);
