@@ -156,6 +156,7 @@ public class BotAttacking extends UsefulMethods {
                 }
             }
         }*/
+        //test
 
         // end goal chooser
         boolean bestAttack = false;
@@ -233,14 +234,58 @@ public class BotAttacking extends UsefulMethods {
 
     // If a bot eliminates a player and gets his cards --> the bot needs to turn in a set
     public ArrayList<Card> attackingCard(Graph g, Player p) {
-        // TODO Can't we use the basic method we're already using for turning in cards?
-        if (p.getHand().size() >= 6) {
-            // trade in cards
-            return null;
+        ArrayList<Card> infSet = new ArrayList<>();
+        ArrayList<Card> cavSet = new ArrayList<>();
+        ArrayList<Card> artSet = new ArrayList<>();
+
+
+        for (int i = 0; i < p.getHand().size(); i++) {
+            switch (p.getHand().get(i).getCardType()) {
+                case "WILDCARD":
+                    infSet.add(p.getHand().get(i));
+                    cavSet.add(p.getHand().get(i));
+                    artSet.add(p.getHand().get(i));
+                    break;
+                case "Infantry":
+                    infSet.add(p.getHand().get(i));
+                    break;
+                case "Cavalry":
+                    cavSet.add(p.getHand().get(i));
+                    break;
+                case "Artillery":
+                    artSet.add(p.getHand().get(i));
+            }
         }
-        else {
-            return null;
+        //TODO: Clean this one up, look for owned territories when turning in, try to keep wildcards if possible
+
+        if (infSet.size() == 3) {
+            return infSet;
         }
+        if (infSet.size() > 3) {
+            while (infSet.size() > 3) {
+                infSet.remove(3);
+            }
+            return infSet;
+        }
+        if (cavSet.size() == 3) {
+            return cavSet;
+        }
+        if (cavSet.size() > 3) {
+            while (cavSet.size() > 3) {
+                cavSet.remove(3);
+            }
+            return cavSet;
+        }
+        if (artSet.size() == 3) {
+            return artSet;
+        }
+        if (artSet.size() > 3) {
+            while (artSet.size() > 3) {
+                artSet.remove(3);
+            }
+            return artSet;
+        }
+        return null;
     }
 
     public void setAttackerDie(Vertex v) {
