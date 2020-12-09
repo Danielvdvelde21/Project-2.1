@@ -163,11 +163,13 @@ public class BotAttacking extends UsefulMethods {
         int bestAttackers = 0;
         int bestTarget = 0;
         int bestAttackIsFrom = 0;
-        while(!bestAttack){
+        int counter = 0;
+        while(!bestAttack && counter < 50){
+            bestAttackers = 0;
             bestTarget = getHighest(grades);
             for(int i = 0; i < g.getSize(); i++) {
-                //System.out.println(g.get(i).getTerritory().getTerritoryName() + ": " + grades[i]);
                 if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
+                    System.out.println(g.get(i).getTerritory().getTerritoryName());
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
 
                     if (attackers > bestAttackers && attackers > 1) {
@@ -180,22 +182,27 @@ public class BotAttacking extends UsefulMethods {
             if(defenders > bestAttackers){
                 grades[bestTarget] += -1000;
             }
-            else if(getHighest(grades) == bestTarget){
+            else if(getHighest(grades) == bestTarget && g.isAdjecent(g.get(bestTarget), g.get(bestAttackIsFrom))){
                 grades[bestTarget] += (bestAttackers - defenders) * 0.1;
-                //grades[bestTarget] += (bestAttackers/defenders) * 0.5;
+                grades[bestTarget] += (bestAttackers/defenders) * 0.5;
                 bestAttack = true;
             }
             else{
                 bestAttack = false;
             }
+            counter++;
         }
         if (g.get(bestAttackIsFrom) == g.get(bestTarget)) {
             throw new IllegalArgumentException("Attacker = Defender");
         }
+        if (!g.isAdjecent(g.get(bestAttackIsFrom), g.get(bestTarget))) {
+            System.out.println(g.get(bestAttackIsFrom).getTerritory().getTerritoryName() + " is trying to attack " + g.get(bestTarget).getTerritory().getTerritoryName());
+            throw new IllegalArgumentException("Attacker and Defender aren't adjacent");
+        }
 
         setAttackerDie(g.get(bestAttackIsFrom));
 
-        if(grades[bestTarget] > 2) {
+        if(grades[bestTarget] > 2 && counter < 50) {
             return new Vertex[]{g.get(bestAttackIsFrom), g.get(bestTarget)};
         }
         return new Vertex[]{null, null};
