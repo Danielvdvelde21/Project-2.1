@@ -285,6 +285,13 @@ public class BotAttacking extends UsefulMethods {
             }
             return artSet;
         }
+        if (p.getHand().size() >= 5) {
+            ArrayList<Card> mixed = new ArrayList<>();
+            mixed.add(infSet.get(0));
+            mixed.add(cavSet.get(0));
+            mixed.add(artSet.get(0));
+            return mixed;
+        }
         return null;
     }
 
