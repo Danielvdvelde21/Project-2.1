@@ -163,10 +163,9 @@ public class Game {
 
     // Checks whether a player owns all countries in a continent based on its territories
     public void checkContinent(Player player, int[] terr, String continent) {
-        String n = player.getName();
         int counter = 0;
         for (int i = 0; i < terr.length ; i++) {
-            if (graph.get(terr[i]).getTerritory().getOwner().equals(n)) {
+            if (graph.get(terr[i]).getTerritory().getOwner() == player) {
                 counter++;
             }
         }
