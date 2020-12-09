@@ -129,35 +129,6 @@ public class BotAttacking extends UsefulMethods {
             }
         }
 
-
-        /*double maxAtk = 0.0;
-        int maxAtkIndex = 0;
-
-        ArrayList<Vertex> ownedTerritories = getOwnedVertices(g, p);
-        for (int i = 1; i < grades.length; i++) {
-            for (Vertex v : ownedTerritories) {
-                if (g.get(i) == v) {
-                    if (grades[i] > maxAtk) {
-                        maxAtk = grades[i];
-                        maxAtkIndex = i;
-                    }
-                }
-            }
-        }
-
-        LinkedList<Edge> maxAtkNeighbours = g.get(maxAtkIndex).getEdges();
-        double minDef = 9999.0;
-        int minDefIndex = 0;
-        for(int i = 0; i < maxAtkNeighbours.size(); i++) {
-            if (maxAtkNeighbours.get(i).getVertex().getTerritory().getOwner() != p) {
-                if (grades[i] < minDef && grades[i] > 0.0) {
-                    minDef = grades[i];
-                    minDefIndex = i;
-                }
-            }
-        }*/
-        //test
-
         // end goal chooser
         boolean bestAttack = false;
         int bestAttackers = 0;
@@ -169,7 +140,6 @@ public class BotAttacking extends UsefulMethods {
             bestTarget = getHighest(grades);
             for(int i = 0; i < g.getSize(); i++) {
                 if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
-                    System.out.println(g.get(i).getTerritory().getTerritoryName());
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
 
                     if (attackers > bestAttackers && attackers > 1) {
@@ -192,17 +162,18 @@ public class BotAttacking extends UsefulMethods {
             }
             counter++;
         }
-        if (g.get(bestAttackIsFrom) == g.get(bestTarget)) {
-            throw new IllegalArgumentException("Attacker = Defender");
-        }
-        if (!g.isAdjecent(g.get(bestAttackIsFrom), g.get(bestTarget))) {
-            System.out.println(g.get(bestAttackIsFrom).getTerritory().getTerritoryName() + " is trying to attack " + g.get(bestTarget).getTerritory().getTerritoryName());
-            throw new IllegalArgumentException("Attacker and Defender aren't adjacent");
-        }
 
         setAttackerDie(g.get(bestAttackIsFrom));
 
         if(grades[bestTarget] > 2 && counter < 50) {
+            // Checking for bugs
+            if (!g.isAdjecent(g.get(bestAttackIsFrom), g.get(bestTarget))) {
+                System.out.println(g.get(bestAttackIsFrom).getTerritory().getTerritoryName() + " is trying to attack " + g.get(bestTarget).getTerritory().getTerritoryName());
+                throw new IllegalArgumentException("Attacker and Defender aren't adjacent");
+            }
+            if (g.get(bestAttackIsFrom) == g.get(bestTarget)) {
+                throw new IllegalArgumentException("Attacker = Defender, index is " + bestAttackIsFrom);
+            }
             return new Vertex[]{g.get(bestAttackIsFrom), g.get(bestTarget)};
         }
         return new Vertex[]{null, null};
