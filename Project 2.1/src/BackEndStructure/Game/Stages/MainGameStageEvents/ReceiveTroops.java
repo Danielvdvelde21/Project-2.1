@@ -55,6 +55,7 @@ public class ReceiveTroops {
 
         // Troops for territories owned
         int terri = player.getTerritoriesOwned() / 3;
+        // Min 3 troops
         if (terri < 3) {
             terri = 3;
         }
