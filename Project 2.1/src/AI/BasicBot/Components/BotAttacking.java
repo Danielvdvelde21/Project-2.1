@@ -169,7 +169,7 @@ public class BotAttacking extends UsefulMethods {
             bestTarget = getHighest(grades);
             for(int i = 0; i < g.getSize(); i++) {
                 if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
-                    // System. out.println(g.get(i).getTerritory().getTerritoryName());
+                    System.out.println(g.get(i).getTerritory().getTerritoryName());
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
 
                     if (attackers > bestAttackers && attackers > 1) {
@@ -196,7 +196,7 @@ public class BotAttacking extends UsefulMethods {
             throw new IllegalArgumentException("Attacker = Defender");
         }
         if (!g.isAdjecent(g.get(bestAttackIsFrom), g.get(bestTarget))) {
-            // out.println(g.get(bestAttackIsFrom).getTerritory().getTerritoryName() + " is trying to attack " + g.get(bestTarget).getTerritory().getTerritoryName());
+            System.out.println(g.get(bestAttackIsFrom).getTerritory().getTerritoryName() + " is trying to attack " + g.get(bestTarget).getTerritory().getTerritoryName());
             throw new IllegalArgumentException("Attacker and Defender aren't adjacent");
         }
 
