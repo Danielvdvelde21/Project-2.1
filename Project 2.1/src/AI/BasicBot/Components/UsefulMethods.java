@@ -167,8 +167,11 @@ public class UsefulMethods {
             case "Asia":
                 // 0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41
                 return new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41};
+
+            case "":
+                return new int[]{};
         }
-        throw new IllegalArgumentException("INVALID CONTINENT SELECTED!");
+        throw new IllegalArgumentException("INVALID CONTINENT SELECTED (" + continent + ")!");
     }
 
     // For a continent, calculate what percentage is owned by a player
