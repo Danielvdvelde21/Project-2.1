@@ -16,6 +16,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Game {
+    private boolean simulatedGame;
+
     // Player object List, all the players of the game
     private ArrayList<Player> players = new ArrayList<>();
     private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
@@ -47,7 +49,7 @@ public class Game {
     // Troops you receive for sets owned
     private final int[] setValues = new int[]{0,4,6,8,10,12,15};
 
-    public Game(int numberOfPlayers, String[] names, boolean[] bots) {
+    public Game(int numberOfPlayers, String[] names, boolean[] bots, boolean b) {
         // How many troops each player gets from the start
         switch (numberOfPlayers) {
             case 2:
@@ -69,9 +71,6 @@ public class Game {
                 System.out.println("Insert 2,3,4,5 or 6");
                 break;
         }
-        // Create a new map
-        this.map = new Map();
-        map.createMap();
 
         // Instantiate Graph
         this.graph = new Territories().getGraph();
@@ -83,6 +82,17 @@ public class Game {
         for (int i = 0; i < numberOfPlayers; i++) {
             players.add(new Player(names[i], i, colors[i], bots[i]));
         }
+
+        // Simulate games
+        this.simulatedGame = b;
+        narrator.setSimulatedGame(simulatedGame);
+        playerTurn.setSimulatedGame(simulatedGame);
+        cardInventory.setSimulatedGame(simulatedGame);
+        dicePanel.setSimulatedGame(simulatedGame);
+
+        // Create a new map
+        this.map = new Map(simulatedGame);
+        map.createMap();
     }
 
     public Map getMap() {
