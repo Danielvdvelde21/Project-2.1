@@ -19,6 +19,7 @@ public class State {
         int visitCount = 1;
     }
 
+    // TODO Is this all the posible outcomes from a battle?
     public List<State> getAllPossibleStates() {
         return new ArrayList<State>();
     }

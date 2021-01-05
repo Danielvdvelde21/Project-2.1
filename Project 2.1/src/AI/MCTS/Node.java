@@ -3,7 +3,7 @@ package AI.MCTS;
 import java.util.List;
 
 public class Node {
-    private State state;
+    private final State state;
     private Node parent;
     private List<Node> children;
 
