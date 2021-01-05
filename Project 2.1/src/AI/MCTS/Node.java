@@ -3,9 +3,9 @@ package AI.MCTS;
 import java.util.List;
 
 public class Node {
-    State state;
-    Node parent;
-    List<Node> children;
+    private State state;
+    private Node parent;
+    private List<Node> children;
 
     public Node(State state) {
         this.state = state;
@@ -25,5 +25,9 @@ public class Node {
 
     public Node getParent() {
         return parent;
+    }
+
+    public State getState() {
+        return state;
     }
 }

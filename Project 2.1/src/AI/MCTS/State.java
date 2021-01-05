@@ -22,7 +22,6 @@ public class State {
     }
 
     public List<State> getAllPossibleStates() {
-
         return new ArrayList<State>();
     }
 
@@ -44,6 +43,10 @@ public class State {
 
     public void setWinScore(int i) {
         winScore = i;
+    }
+
+    public void visit() {
+        visitCount++;
     }
 
 }
