@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DicePanel {
+    private boolean simulatedGame;
 
     private int numberOfAttackingDice = 1;
     private int numberOfDefendingDice = 2;
@@ -81,10 +82,10 @@ public class DicePanel {
         previous.setEnabled(true);
         previous.setPreferredSize(previous.getPreferredSize());
 
-        previous.addActionListener(actionEvent ->  {
+        previous.addActionListener(actionEvent -> {
             removeAttackDie();
         });
-        next.addActionListener(actionEvent ->  {
+        next.addActionListener(actionEvent -> {
             addAttackDie();
         });
 
@@ -104,17 +105,17 @@ public class DicePanel {
         previous1.setEnabled(true);
         previous1.setPreferredSize(previous.getPreferredSize());
 
-        previous1.addActionListener(actionEvent ->  {
+        previous1.addActionListener(actionEvent -> {
             removeDefendDie();
         });
-        next1.addActionListener(actionEvent ->  {
+        next1.addActionListener(actionEvent -> {
             addDefendDie();
         });
 
         attackDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
         attackDiceRoll.setBackground(new Color(80, 100, 182));
         attackDiceRoll.setForeground(Color.WHITE);
-        attackDiceRoll.setPreferredSize(new Dimension(170,30));
+        attackDiceRoll.setPreferredSize(new Dimension(170, 30));
         attackDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         attackDiceRoll.addActionListener(actionEvent -> {
             rollAttackDie();
@@ -124,7 +125,7 @@ public class DicePanel {
         defendDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
         defendDiceRoll.setBackground(new Color(80, 100, 182));
         defendDiceRoll.setForeground(Color.WHITE);
-        defendDiceRoll.setPreferredSize(new Dimension(170,30));
+        defendDiceRoll.setPreferredSize(new Dimension(170, 30));
         defendDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         defendDiceRoll.addActionListener(actionEvent -> {
             rollDefDie();
@@ -134,12 +135,12 @@ public class DicePanel {
         p1a.add(attackDice1);
         p1b.add(attackDiceRoll);
 
-        p1.setBounds(new Rectangle(Map.frameX, 218+100, 300, 40));
-        p1a.setBounds(new Rectangle(Map.frameX, 218+140, 300, 80));
-        p1b.setBounds(new Rectangle(Map.frameX, 218+140+80, 300, 120));
-        p2.setBounds(new Rectangle(Map.frameX, 218+140+200, 300, 40));
-        p2a.setBounds(new Rectangle(Map.frameX, 218+380, 300, 80));
-        p2b.setBounds(new Rectangle(Map.frameX, 218+380+80, 300, 135));
+        p1.setBounds(new Rectangle(Map.frameX, 218 + 100, 300, 40));
+        p1a.setBounds(new Rectangle(Map.frameX, 218 + 140, 300, 80));
+        p1b.setBounds(new Rectangle(Map.frameX, 218 + 140 + 80, 300, 120));
+        p2.setBounds(new Rectangle(Map.frameX, 218 + 140 + 200, 300, 40));
+        p2a.setBounds(new Rectangle(Map.frameX, 218 + 380, 300, 80));
+        p2b.setBounds(new Rectangle(Map.frameX, 218 + 380 + 80, 300, 135));
         Map.frame.add(p1);
         Map.frame.add(p1a);
         Map.frame.add(p1b);
@@ -330,11 +331,11 @@ public class DicePanel {
     }
 
     public int[] getAttackDieValues() {
-        return new int[] {attackDice1.getDieValue(), attackDice2.getDieValue(), attackDice3.getDieValue()};
+        return new int[]{attackDice1.getDieValue(), attackDice2.getDieValue(), attackDice3.getDieValue()};
     }
 
     public int[] getDefendDieValues() {
-        return new int[] {defDice1.getDieValue(), defDice2.getDieValue()};
+        return new int[]{defDice1.getDieValue(), defDice2.getDieValue()};
     }
 
     public boolean diceRolled() {
@@ -354,11 +355,21 @@ public class DicePanel {
         game = g;
     }
 
+    public void setSimulatedGame(boolean b) {
+        attackDice1.setSimulatedGame(b);
+        attackDice2.setSimulatedGame(b);
+        attackDice3.setSimulatedGame(b);
+        defDice1.setSimulatedGame(b);
+        defDice2.setSimulatedGame(b);
+    }
+
     public static class Die extends JComponent {
+
+        private boolean simulatedGame;
 
         private static final int DOT_DIAM = 6;  //diameter of the dots
         private int dieValue;
-        private final Dimension dimension = new Dimension(40,40);
+        private final Dimension dimension = new Dimension(40, 40);
 
         public Die() {
             setPreferredSize(dimension);
@@ -368,7 +379,7 @@ public class DicePanel {
 
         //returns random value from 1 to 6 and draws the dice accordingly
         public void rollDie() {
-            dieValue = (int) ( 6 * Math.random() + 1);
+            dieValue = (int) (6 * Math.random() + 1);
             repaint();
         }
 
@@ -378,49 +389,56 @@ public class DicePanel {
 
         @Override
         public void paintComponent(Graphics g) {
-            int w = dimension.width;
-            int h = dimension.height;
+            if (!simulatedGame) {
+                int w = dimension.width;
+                int h = dimension.height;
 
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(Color.WHITE); //background
-            g2.fillRect(0, 0, w, h);
-            g2.setColor(Color.BLACK);
-            g2.drawRect(0, 0, w-1, h-1);    //border
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(Color.WHITE); //background
+                g2.fillRect(0, 0, w, h);
+                g2.setColor(Color.BLACK);
+                g2.drawRect(0, 0, w - 1, h - 1);    //border
 
-            switch (dieValue) {
-                case 1:
-                    drawDot(g2, w/2, h/2);
-                    break;
-                case 2:
-                    drawDot(g2, w/4, h/4);
-                    drawDot(g2, 3*w/4, 3*h/4);
-                    break;
-                case 3:
-                    drawDot(g2, w/2, h/2);
-                    drawDot(g2, w/4, h/4);
-                    drawDot(g2, 3*w/4, 3*h/4);
-                    break;
-                case 5:
-                    drawDot(g2, w/2, h/2);
-                case 4:
-                    drawDot(g2, w/4, h/4);
-                    drawDot(g2, 3*w/4, 3*h/4);
-                    drawDot(g2, 3*w/4, h/4);
-                    drawDot(g2, w/4, 3*h/4);
-                    break;
-                case 6:
-                    drawDot(g2, w/4, h/4);
-                    drawDot(g2, 3*w/4, 3*h/4);
-                    drawDot(g2, 3*w/4, h/4);
-                    drawDot(g2, w/4, 3*h/4);
-                    drawDot(g2, w/4, h/2);
-                    drawDot(g2, 3*w/4, h/2);
-                    break;
+                switch (dieValue) {
+                    case 1:
+                        drawDot(g2, w / 2, h / 2);
+                        break;
+                    case 2:
+                        drawDot(g2, w / 4, h / 4);
+                        drawDot(g2, 3 * w / 4, 3 * h / 4);
+                        break;
+                    case 3:
+                        drawDot(g2, w / 2, h / 2);
+                        drawDot(g2, w / 4, h / 4);
+                        drawDot(g2, 3 * w / 4, 3 * h / 4);
+                        break;
+                    case 5:
+                        drawDot(g2, w / 2, h / 2);
+                    case 4:
+                        drawDot(g2, w / 4, h / 4);
+                        drawDot(g2, 3 * w / 4, 3 * h / 4);
+                        drawDot(g2, 3 * w / 4, h / 4);
+                        drawDot(g2, w / 4, 3 * h / 4);
+                        break;
+                    case 6:
+                        drawDot(g2, w / 4, h / 4);
+                        drawDot(g2, 3 * w / 4, 3 * h / 4);
+                        drawDot(g2, 3 * w / 4, h / 4);
+                        drawDot(g2, w / 4, 3 * h / 4);
+                        drawDot(g2, w / 4, h / 2);
+                        drawDot(g2, 3 * w / 4, h / 2);
+                        break;
+                }
             }
         }
 
         private void drawDot(Graphics2D g2, int posX, int posY) {
-            g2.fillOval(posX-DOT_DIAM/2, posY-DOT_DIAM/2, DOT_DIAM, DOT_DIAM);
+            g2.fillOval(posX - DOT_DIAM / 2, posY - DOT_DIAM / 2, DOT_DIAM, DOT_DIAM);
         }
+
+        public void setSimulatedGame(boolean b) {
+            this.simulatedGame = b;
+        }
+
     }
 }
