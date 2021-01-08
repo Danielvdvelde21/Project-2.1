@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 public class MCTS extends UsefulMethods {
 
+    private boolean isRoot = true;
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Move-maker
+
     public Graph findNextMove(Graph g, Player player) {
         State originalState = new State(g, player);
         Node root = new Node(originalState);
@@ -19,10 +24,12 @@ public class MCTS extends UsefulMethods {
 
         while (System.currentTimeMillis() < end) {
             Node promisingNode = selectPromisingNode(root);
-            boolean expand = false; // should create a condition for when to expand
-            if(expand) {
-                expansion(promisingNode);
-            }
+
+            // First iteration the node will be the root
+            // Use UCT for choosing which node to expand
+            expansion(g, player, promisingNode, isRoot);
+            isRoot = false;
+
             Node explorationNode = promisingNode;
             if (promisingNode.getChildren().size() > 0) {
                 explorationNode = promisingNode.getRandomChildNode();
@@ -36,6 +43,9 @@ public class MCTS extends UsefulMethods {
         return winner.getState().getGraph();
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Selection, Play-out, Expansion, Back propagation
+
     // Selection
     private Node selectPromisingNode(Node rootNode) {
         Node node = rootNode;
@@ -43,15 +53,6 @@ public class MCTS extends UsefulMethods {
             node = UCT.findBestNodeWithUCT(node);
         }
         return node;
-    }
-
-    // Adds all the possible attacks on the current graph to the parent node
-    public void addPossibleAttacks(Graph g, Player p, Node parent) {
-        ArrayList<Vertex> owned = getOwnedVertices(g, p);
-        for (Vertex v : owned) {
-            Node x = new Node(new State(g, p));
-            parent.addChild(x);
-        }
     }
 
     // TODO Play-out
@@ -70,9 +71,18 @@ public class MCTS extends UsefulMethods {
         return result;
     }
 
-    // TODO Expansion
-    public void expansion(Node node) {
-        // Use UCT for choosing which node to expand
+    // TODO IDK IF THIS WORKS KEKW
+    // Add all the first possible moves or add 1 node to the bottom of the best node
+    public void expansion(Graph g, Player p, Node node, boolean isRoot) {
+        if (isRoot) {
+            ArrayList<Vertex> owned = getOwnedVertices(g, p);
+            for (Vertex v : owned) {
+                Node x = new Node(new State(g, p));
+                node.addChild(x);
+            }
+        } else {
+            node.addChild(new Node(new State(g,p)));
+        }
     }
 
     // TODO back-propagation
@@ -80,5 +90,7 @@ public class MCTS extends UsefulMethods {
 
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Extra methods
 
 }
