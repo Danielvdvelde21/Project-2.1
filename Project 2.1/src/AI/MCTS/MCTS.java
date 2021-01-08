@@ -54,7 +54,6 @@ public class MCTS extends UsefulMethods {
         }
     }
 
-
     // TODO Play-out
     public int playOut(int playerNo) {
         String[] names = new String[playerNo];

@@ -40,4 +40,5 @@ public class State {
         visitCount++;
     }
 
+    public int getVisitCount() { return visitCount; }
 }
