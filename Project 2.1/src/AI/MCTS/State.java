@@ -11,7 +11,7 @@ public class State {
     private final Player player;
 
     private int visitCount;
-    private double winScore;
+    private int winScore;
 
     public State(Graph g, Player player) {
         this.graph = g;
@@ -32,7 +32,7 @@ public class State {
         return player;
     }
 
-    public double getWinScore() { return winScore; }
+    public int getWinScore() { return winScore; }
 
     public void setWinScore(int i) { winScore = i; }
 

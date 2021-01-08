@@ -1,6 +1,7 @@
 package AI.MCTS;
 
 import java.util.List;
+import java.util.Random;
 
 public class Node {
     private final State state;
@@ -21,6 +22,24 @@ public class Node {
 
     public List<Node> getChildren() {
         return children;
+    }
+
+    public Node getRandomChildNode() {
+        Random rn = new Random();
+        int random = rn.nextInt(children.size());
+        return children.get(random);
+    }
+
+    public Node getMaxScoreChild() {
+        int maxscore = 0;
+        Node maxNode = children.get(0);
+        for (Node n : children) {
+            if (n.getState().getWinScore() > maxscore) {
+                maxNode = n;
+                maxscore = n.getState().getWinScore();
+            }
+        }
+        return maxNode;
     }
 
     public Node getParent() {
