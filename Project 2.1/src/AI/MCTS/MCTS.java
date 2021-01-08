@@ -28,7 +28,7 @@ public class MCTS extends UsefulMethods {
             // First iteration the node will be the root
             // Use UCT for choosing which node to expand
             expansion(g, player, promisingNode, isRoot);
-            isRoot = false;
+            isRoot = false; // Next iteration won't consist of root node
 
             Node explorationNode = promisingNode;
             if (promisingNode.getChildren().size() > 0) {
