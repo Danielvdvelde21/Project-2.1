@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class MCTS extends UsefulMethods {
 
     private boolean isRoot = true;
+    private Graph originalGraph;
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
@@ -71,16 +72,22 @@ public class MCTS extends UsefulMethods {
         return result;
     }
 
-    // TODO IDK IF THIS WORKS KEKW
+    // TODO
     // Add all the first possible moves or add 1 node to the bottom of the best node
     public void expansion(Graph g, Player p, Node node, boolean isRoot) {
         if (isRoot) {
+            // TODO test if this actually works
+            originalGraph = (Graph) g.clone();
             ArrayList<Vertex> owned = getOwnedVertices(g, p);
             for (Vertex v : owned) {
+                // TODO attack
+                // TODO update graph
                 Node x = new Node(new State(g, p));
                 node.addChild(x);
             }
         } else {
+            // TODO random attack
+            // TODO update graph
             node.addChild(new Node(new State(g,p)));
         }
     }

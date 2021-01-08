@@ -5,7 +5,7 @@ import java.util.*;
 public class Graph {
     private final List<Vertex> graph;
 
-    public Graph(){ graph = new ArrayList<Vertex>(); }
+    public Graph() { graph = new ArrayList<Vertex>(); }
 
     public void AddVertex (Vertex newVertex){
         graph.add(newVertex);
@@ -41,4 +41,12 @@ public class Graph {
     }
 
     public int getSize() { return graph.size(); }
+
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalArgumentException("Cloning error!");
+        }
+    }
 }
