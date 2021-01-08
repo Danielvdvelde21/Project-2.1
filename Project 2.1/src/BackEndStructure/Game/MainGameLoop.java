@@ -1,8 +1,10 @@
 package BackEndStructure.Game;
 
+import AI.MCTS.MCTS;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Stages.MainGameStage;
 import BackEndStructure.Game.Stages.PlacementStage;
+import BackEndStructure.Graph.Graph;
 import Visualisation.Map.Components.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +18,8 @@ public class MainGameLoop {
     // Gameplay variables
     private final Game game;
     private Player winner;
+    private ArrayList<Player> order;
+    private MCTS tree;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Updating visual variables
@@ -42,13 +46,16 @@ public class MainGameLoop {
         cardInventory.setGame(game);
         dicePanel.setGame(game);
 
+        tree = new MCTS();
+
         // The game starts by every player rolling die to determine who goes first
         determinePlayerOrder();
+        tree.setPlayerOrder(order);
 
         // The game starts by every player starting to place troops on the board
         placementStage();
 
-        // The game is no about attacking, using cards, fortifying, etc.
+        // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();
 
         // Game over
@@ -62,7 +69,7 @@ public class MainGameLoop {
     // If players throw the same number the one that first threw that number goes first
     private void determinePlayerOrder() {
         dicePanel.allowRolling(true);
-        ArrayList<Player> order = new ArrayList<>();
+        order = new ArrayList<>();
         ArrayList<Integer> values = new ArrayList<>();
 
         // For each player in the game wait until he rolled the dice
@@ -117,4 +124,11 @@ public class MainGameLoop {
 
     public Player getWinner() { return winner; }
 
+    public ArrayList<Player> getOrder() {
+        return order;
+    }
+
+    public void setOrder(ArrayList<Player> order) {
+        this.order = order;
+    }
 }

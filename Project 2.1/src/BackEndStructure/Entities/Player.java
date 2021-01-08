@@ -11,6 +11,7 @@ public class Player {
     private final int playerIndex;
     private final Color playerColor;
     private final boolean isBot;
+    private final boolean isMCTSBot;
 
     // Territories and Continents
     private int territoriesOwned;
@@ -24,7 +25,17 @@ public class Player {
         this.playerName = name;
         this.playerColor = col;
         this.isBot = isBot;
+        this.isMCTSBot = false;
         this.playerIndex=playerIndex;
+    }
+
+    public Player(String name, int playerIndex,Color col, boolean isBot, boolean MCTSBot) {
+        this.playerName = name;
+        this.playerColor = col;
+        this.isBot = isBot;
+        this.isMCTSBot = MCTSBot;
+        this.playerIndex=playerIndex;
+        assert (!(isBot()) && isMCTSBot());
     }
 
     // Get Player data
@@ -40,6 +51,10 @@ public class Player {
 
     public boolean isBot() {
         return isBot;
+    }
+
+    public boolean isMCTSBot() {
+        return isMCTSBot;
     }
 
     // Get and Set territory/continent data

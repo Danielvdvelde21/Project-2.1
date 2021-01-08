@@ -35,7 +35,7 @@ public class Game {
     private final DicePanel dicePanel = new DicePanel();
 
     // All the territories in a graph (with edges)
-    private final Graph graph;
+    private Graph graph;
 
     // Attacking Die
     private final AttackingHandler attackingHandler;
@@ -95,6 +95,29 @@ public class Game {
         map.createMap();
     }
 
+    public Game(Graph g, ArrayList<Player> players) {
+
+        // Instantiate Graph
+        this.graph = (Graph) g.clone();
+
+        // Instantiate Dice
+        this.attackingHandler = new AttackingHandler();
+
+        // Instantiate players
+        this.players.addAll(players);
+
+        // Simulate games
+        this.simulatedGame = true;
+        narrator.setSimulatedGame(simulatedGame);
+        playerTurn.setSimulatedGame(simulatedGame);
+        cardInventory.setSimulatedGame(simulatedGame);
+        dicePanel.setSimulatedGame(simulatedGame);
+
+        // Create a new map
+        this.map = new Map(simulatedGame);
+        map.createMap();
+    }
+
     public Map getMap() {
         return this.map;
     }
@@ -114,6 +137,8 @@ public class Game {
     public void setPlayerOrder(ArrayList<Player> order) {
         players = order;
     }
+
+    public void setGraph(Graph g) { this.graph = g; }
 
     public Graph getGraph() { return graph; }
 
