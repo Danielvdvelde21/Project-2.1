@@ -65,7 +65,7 @@ public class MCTS extends UsefulMethods {
     // TODO Play-out
     // Amount of players, board
     public int playOut(int playerNo, Graph g) {
-
+        // order has to be set somewhere
         SimulatedGameLoop game = new SimulatedGameLoop(g, order);
         System.out.println(game.getWinner());
 
