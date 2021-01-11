@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DicePanel {
-    private boolean simulatedGame;
+    private boolean simulatedGame = false;
 
     private int numberOfAttackingDice = 1;
     private int numberOfDefendingDice = 2;

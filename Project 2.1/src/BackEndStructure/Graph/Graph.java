@@ -3,9 +3,22 @@ package BackEndStructure.Graph;
 import java.util.*;
 
 public class Graph {
-    private final List<Vertex> graph;
 
-    public Graph() { graph = new ArrayList<Vertex>(); }
+    private final ArrayList<Vertex> graph;
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructors
+
+    public Graph() {
+        graph = new ArrayList<>();
+    }
+
+    public Graph(ArrayList<Vertex> existingGraph) {
+        graph = existingGraph;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Building a graph
 
     public void AddVertex (Vertex newVertex){
         graph.add(newVertex);
@@ -16,7 +29,10 @@ public class Graph {
         vertex2.getEdges().add(new Edge(vertex1));
     }
 
-    public boolean isAdjecent(Vertex vertex1, Vertex vertex2) {
+    //------------------------------------------------------------------------------------------------------------------
+    // Checking for adjacency
+
+    public boolean isAdjacent(Vertex vertex1, Vertex vertex2) {
         for (int i = 0; i < vertex1.getEdges().size(); i++) {
             if(vertex1.getEdges().get(i).getVertex() == vertex2) {
                 return true;
@@ -24,6 +40,18 @@ public class Graph {
         }
         return false;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Getters
+
+    public Vertex get(int i) { return graph.get(i); }
+
+    public int getSize() { return graph.size(); }
+
+    public ArrayList<Vertex> getArrayList() { return graph; }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Printing the graph
 
     public void printGraph(){
         for (Vertex v : graph){
@@ -33,20 +61,6 @@ public class Graph {
                 System.out.print(e.getVertex().getTerritory().getTerritoryName() + ", ");
             }
             System.out.print("\n");
-        }
-    }
-
-    public Vertex get(int i) {
-        return graph.get(i);
-    }
-
-    public int getSize() { return graph.size(); }
-
-    public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalArgumentException("Cloning error!");
         }
     }
 }

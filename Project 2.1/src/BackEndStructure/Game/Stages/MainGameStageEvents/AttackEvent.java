@@ -64,7 +64,7 @@ public class AttackEvent {
                             Vertex defender = graph.get(map.getTerritoryNumber()); // Defending territory
                             narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName());
                             if (!isTerritoryOwnedBy(defender.getTerritory(), player)) {
-                                if (graph.isAdjecent(attacker, defender)) {
+                                if (graph.isAdjacent(attacker, defender)) {
                                     dicePanel.allowRolling(true);
                                     dicePanel.resetDiceRolls();
                                     narrator.addText("Roll the dice to determine the fight!");

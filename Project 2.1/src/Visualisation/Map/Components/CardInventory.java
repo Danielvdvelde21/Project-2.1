@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class CardInventory {
-    private boolean simulatedGame;
+    private boolean simulatedGame = false;
 
     private JFrame f;
 

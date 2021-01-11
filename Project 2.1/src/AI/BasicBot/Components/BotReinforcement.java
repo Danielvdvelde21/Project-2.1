@@ -36,7 +36,7 @@ public class BotReinforcement extends UsefulMethods {
             if (g.get(i).getTerritory().getOwner()==p) {    //checks territories owned by player
                 totalTroops = g.get(i).getTerritory().getNumberOfTroops();
                 for(int j = 0; j < g.getSize(); j++) {
-                    if (g.isAdjecent(g.get(i), g.get(j)) && g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner()==p) {
+                    if (g.isAdjacent(g.get(i), g.get(j)) && g.get(j).getTerritory().getNumberOfTroops() > 1 && g.get(j).getTerritory().getOwner()==p) {
                         //checks all adjacent territories owned by player with > 1 troops
                         totalTroops += g.get(j).getTerritory().getNumberOfTroops(); //total adjacent troops of the territory
                     }
@@ -51,7 +51,7 @@ public class BotReinforcement extends UsefulMethods {
         //determining 'from' territory
         if(to != null) {
             for (int n = 0; n < g.getSize(); n++) {
-                if (g.isAdjecent(to, g.get(n)) && g.get(n).getTerritory().getNumberOfTroops() > 1 && g.get(n).getTerritory().getOwner()==p) {
+                if (g.isAdjacent(to, g.get(n)) && g.get(n).getTerritory().getNumberOfTroops() > 1 && g.get(n).getTerritory().getOwner()==p) {
                     reinforcementTroops = g.get(n).getTerritory().getNumberOfTroops() - 1;
                     if(g.get(n).getTerritory().getNumberOfTroops() - reinforcementTroops > 0) {
                         from = g.get(n);
@@ -90,7 +90,7 @@ public class BotReinforcement extends UsefulMethods {
                 for (Vertex posSeller : possibleSellers) {
                     ArrayList<Vertex> adj = new ArrayList<>();  //all adjacent territories to 'seller' owned by player
                     for (int j = 0; j < g.getSize(); j++) {
-                        if (g.isAdjecent(posSeller, g.get(j)) && g.get(j).getTerritory().getOwner() == p) {
+                        if (g.isAdjacent(posSeller, g.get(j)) && g.get(j).getTerritory().getOwner() == p) {
                             adj.add(g.get(j));
                         }
                     }
@@ -128,7 +128,7 @@ public class BotReinforcement extends UsefulMethods {
 
     private void fillCluster(Graph g, ArrayList<Vertex> ownedTerritories, ArrayList<Vertex> cluster, Vertex ownedTerritory) {
         for(Vertex vertex : ownedTerritories) {
-            if(g.isAdjecent(ownedTerritory, vertex) && !cluster.contains(vertex) ) {
+            if(g.isAdjacent(ownedTerritory, vertex) && !cluster.contains(vertex) ) {
                 cluster.add(vertex);
                 fillCluster(g, ownedTerritories, cluster, vertex);
             }
@@ -141,7 +141,7 @@ public class BotReinforcement extends UsefulMethods {
             return false;
         }
         for (int j = 0; j < g.getSize(); j++) {
-            if (g.isAdjecent(vertex, g.get(j)) && g.get(j).getTerritory().getOwner() != p) {
+            if (g.isAdjacent(vertex, g.get(j)) && g.get(j).getTerritory().getOwner() != p) {
                 return false;
             }
         }

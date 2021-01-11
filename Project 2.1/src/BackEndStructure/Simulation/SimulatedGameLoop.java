@@ -3,7 +3,6 @@ package BackEndStructure.Simulation;
 import AI.MCTS.MCTS;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
-import BackEndStructure.Game.Stages.MainGameStage;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Simulation.Stages.SimulatedGameStage;
 import Visualisation.Map.Components.CardInventory;
@@ -15,21 +14,15 @@ import java.util.ArrayList;
 
 public class SimulatedGameLoop {
 
-    private final boolean simulatedGame;
-
     // -----------------------------------------------------------------------------------------------------------------
     // Gameplay variables
     private final Game game;
     private Player winner;
-    private ArrayList<Player> order;
     private MCTS tree;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Updating visual variables
     private final Narrator narrator;
-
-    // For updating the player turn label (current player)
-    private final PlayerTurn playerTurn;
 
     // For updating the card inventory
     private final CardInventory cardInventory;
@@ -40,10 +33,8 @@ public class SimulatedGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
 
     public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
-        this.simulatedGame = true;
         this.game = new Game(g, order);
         this.narrator = game.getNarrator();
-        this.playerTurn = game.getPlayerTurn();
         this.cardInventory = game.getCardInventory();
         this.dicePanel = game.getDicePanel();
         cardInventory.setGame(game);
@@ -56,7 +47,6 @@ public class SimulatedGameLoop {
         mainGameStage();
 
         // Game over
-        System.out.println("MAINGAMELOOP DISABLE ME! WINNER = " + winner.getName());
         narrator.addText("GAME OVER! PLAYER " + winner.getName() + " IS VICTORIOUS");
     }
 
@@ -72,15 +62,7 @@ public class SimulatedGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
     // Extra methods
 
-    // Creates a delay
-    private void delay() {
-        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
-    }
-
     public Player getWinner() { return winner; }
 
-
-    public void setOrder(ArrayList<Player> order) {
-        this.order = order;
-    }
+    public void setOrder(ArrayList<Player> order) { game.setPlayerOrder(order); }
 }

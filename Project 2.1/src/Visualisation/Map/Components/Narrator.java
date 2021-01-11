@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Narrator {
-    private boolean simulatedGame;
+    private boolean simulatedGame = false;
 
     private JLabel label= new JLabel();
     private String oldText = null;

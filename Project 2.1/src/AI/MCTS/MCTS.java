@@ -78,8 +78,7 @@ public class MCTS extends UsefulMethods {
     // Add all the first possible moves or add 1 node to the bottom of the best node
     public void expansion(Graph g, Player p, Node node, boolean isRoot) {
         if (isRoot) {
-            // TODO test if this actually works
-            originalGraph = (Graph) g.clone();
+            originalGraph = new Graph(g.getArrayList());
             ArrayList<Vertex> owned = getOwnedVertices(g, p);
             for (Vertex v : owned) {
                 // TODO attack

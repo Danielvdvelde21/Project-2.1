@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PlayerTurn {
-    private boolean simulatedGame;
+    private boolean simulatedGame = false;
 
     private final JLabel nameLabel = new JLabel();
     private JPanel p1 = new JPanel();
