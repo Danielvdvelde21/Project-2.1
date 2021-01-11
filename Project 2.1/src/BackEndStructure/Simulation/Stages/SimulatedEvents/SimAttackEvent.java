@@ -19,7 +19,6 @@ public class SimAttackEvent {
     private final Narrator narrator;
     private final CardInventory cardInventory;
     private final DicePanel dicePanel;
-    private final PlayerTurn playerTurn;
     private final Graph graph;
 
     private boolean gameOver = false;
@@ -33,7 +32,6 @@ public class SimAttackEvent {
         this.narrator = game.getNarrator();
         this.cardInventory = game.getCardInventory();
         this.dicePanel = game.getDicePanel();
-        this.playerTurn = game.getPlayerTurn();
         this.graph = game.getGraph();
         cardInventory.setGame(game);
         dicePanel.setGame(game);
@@ -41,8 +39,6 @@ public class SimAttackEvent {
 
     public void attacking(Player player) {
         oneTerritoryCaptured = false;
-        narrator.addText("Brace yourself! Player " + player.getName() + " is attacking different players!");
-        map.deselectTerritory();
 
         randomAttack(player);
 
