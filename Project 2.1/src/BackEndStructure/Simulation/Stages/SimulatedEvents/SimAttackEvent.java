@@ -7,7 +7,6 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 import Visualisation.Map.Components.*;
-import Visualisation.Map.Map;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -93,14 +92,14 @@ public class SimAttackEvent {
         }
 
         // Perform a fight
-        game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+        game.getAttackingHandler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
 
         // Update troops counts
-        attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
-        defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
+        attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
+        defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
 
         // Reset classes
-        game.getAttackingHandeler().resetTroopsLost();
+        game.getAttackingHandler().resetTroopsLost();
 
         // If a territory is captured
         if (defender.getTerritory().getNumberOfTroops() < 1) {

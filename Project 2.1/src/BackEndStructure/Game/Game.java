@@ -100,9 +100,6 @@ public class Game {
         this.players.addAll(players);
 
         // Simulate games
-        narrator.setSimulatedGame(true);
-        playerTurn.setSimulatedGame(true);
-        cardInventory.setSimulatedGame(true);
         dicePanel.setSimulatedGame(true);
 
         // Create a new map
@@ -140,7 +137,7 @@ public class Game {
         return cardStack;
     }
 
-    public AttackingHandler getAttackingHandeler() {
+    public AttackingHandler getAttackingHandler() {
         return attackingHandler;
     }
 
