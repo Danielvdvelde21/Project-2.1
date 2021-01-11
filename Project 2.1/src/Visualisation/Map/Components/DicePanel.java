@@ -353,17 +353,7 @@ public class DicePanel {
         game = g;
     }
 
-    public void setSimulatedGame(boolean b) {
-        attackDice1.setSimulatedGame(b);
-        attackDice2.setSimulatedGame(b);
-        attackDice3.setSimulatedGame(b);
-        defDice1.setSimulatedGame(b);
-        defDice2.setSimulatedGame(b);
-    }
-
     public static class Die extends JComponent {
-
-        private boolean simulatedGame;
 
         private static final int DOT_DIAM = 6;  //diameter of the dots
         private int dieValue;
@@ -387,55 +377,50 @@ public class DicePanel {
 
         @Override
         public void paintComponent(Graphics g) {
-            if (!simulatedGame) {
-                int w = dimension.width;
-                int h = dimension.height;
+            int w = dimension.width;
+            int h = dimension.height;
 
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(Color.WHITE); //background
-                g2.fillRect(0, 0, w, h);
-                g2.setColor(Color.BLACK);
-                g2.drawRect(0, 0, w - 1, h - 1);    //border
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(Color.WHITE); //background
+            g2.fillRect(0, 0, w, h);
+            g2.setColor(Color.BLACK);
+            g2.drawRect(0, 0, w - 1, h - 1);    //border
 
-                switch (dieValue) {
-                    case 1:
-                        drawDot(g2, w / 2, h / 2);
-                        break;
-                    case 2:
-                        drawDot(g2, w / 4, h / 4);
-                        drawDot(g2, 3 * w / 4, 3 * h / 4);
-                        break;
-                    case 3:
-                        drawDot(g2, w / 2, h / 2);
-                        drawDot(g2, w / 4, h / 4);
-                        drawDot(g2, 3 * w / 4, 3 * h / 4);
-                        break;
-                    case 5:
-                        drawDot(g2, w / 2, h / 2);
-                    case 4:
-                        drawDot(g2, w / 4, h / 4);
-                        drawDot(g2, 3 * w / 4, 3 * h / 4);
-                        drawDot(g2, 3 * w / 4, h / 4);
-                        drawDot(g2, w / 4, 3 * h / 4);
-                        break;
-                    case 6:
-                        drawDot(g2, w / 4, h / 4);
-                        drawDot(g2, 3 * w / 4, 3 * h / 4);
-                        drawDot(g2, 3 * w / 4, h / 4);
-                        drawDot(g2, w / 4, 3 * h / 4);
-                        drawDot(g2, w / 4, h / 2);
-                        drawDot(g2, 3 * w / 4, h / 2);
-                        break;
-                }
+            switch (dieValue) {
+                case 1:
+                    drawDot(g2, w / 2, h / 2);
+                    break;
+                case 2:
+                    drawDot(g2, w / 4, h / 4);
+                    drawDot(g2, 3 * w / 4, 3 * h / 4);
+                    break;
+                case 3:
+                    drawDot(g2, w / 2, h / 2);
+                    drawDot(g2, w / 4, h / 4);
+                    drawDot(g2, 3 * w / 4, 3 * h / 4);
+                    break;
+                case 5:
+                    drawDot(g2, w / 2, h / 2);
+                case 4:
+                    drawDot(g2, w / 4, h / 4);
+                    drawDot(g2, 3 * w / 4, 3 * h / 4);
+                    drawDot(g2, 3 * w / 4, h / 4);
+                    drawDot(g2, w / 4, 3 * h / 4);
+                    break;
+                case 6:
+                    drawDot(g2, w / 4, h / 4);
+                    drawDot(g2, 3 * w / 4, 3 * h / 4);
+                    drawDot(g2, 3 * w / 4, h / 4);
+                    drawDot(g2, w / 4, 3 * h / 4);
+                    drawDot(g2, w / 4, h / 2);
+                    drawDot(g2, 3 * w / 4, h / 2);
+                    break;
+
             }
         }
 
         private void drawDot(Graphics2D g2, int posX, int posY) {
             g2.fillOval(posX - DOT_DIAM / 2, posY - DOT_DIAM / 2, DOT_DIAM, DOT_DIAM);
-        }
-
-        public void setSimulatedGame(boolean b) {
-            this.simulatedGame = b;
         }
 
     }

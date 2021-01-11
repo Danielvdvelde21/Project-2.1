@@ -6,7 +6,6 @@ import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
-import Visualisation.Map.Components.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,7 +13,6 @@ import java.util.Random;
 public class SimAttackEvent {
 
     private final Game game;
-    private final DicePanel dicePanel;
     private final Graph graph;
 
     private boolean gameOver = false;
@@ -25,9 +23,6 @@ public class SimAttackEvent {
     public SimAttackEvent(Game game) {
         this.game = game;
         this.graph = game.getGraph();
-
-        this.dicePanel = game.getDicePanel();
-        dicePanel.setGame(game);
     }
 
     public void attacking(Player player) {
@@ -44,7 +39,7 @@ public class SimAttackEvent {
     private boolean randomAttack(Player player) {
         ArrayList<Vertex> ownedTerritories = new ArrayList<>();
         ArrayList<Vertex> unownedTerritories = new ArrayList<>();
-        
+
         for (int i = 0; i < graph.getSize(); i++) {
             if (graph.get(i).getTerritory().getOwner() == player) {
                 ownedTerritories.add(graph.get(i));
@@ -59,40 +54,48 @@ public class SimAttackEvent {
             atkIndex = rn.nextInt(ownedTerritories.size());
         }
 
-
         Vertex attacker = ownedTerritories.get(atkIndex);
         Vertex defender = unownedTerritories.get(defIndex);
+
         // --------------------- worked on random attack till here, need to adjust further code ------------------------------
 
         int initialAttack = attacker.getTerritory().getNumberOfTroops();
 
-        // Set the amount of dice that the bot wants to use
-        switch (game.getAi().getBotAttacking().getAttackerDie()) {
+        int numberOfAttackerDice;
+        int numberOfDefenderDice;
+        int[] attackerDiceValues = new int[3];
+        int[] defenderDiceValues = new int[2];
+
+        // Settinng the attacker dice
+        switch (attacker.getTerritory().getNumberOfTroops()) {
             case 1:
-                dicePanel.removeAttackDie();
-                dicePanel.removeAttackDie();
+                numberOfAttackerDice = 1;
+                attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
                 break;
             case 2:
-                dicePanel.removeAttackDie();
-                dicePanel.removeAttackDie();
-                dicePanel.addAttackDie();
+                numberOfAttackerDice = 2;
+                attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
                 break;
-            case 3:
-                dicePanel.addAttackDie();
-                dicePanel.addAttackDie();
+            default:
+                numberOfAttackerDice = 3;
+                attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
         }
 
-        // If the bot is attacking another bot, the defending bot will use a much defending dice
-        if (defender.getTerritory().getOwner().isBot()) {
-            if (defender.getTerritory().getNumberOfTroops() > 1) {
-                dicePanel.addDefendDie();
-            } else {
-                dicePanel.removeDefendDie();
-            }
+        // Setting the defender dice
+        if (defender.getTerritory().getNumberOfTroops() > 1) {
+            numberOfDefenderDice = 2;
+            defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+            defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
+        } else {
+            numberOfDefenderDice = 1;
+            defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
         }
 
         // Perform a fight
-        game.getAttackingHandler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+        game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
 
         // Update troops counts
         attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());

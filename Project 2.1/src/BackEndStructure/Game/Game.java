@@ -84,7 +84,7 @@ public class Game {
         }
 
         // Create a new map
-        this.map = new Map(false);
+        this.map = new Map();
         map.createMap();
     }
 
@@ -93,18 +93,14 @@ public class Game {
         // Instantiate Graph
         this.graph = new Graph(g.getArrayList());
 
-        // Instantiate Dice
-        this.attackingHandler = new AttackingHandler();
-
         // Instantiate players
         this.players.addAll(players);
 
-        // Simulate games
-        dicePanel.setSimulatedGame(true);
+        // Instantiate Dice
+        this.attackingHandler = new AttackingHandler();
 
-        // Create a new map
-        this.map = new Map(true);
-        map.createMap();
+        // We only instantiate the map class here, there wont be an actual map
+        this.map = new Map();
     }
 
     public Map getMap() {

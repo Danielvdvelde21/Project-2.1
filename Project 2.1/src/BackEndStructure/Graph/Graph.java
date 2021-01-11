@@ -54,6 +54,7 @@ public class Graph {
     // Printing the graph
 
     public void printGraph(){
+        System.out.println("Printing Graph:");
         for (Vertex v : graph){
             System.out.print("Territory name: "+ v.getTerritory().getTerritoryName());
             System.out.print(" Connected with: ");
