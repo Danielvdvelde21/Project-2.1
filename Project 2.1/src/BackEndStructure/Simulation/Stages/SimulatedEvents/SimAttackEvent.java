@@ -84,47 +84,48 @@ public class SimAttackEvent {
         // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
         while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
 
-            // Set attacker dice to maximum amount
-            int initialAttack = attacker.getTerritory().getNumberOfTroops();
-            int dice = 0;
-            if (initialAttack <= 2) {
-                dicePanel.removeAttackDie();
-                dicePanel.removeAttackDie();
-                dice = 1;
-            } else if (initialAttack == 3) {
-                dicePanel.removeAttackDie();
-                dicePanel.removeAttackDie();
-                dicePanel.addAttackDie();
-                dice = 2;
-            } else {
-                dicePanel.addAttackDie();
-                dicePanel.addAttackDie();
-                dice = 3;
+            int numberOfAttackerDice;
+            int numberOfDefenderDice;
+            int[] attackerDiceValues = new int[3];
+            int[] defenderDiceValues = new int[2];
+
+            // Settinng the attacker dice
+            switch (attacker.getTerritory().getNumberOfTroops()) {
+                case 1:
+                    numberOfAttackerDice = 1;
+                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    break;
+                case 2:
+                    numberOfAttackerDice = 2;
+                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                    break;
+                default:
+                    numberOfAttackerDice = 3;
+                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                    attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
             }
 
-            narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + dice + " Dice(s)");
-
-            // Set defender dice to maximum amount
+            // Setting the defender dice
             if (defender.getTerritory().getNumberOfTroops() > 1) {
-                dicePanel.addDefendDie();
+                numberOfDefenderDice = 2;
+                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+                defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
             } else {
-                dicePanel.removeDefendDie();
+                numberOfDefenderDice = 1;
+                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
             }
-
 
             // Perform a fight
-            game.getAttackingHandeler().oneFight(dicePanel.getNumberOfAttackingDice(), dicePanel.getAttackDieValues(), dicePanel.getNumberOfDefendingDice(), dicePanel.getDefendDieValues());
+            game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
 
             // Update troops counts
-            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsAttackers());
-            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandeler().getLostTroopsDefenders());
-            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
-            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
-
-            narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsDefenders() + ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandeler().getLostTroopsAttackers() + ")");
+            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
+            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
 
             // Reset classes
-            game.getAttackingHandeler().resetTroopsLost();
+            game.getAttackingHandler().resetTroopsLost();
 
             // If a territory is captured
             if (defender.getTerritory().getNumberOfTroops() < 1) {
