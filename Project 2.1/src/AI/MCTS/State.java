@@ -36,6 +36,8 @@ public class State {
 
     public void setWinScore(int i) { winScore = i; }
 
+    public void addWinScore(int i) { winScore += i; }
+
     public void visit() {
         visitCount++;
     }

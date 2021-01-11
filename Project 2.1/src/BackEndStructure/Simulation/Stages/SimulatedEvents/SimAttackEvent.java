@@ -123,7 +123,7 @@ public class SimAttackEvent {
     }
 
     // Logic that needs to happen after a territory is captured
-    private void territoryCaptured(Player player, Vertex defender, Vertex attack) { //TODO fix the isEliminated order
+    private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
         // Player gets the territory
         Player defenderOwner=defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();

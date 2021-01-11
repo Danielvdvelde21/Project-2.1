@@ -93,9 +93,13 @@ public class MCTS extends UsefulMethods {
         }
     }
 
-    // TODO back-propagation
+    // Adds scores to nodes from this simulation
     public void backProp(Node node, int result) {
-
+        node.getState().addWinScore(result);
+        node.getState().visit();
+        if (node.getParent() != null) {
+            backProp(node.getParent(), result);
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
