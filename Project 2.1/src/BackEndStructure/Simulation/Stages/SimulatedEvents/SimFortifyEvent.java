@@ -1,117 +1,57 @@
 package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
 import BackEndStructure.Entities.Player;
-import BackEndStructure.Game.Game;
+import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
-import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
-import Visualisation.Map.Components.FortifyTroops;
-import Visualisation.Map.Components.Narrator;
-import Visualisation.Map.Components.PlayerTurn;
-import Visualisation.Map.Map;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class SimFortifyEvent {
 
-    private final Game game;
-    private final Map map;
-    private final Narrator narrator;
-    private final PlayerTurn playerTurn;
     private final Graph graph;
 
-    public SimFortifyEvent(Game game) {
-        this.game = game;
-        this.map = game.getMap();
-        this.narrator = game.getNarrator();
-        this.playerTurn = game.getPlayerTurn();
-        this.graph = game.getGraph();
+    public SimFortifyEvent(Graph g) {
+        this.graph = g;
     }
 
-    public void fortifyTerritory(Player player) {
-        map.deselectTerritory();
-        narrator.addText("Player " + player.getName() + " is fortifying his territories!");
-        boolean fortified = false;
-
-        if (player.isBot()) {
-            Vertex[] vertices = game.getAi().getBotReinforcement().reinforceDefense(graph, player);
-            if (vertices != null) {
-                Vertex from = vertices[0];
-                Vertex to = vertices[1];
-                int troopsSend = game.getAi().getBotReinforcement().getReinforcementTroops();
-
-                from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
-                to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
-                map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
-                map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
-                narrator.addText("Player " + player.getName() + " send " + troopsSend + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
+    public void randomFortification(Player player) {
+        // Get all the owned territories for this player that have more than 1 troop
+        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+        for (Vertex v : graph.getArrayList()) {
+            if (v.getTerritory().getOwner() == player && v.getTerritory().getNumberOfTroops() > 1) {
+                ownedTerritories.add(v);
             }
-        } else {
-            while (!playerTurn.hasTurnEnded() && !fortified) {
-                delay();
-                if (territorySelected(map)) {
-                    Vertex from = graph.get(map.getTerritoryNumber()); // Territory that sends troops
-                    narrator.addText("Player " + player.getName() + " is fortifying with troops from " + from.getTerritory().getTerritoryName());
-                    if (from.getTerritory().getNumberOfTroops() > 1) {
-                        if (isTerritoryOwnedBy(from.getTerritory(), player)) {
+        }
 
-                            // Wait until a different territory is selected
-                            while (graph.get(map.getTerritoryNumber()) == from) {
-                                delay();
-                            }
-                            Vertex to = graph.get(map.getTerritoryNumber()); // Territory that gets troops
-                            narrator.addText("Player " + player.getName() + " is trying to fortify " + to.getTerritory().getTerritoryName() + " with troops from " + from.getTerritory().getTerritoryName());
-
-                            if (isTerritoryOwnedBy(to.getTerritory(), player)) {
-                                if (graph.isAdjecent(from, to)) {
-                                    FortifyTroops popUp = new FortifyTroops(from.getTerritory());
-                                    if (!popUp.isCanceled()) {
-                                        from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - popUp.getTroops());
-                                        to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + popUp.getTroops());
-                                        map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
-                                        map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
-                                        fortified = true;
-                                        narrator.addText("Player " + player.getName() + " send " + popUp.getTroops() + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
-                                    }
-                                    map.deselectTerritory();
-                                } else {
-                                    map.deselectTerritory();
-                                    narrator.addText("These territories are not adjacent to each other");
-                                }
-                            } else {
-                                map.deselectTerritory();
-                                narrator.addText("Choose a territory that belongs to you!");
-                            }
-                        } else {
-                            map.deselectTerritory();
-                            narrator.addText("Choose a territory that belongs to you!");
-                        }
-                    } else {
-                        map.deselectTerritory();
-                        narrator.addText("Choose a territory that has more than 1 troops!");
-                    }
+        // For all owned territories select the ones that have another adjacent owned territory
+        for (Vertex v : ownedTerritories) {
+            boolean twoOwnedAdjacent = false;
+            for (Edge e : v.getEdges()) {
+                if (e.getVertex().getTerritory().getOwner() == player) {
+                    twoOwnedAdjacent = true;
+                    break;
                 }
             }
+            if (!twoOwnedAdjacent) {
+                ownedTerritories.remove(v);
+            }
         }
-    }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Extra Methods
+        // Select a random territory from this list (this territory will send troops)
+        Random random = new Random();
+        Vertex from = ownedTerritories.get(random.nextInt(ownedTerritories.size()));
 
-    // Creates a delay
-    private void delay() {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException ignored) {
-        }
-    }
+        // Select a random territory that is adjacent to the from territory (this territory receives troops)
+        Vertex to = from.getEdges().get(random.nextInt(from.getEdges().size())).getVertex();
 
-    // If a territory is selected
-    private boolean territorySelected(Map map) {
-        return map.getTerritoryNumber() != -1;
-    }
+        // Send a random quantity of troops
+        int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;
 
-    // If a territory belongs to a player
-    private boolean isTerritoryOwnedBy(Territory t, Player p) {
-        return t.getOwner() == p;
+        // Update the troop counts in the graph
+        from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
+        to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
     }
 
 }

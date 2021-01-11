@@ -4,15 +4,11 @@ import AI.MCTS.MCTS;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Stages.MainGameStage;
 import BackEndStructure.Game.Stages.PlacementStage;
-import BackEndStructure.Graph.Graph;
 import Visualisation.Map.Components.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainGameLoop {
-    // -----------------------------------------------------------------------------------------------------------------
-    // Disables graphics
-    private final boolean simulatedGame;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Gameplay variables
@@ -37,8 +33,7 @@ public class MainGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
 
     public MainGameLoop(int players, String[] playerNames, boolean[] bots, boolean simulatedGame) {
-        this.simulatedGame = simulatedGame;
-        this.game = new Game(players, playerNames, bots, simulatedGame);
+        this.game = new Game(players, playerNames, bots);
         this.narrator = game.getNarrator();
         this.playerTurn = game.getPlayerTurn();
         this.cardInventory = game.getCardInventory();
@@ -59,7 +54,6 @@ public class MainGameLoop {
         mainGameStage();
 
         // Game over
-        System.out.println("MAINGAMELOOP DISABLE ME! WINNER = " + winner.getName());
         narrator.addText("GAME OVER! PLAYER " + winner.getName() + " IS VICTORIOUS");
     }
 

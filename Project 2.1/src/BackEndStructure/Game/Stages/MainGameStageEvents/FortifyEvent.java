@@ -59,7 +59,7 @@ public class FortifyEvent {
                             narrator.addText("Player " + player.getName() + " is trying to fortify " + to.getTerritory().getTerritoryName() + " with troops from " + from.getTerritory().getTerritoryName());
 
                             if (isTerritoryOwnedBy(to.getTerritory(), player)) {
-                                if (graph.isAdjecent(from, to)) {
+                                if (graph.isAdjacent(from, to)) {
                                     FortifyTroops popUp = new FortifyTroops(from.getTerritory());
                                     if (!popUp.isCanceled()) {
                                         from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - popUp.getTroops());

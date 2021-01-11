@@ -76,7 +76,7 @@ public class BotPlaceTroops extends UsefulMethods {
             //System.out.println(territoryScores[territory]);
             // adjacent countries modifier
             for(int j = 0; j < g.getSize(); j++){
-                if(g.get(j).getTerritory().getOwner() == p  && g.isAdjecent(g.get(j),g.get(unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber()))){
+                if(g.get(j).getTerritory().getOwner() == p  && g.isAdjacent(g.get(j),g.get(unOwnedTerritories.get(territory).getTerritory().getTerritoryNumber()))){
                     territoryScores[territory] += 0.4;
                 }
             }

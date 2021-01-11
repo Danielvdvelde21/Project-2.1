@@ -4,10 +4,8 @@ import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
-import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -119,7 +117,7 @@ public class BotAttacking extends UsefulMethods {
             }
             // A flat bonus for owning neighbouring countries to the one you are attacking.
             for (int j = 0; j < g.getSize(); j++) {
-                if (g.get(j).getTerritory().getOwner() == p && g.isAdjecent(g.get(j), g.get(i))) {
+                if (g.get(j).getTerritory().getOwner() == p && g.isAdjacent(g.get(j), g.get(i))) {
                     grades[i] += 0.4;
                 }
             }
@@ -139,7 +137,7 @@ public class BotAttacking extends UsefulMethods {
             bestAttackers = 0;
             bestTarget = getHighest(grades);
             for(int i = 0; i < g.getSize(); i++) {
-                if (g.get(i).getTerritory().getOwner() == p && g.isAdjecent(g.get(bestTarget), g.get(i))) {
+                if (g.get(i).getTerritory().getOwner() == p && g.isAdjacent(g.get(bestTarget), g.get(i))) {
                     int attackers = g.get(i).getTerritory().getNumberOfTroops();
 
                     if (attackers > bestAttackers && attackers > 1) {
@@ -152,7 +150,7 @@ public class BotAttacking extends UsefulMethods {
             if(defenders > bestAttackers){
                 grades[bestTarget] += -1000;
             }
-            else if(getHighest(grades) == bestTarget && g.isAdjecent(g.get(bestTarget), g.get(bestAttackIsFrom))){
+            else if(getHighest(grades) == bestTarget && g.isAdjacent(g.get(bestTarget), g.get(bestAttackIsFrom))){
                 grades[bestTarget] += (bestAttackers - defenders) * 0.1;
                 grades[bestTarget] += (bestAttackers/defenders) * 0.5;
                 bestAttack = true;
@@ -167,7 +165,7 @@ public class BotAttacking extends UsefulMethods {
 
         if(grades[bestTarget] > 2 && counter < 50) {
             // Checking for bugs
-            if (!g.isAdjecent(g.get(bestAttackIsFrom), g.get(bestTarget))) {
+            if (!g.isAdjacent(g.get(bestAttackIsFrom), g.get(bestTarget))) {
                 System.out.println(g.get(bestAttackIsFrom).getTerritory().getTerritoryName() + " is trying to attack " + g.get(bestTarget).getTerritory().getTerritoryName());
                 throw new IllegalArgumentException("Attacker and Defender aren't adjacent");
             }
