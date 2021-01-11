@@ -25,6 +25,7 @@ public class SimReceiveTroops {
         int cards;
 
         // Set of cards the bot is going to turn in
+        // TODO
         ArrayList<Card> turnInSet = game.getAi().getBotCards().cards(graph, player);
 
         // Return cards to stack
