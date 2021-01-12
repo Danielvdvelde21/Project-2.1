@@ -2,7 +2,7 @@ package AI.MCTS;
 
 import AI.BasicBot.Components.UsefulMethods;
 import BackEndStructure.Entities.Player;
-import BackEndStructure.Game.MainGameLoop;
+import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
@@ -11,27 +11,41 @@ import java.util.ArrayList;
 
 public class MCTS extends UsefulMethods {
 
-    private boolean isRoot = true;
     private Graph originalGraph;
     private ArrayList<Player> order;
+
+    private boolean isSimulated;
+    // TODO UCT stuff
+    private ArrayList<Node> leaves = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Graph findNextMove(Graph g, Player player, int playerAmount) {
+        // New tree, new root
+        isSimulated = true;
         State originalState = new State(g, player);
         Node root = new Node(originalState);
+        root.setVisitCount(1);
         Tree tree = new Tree(root);
 
         int end = 10000; //time limit
 
-        while (System.currentTimeMillis() < end) {
-            Node promisingNode = selectPromisingNode(root);
+        // Update time properly
+        long time = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() - time < end) {
+            // TODO JUST CHANGE SELECTPROMOSINGNODE
+            Node promisingNode = selectPromisingNode(leaves);
 
             // First iteration the node will be the root
             // Use UCT for choosing which node to expand
-            expansion(g, player, promisingNode, isRoot);
-            isRoot = false; // Next iteration won't consist of root node
+            if (promisingNode.isSimulated()) {
+                expansion(g, player, promisingNode, isSimulated);
+                // TODO make seperate method
+                // TODO update name
+                promisingNode = selectPromisingNode(promisingNode);
+            }
 
             Node simulationNode = promisingNode;
             if (promisingNode.getChildren().size() > 0) {
@@ -39,7 +53,7 @@ public class MCTS extends UsefulMethods {
             }
             int playResult = playOut(playerAmount, simulationNode.getState().getGraph());
             backProp(simulationNode, playResult);
-        }
+            }
 
         Node winner = root.getMaxScoreChild();
         tree.setRoot(winner);
@@ -62,7 +76,6 @@ public class MCTS extends UsefulMethods {
         this.order = players;
     }
 
-    // TODO Play-out
     // Amount of players, board
     public int playOut(int playerNo, Graph g) {
         // order has to be set somewhere
@@ -74,35 +87,38 @@ public class MCTS extends UsefulMethods {
         return result;
     }
 
-    // TODO
     // Add all the first possible moves or add 1 node to the bottom of the best node
-    public void expansion(Graph g, Player p, Node node, boolean isRoot) {
-        if (isRoot) {
+    public void expansion(Graph g, Player p, Node node, boolean isSimulated) {
+        // TODO Update leavbes
+        if (isSimulated) {
             originalGraph = new Graph(g.getArrayList());
-            ArrayList<Vertex> owned = getOwnedVertices(g, p);
+            ArrayList<Vertex> owned = getOwnedVertices(originalGraph, p);
+
+            // For all owned territories select the ones that have another adjacent owned territory
             for (Vertex v : owned) {
-                // TODO attack
-                // TODO update graph
-                Node x = new Node(new State(g, p));
-                node.addChild(x);
+                for (Edge e : v.getEdges()) {
+                    if (e.getVertex().getTerritory().getOwner() != p) {
+                        Node n = new Node(new State(originalGraph, p));
+                        n.setAttacker(v);
+                        n.setDefender(e.getVertex());
+                        node.addChild(n);
+                    }
+                }
             }
+
         } else {
-            // TODO random attack
-            // TODO update graph
+            // TODO
             node.addChild(new Node(new State(g,p)));
         }
     }
 
     // Adds scores to nodes from this simulation
     public void backProp(Node node, int result) {
-        node.getState().addWinScore(result);
-        node.getState().visit();
+        node.addWinScore(result);
+        node.visit();
         if (node.getParent() != null) {
             backProp(node.getParent(), result);
         }
     }
-
-    //------------------------------------------------------------------------------------------------------------------
-    // Extra methods
 
 }

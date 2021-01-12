@@ -1,5 +1,7 @@
 package AI.MCTS;
 
+import BackEndStructure.Graph.Vertex;
+
 import java.util.List;
 import java.util.Random;
 
@@ -8,8 +10,15 @@ public class Node {
     private Node parent;
     private List<Node> children;
 
+    private Vertex attacker;
+    private Vertex defender;
+
+    private int visitCount;
+    private int winScore;
+
     public Node(State state) {
         this.state = state;
+        this.visitCount = 0;
     }
 
     public void setParent(Node node) {
@@ -17,7 +26,7 @@ public class Node {
     }
 
     public void addChild(Node node) {
-        children.add(node);
+        this.children.add(node);
     }
 
     public List<Node> getChildren() {
@@ -34,9 +43,9 @@ public class Node {
         int maxscore = 0;
         Node maxNode = children.get(0);
         for (Node n : children) {
-            if (n.getState().getWinScore() > maxscore) {
+            if (n.getWinScore() > maxscore) {
                 maxNode = n;
-                maxscore = n.getState().getWinScore();
+                maxscore = n.getWinScore();
             }
         }
         return maxNode;
@@ -49,4 +58,38 @@ public class Node {
     public State getState() {
         return state;
     }
+
+    public void setAttacker(Vertex attacker) {
+        this.attacker = attacker;
+    }
+
+    public void setDefender(Vertex defender) {
+        this.defender = defender;
+    }
+
+    public Vertex getAttacker() {
+        assert(attacker != null);
+        return attacker;
+    }
+
+    public Vertex getDefender() {
+        assert(defender != null);
+        return defender;
+    }
+
+    public int getWinScore() { return winScore; }
+
+    public void setWinScore(int i) { winScore = i; }
+
+    public void addWinScore(int i) { winScore += i; }
+
+    public void visit() {
+        visitCount++;
+    }
+
+    public void setVisitCount(int visits) { visitCount = visits; }
+
+    public int getVisitCount() { return visitCount; }
+
+    public boolean isSimulated() { return visitCount != 0;}
 }
