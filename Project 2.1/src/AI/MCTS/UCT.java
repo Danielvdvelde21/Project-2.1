@@ -13,8 +13,7 @@ public class UCT {
         return ((double) nodeWinScore / (double) nodeVisit) + 1.41 * Math.sqrt(Math.log(totalVisit) / (double) nodeVisit);
     }
 
-    public static Node findBestNodeWithUCT(Node node) {
-        int parentVisit = node.getVisitCount();
-        return Collections.max(node.getChildren(), Comparator.comparing(c -> uctValue(parentVisit, c.getWinScore(), c.getVisitCount())));
+    public static Node findBestChildWithUCT(Node node) {
+        return Collections.max(node.getChildren(), Comparator.comparing(c -> uctValue(c.getParent().getVisitCount(), c.getWinScore(), c.getVisitCount())));
     }
 }

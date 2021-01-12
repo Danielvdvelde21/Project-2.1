@@ -8,25 +8,24 @@ import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MCTS extends UsefulMethods {
 
     private Graph originalGraph;
     private ArrayList<Player> order;
-
-    private boolean isSimulated;
+    private int maxIterations = 1000;
     // TODO UCT stuff
-    private ArrayList<Node> leaves = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Graph findNextMove(Graph g, Player player, int playerAmount) {
         // New tree, new root
-        isSimulated = true;
+        int iteration=0;
         State originalState = new State(g, player);
         Node root = new Node(originalState);
-        root.setVisitCount(1);
+        root.setVisitCount(1); //set the root as simulated so that we can
         Tree tree = new Tree(root);
 
         int end = 10000; //time limit
@@ -34,26 +33,26 @@ public class MCTS extends UsefulMethods {
         // Update time properly
         long time = System.currentTimeMillis();
 
-        while (System.currentTimeMillis() - time < end) {
-            // TODO JUST CHANGE SELECTPROMOSINGNODE
-            Node promisingNode = selectPromisingNode(leaves);
+        while (System.currentTimeMillis() - time < end && iteration<maxIterations) {
+            Node promisingNode = selectPromisingChild(root);
 
-            // First iteration the node will be the root
-            // Use UCT for choosing which node to expand
             if (promisingNode.isSimulated()) {
-                expansion(g, player, promisingNode, isSimulated);
-                // TODO make seperate method
-                // TODO update name
-                promisingNode = selectPromisingNode(promisingNode);
+                expansion(g, player, promisingNode);
+                promisingNode = promisingNode.getChildren().get(0);
             }
 
             Node simulationNode = promisingNode;
-            if (promisingNode.getChildren().size() > 0) {
+
+            //this is probably redundant since a promising node is always a leaf
+            /*if (promisingNode.getChildren().size() > 0) {
                 simulationNode = promisingNode.getRandomChildNode();
-            }
+            }*/
+
             int playResult = playOut(playerAmount, simulationNode.getState().getGraph());
             backProp(simulationNode, playResult);
-            }
+
+            iteration++;
+        }
 
         Node winner = root.getMaxScoreChild();
         tree.setRoot(winner);
@@ -64,13 +63,13 @@ public class MCTS extends UsefulMethods {
     // Selection, Play-out, Expansion, Back propagation
 
     // Selection
-    private Node selectPromisingNode(Node rootNode) {
-        Node node = rootNode;
-        while (node.getChildren().size() != 0) {
-            node = UCT.findBestNodeWithUCT(node);
+    private Node selectPromisingChild(Node curNode) {
+        while (curNode.getChildren().size() != 0) {
+            curNode = UCT.findBestChildWithUCT(curNode);
         }
-        return node;
+        return curNode;
     }
+
 
     public void setPlayerOrder(ArrayList<Player> players) {
         this.order = players;
@@ -88,27 +87,20 @@ public class MCTS extends UsefulMethods {
     }
 
     // Add all the first possible moves or add 1 node to the bottom of the best node
-    public void expansion(Graph g, Player p, Node node, boolean isSimulated) {
-        // TODO Update leavbes
-        if (isSimulated) {
-            originalGraph = new Graph(g.getArrayList());
-            ArrayList<Vertex> owned = getOwnedVertices(originalGraph, p);
+    public void expansion(Graph g, Player p, Node node) {
 
-            // For all owned territories select the ones that have another adjacent owned territory
-            for (Vertex v : owned) {
-                for (Edge e : v.getEdges()) {
-                    if (e.getVertex().getTerritory().getOwner() != p) {
-                        Node n = new Node(new State(originalGraph, p));
-                        n.setAttacker(v);
-                        n.setDefender(e.getVertex());
-                        node.addChild(n);
-                    }
+        originalGraph = new Graph(g.getArrayList());
+        ArrayList<Vertex> owned = getOwnedVertices(originalGraph, p);
+        // For all owned territories select the ones that have another adjacent owned territory
+        for (Vertex v : owned) {
+            for (Edge e : v.getEdges()) {
+                if (e.getVertex().getTerritory().getOwner() != p) {
+                    Node n = new Node(new State(originalGraph, p));
+                    n.setAttacker(v);
+                    n.setDefender(e.getVertex());
+                    node.addChild(n);
                 }
             }
-
-        } else {
-            // TODO
-            node.addChild(new Node(new State(g,p)));
         }
     }
 
