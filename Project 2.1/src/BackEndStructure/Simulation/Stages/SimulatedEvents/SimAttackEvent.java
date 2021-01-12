@@ -19,6 +19,7 @@ public class SimAttackEvent {
     private boolean gameOver = false;
     private Player winner;
 
+    // One territory has been captured in the turn
     private boolean oneTerritoryCaptured;
 
     public SimAttackEvent(Game game) {
@@ -37,7 +38,7 @@ public class SimAttackEvent {
         }*/
     }
 
-    private boolean randomAttack(Player player) {
+    private void randomAttack(Player player) {
         ArrayList<Vertex> ownedTerritories = new ArrayList<>();
         ArrayList<Vertex> enemyNeighbours = new ArrayList<>();
         for (int i = 0; i < graph.getSize(); i++) {
@@ -45,22 +46,25 @@ public class SimAttackEvent {
                 ownedTerritories.add(graph.get(i));
             }
         }
+
         // Select random attacker
         Random rn = new Random();
         int atkIndex = rn.nextInt(ownedTerritories.size());
+
         // Can't attack with only 1 troop
         while (ownedTerritories.get(atkIndex).getTerritory().getNumberOfTroops() < 2) {
             atkIndex = rn.nextInt(ownedTerritories.size());
         }
+
         // Select neighbouring enemy territories
         for (Edge e: ownedTerritories.get(atkIndex).getEdges()) {
             if (e.getVertex().getTerritory().getOwner() != player) {
                 enemyNeighbours.add(e.getVertex());
             }
         }
+
         // Select random neighbour
         int defIndex = rn.nextInt(enemyNeighbours.size());
-
 
         Vertex attacker = ownedTerritories.get(atkIndex);
         Vertex defender = enemyNeighbours.get(defIndex);
@@ -73,7 +77,7 @@ public class SimAttackEvent {
             int[] attackerDiceValues = new int[3];
             int[] defenderDiceValues = new int[2];
 
-            // Settinng the attacker dice
+            // Setting the attacker dice
             switch (attacker.getTerritory().getNumberOfTroops()) {
                 case 1:
                     numberOfAttackerDice = 1;
@@ -115,11 +119,9 @@ public class SimAttackEvent {
             if (defender.getTerritory().getNumberOfTroops() < 1) {
                 oneTerritoryCaptured = true;
                 territoryCaptured(player, defender, attacker);
-                return true;
+                return;
             }
         }
-        return true;
-
     }
 
     // Logic that needs to happen after a territory is captured
@@ -196,23 +198,6 @@ public class SimAttackEvent {
 
     // -----------------------------------------------------------------------------------------------------------------
     // Extra Methods
-
-    // Creates a delay
-    private void delay() {
-        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
-    }
-
-
-    // If a territory belongs to a player
-    private boolean isTerritoryOwnedBy(Territory t, Player p) {
-        return t.getOwner()==p;
-    }
-
-    // Check if vertex is owned by bot
-    private boolean ownedByBot(Vertex defender) {
-        Player p = defender.getTerritory().getOwner();
-        return p.isBot();
-    }
 
     // If a player is defeated
     private boolean isEliminated(Player d) {
