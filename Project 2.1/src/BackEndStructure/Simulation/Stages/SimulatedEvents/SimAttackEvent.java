@@ -51,12 +51,20 @@ public class SimAttackEvent {
         Random rn = new Random();
         int atkIndex = rn.nextInt(ownedTerritories.size());
 
-        // Can't attack with only 1 troop
-        while (ownedTerritories.get(atkIndex).getTerritory().getNumberOfTroops() < 2) {
+        // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
+        boolean enemy = false;
+        while (ownedTerritories.get(atkIndex).getTerritory().getNumberOfTroops() < 2 && !enemy) {
+            enemy = false;
             atkIndex = rn.nextInt(ownedTerritories.size());
+            // Select neighbouring enemy territories
+            for (Edge e: ownedTerritories.get(atkIndex).getEdges()) {
+                if (e.getVertex().getTerritory().getOwner() != player) {
+                    enemy = true;
+                    break;
+                }
+            }
         }
 
-        // Select neighbouring enemy territories
         for (Edge e: ownedTerritories.get(atkIndex).getEdges()) {
             if (e.getVertex().getTerritory().getOwner() != player) {
                 enemyNeighbours.add(e.getVertex());
