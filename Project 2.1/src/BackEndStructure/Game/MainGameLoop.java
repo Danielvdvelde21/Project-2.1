@@ -15,7 +15,6 @@ public class MainGameLoop {
     private final Game game;
     private Player winner;
     private ArrayList<Player> order;
-    private MCTS tree;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Updating visual variables
@@ -32,7 +31,7 @@ public class MainGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public MainGameLoop(int players, String[] playerNames, boolean[] bots, boolean simulatedGame) {
+    public MainGameLoop(int players, String[] playerNames, boolean[] bots) {
         this.game = new Game(players, playerNames, bots);
         this.narrator = game.getNarrator();
         this.playerTurn = game.getPlayerTurn();
@@ -41,11 +40,8 @@ public class MainGameLoop {
         cardInventory.setGame(game);
         dicePanel.setGame(game);
 
-        tree = new MCTS();
-
         // The game starts by every player rolling die to determine who goes first
         determinePlayerOrder();
-        tree.setPlayerOrder(order);
 
         // The game starts by every player starting to place troops on the board
         placementStage();
@@ -70,7 +66,8 @@ public class MainGameLoop {
         for (int i = 0; i < game.getPlayers().size(); i++) {
             narrator.addText("Player " + game.getPlayers().get(i).getName() + " may roll the dice!");
             playerTurn.setPlayerTurn(game.getPlayers().get(i));
-            if (game.getPlayers().get(i).isBot()) {
+            // Set order for bots
+            if (game.getPlayers().get(i).isBot() || game.getPlayers().get(i).isMCTSBot()) {
                 dicePanel.rollAttackDie();
                 dicePanel.resetDiceRolled();
             } else {
@@ -85,10 +82,10 @@ public class MainGameLoop {
             order.add(game.getPlayers().get(values.indexOf(Collections.max(values))));
             values.set(values.indexOf(Collections.max(values)), 0);
         }
-        game.setPlayerOrder(order);
+        game.setPlayers(order);
         dicePanel.allowRolling(false);
         dicePanel.playerOrderObtained();
-        narrator.addText("Player order is " + game.getPlayerOrder());
+        narrator.addText("Player order is " + game.getPlayerOrderToString());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

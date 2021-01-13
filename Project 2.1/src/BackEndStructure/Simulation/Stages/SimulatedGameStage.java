@@ -2,6 +2,7 @@ package BackEndStructure.Simulation.Stages;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
+import BackEndStructure.Graph.Graph;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimAttackEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimFortifyEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimReceiveTroops;
@@ -9,6 +10,7 @@ import BackEndStructure.Simulation.Stages.SimulatedEvents.SimReceiveTroops;
 public class SimulatedGameStage {
 
     private final Game game;
+
     private boolean gameOver = false; // Game state
     private Player winner;
 
@@ -31,10 +33,12 @@ public class SimulatedGameStage {
     // Gameplay
 
     public void mainGameStage() {
+        game.setGraph(game.getAIMCTS().findNextMove(game.getGraph(), game.getPlayers()));
+
         while (!gameOver) {
             for (Player p : game.getPlayers()) {
                 playerTurn(p);
-                if(gameOver) {
+                if (gameOver) {
                     break;
                 }
             }

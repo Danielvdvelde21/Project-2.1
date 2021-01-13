@@ -20,9 +20,7 @@ public class SimulatedGameLoop {
 
     public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
         this.game = new Game(g, order);
-
-        setOrder(order);
-
+        
         // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();
 
@@ -44,5 +42,4 @@ public class SimulatedGameLoop {
 
     public Player getWinner() { return winner; }
 
-    public void setOrder(ArrayList<Player> order) { game.setPlayerOrder(order); }
 }

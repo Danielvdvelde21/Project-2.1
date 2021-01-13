@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Player {
     // Player data
     private final String playerName;
-    private final int playerIndex;
     private final Color playerColor;
     private final boolean isBot;
     private final boolean isMCTSBot;
@@ -21,20 +20,21 @@ public class Player {
     private ArrayList<Card> hand = new ArrayList<>();
     private int setsTurnedIn;
 
-    public Player(String name, int playerIndex,Color col, boolean isBot) {
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructors
+
+    public Player(String name, Color col, boolean isBot) {
         this.playerName = name;
         this.playerColor = col;
         this.isBot = isBot;
         this.isMCTSBot = false;
-        this.playerIndex=playerIndex;
     }
 
-    public Player(String name, int playerIndex,Color col, boolean isBot, boolean MCTSBot) {
+    public Player(String name, Color col, boolean isBot, boolean MCTSBot) {
         this.playerName = name;
         this.playerColor = col;
         this.isBot = isBot;
         this.isMCTSBot = MCTSBot;
-        this.playerIndex=playerIndex;
         assert (!(isBot()) && isMCTSBot());
     }
 
@@ -47,7 +47,8 @@ public class Player {
         return playerColor;
     }
 
-    public int getPlayerIndex() { return playerIndex; }
+    //------------------------------------------------------------------------------------------------------------------
+    // Is the player basic bot or mcts bot?
 
     public boolean isBot() {
         return isBot;
@@ -57,6 +58,7 @@ public class Player {
         return isMCTSBot;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     // Get and Set territory/continent data
     public int getTerritoriesOwned() {
         return territoriesOwned;
@@ -78,6 +80,7 @@ public class Player {
         continentsOwned.add(c);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     // Get and Set card data
     public ArrayList<Card> getHand() {
         return hand;

@@ -154,7 +154,7 @@ public class MainMenuScreen extends Application {
                 }
                 else {
                     ps.hide();  //hide menu
-                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, bots, false);
+                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, bots);
                 }
             });
 

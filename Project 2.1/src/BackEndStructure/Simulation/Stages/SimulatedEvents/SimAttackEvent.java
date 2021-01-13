@@ -32,6 +32,7 @@ public class SimAttackEvent {
 
         randomAttack(player);
 
+        // Cards are neglected in MCTS for now
         // if at least one territory is captured player receives a card
         /*if (oneTerritoryCaptured) {
             player.addToHand(game.getCardStack().draw());
@@ -155,6 +156,7 @@ public class SimAttackEvent {
         attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - troops);
         defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + troops);
 
+        // Cards are neglected in MCTS for now
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
         /*if (player.getHand().size() >= 6) {
             turnInCardsAttacking(player);
@@ -164,7 +166,6 @@ public class SimAttackEvent {
     // Forcing a player to turn in a set during an attacking phase
     private void turnInCardsAttacking(Player player) {
         // Set of cards the bot is going to turn in
-        // Maybe TODO?
         ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
 
         // Return cards to stack

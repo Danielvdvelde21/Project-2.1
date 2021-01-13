@@ -48,7 +48,8 @@ public class PlacementStage {
     }
 
     private void placementTurn(Player player) {
-        if (player.isBot()) {
+        // Both bots use the rule based approach in the placement phase
+        if (player.isBot() || player.isMCTSBot()) {
             placeTroop(player, game.getAi().getPlaceTroops().placementDecider(graph, player));
         } else {
             placeTroop(player, getSelectedTerritoryNumber(player));

@@ -1,12 +1,12 @@
 package BackEndStructure.Game;
 
 import AI.BasicBot.AIMain;
+import AI.MCTS.MCTS;
 import BackEndStructure.Entities.Cards.CardStack;
 import BackEndStructure.Entities.AttackingHandler;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territories;
-import BackEndStructure.Graph.Vertex;
 import Visualisation.Map.Components.CardInventory;
 import Visualisation.Map.Components.DicePanel;
 import Visualisation.Map.Components.PlayerTurn;
@@ -17,6 +17,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Game {
+    // -----------------------------------------------------------------------------------------------------------------
+    // Global variables
+
     // Player object List, all the players of the game
     private ArrayList<Player> players = new ArrayList<>();
     private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
@@ -24,8 +27,11 @@ public class Game {
     // the Board
     private final Map map;
 
-    // AI (bot)
+    // Rule based AI
     private final AIMain ai = new AIMain();
+
+    // MCTS Ai
+    private final MCTS AIMCTS = new MCTS();
 
     // Visual variables
     private final Narrator narrator = new Narrator();
@@ -47,6 +53,9 @@ public class Game {
 
     // Troops you receive for sets owned
     private final int[] setValues = new int[]{0,4,6,8,10,12,15};
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Constructors
 
     // For playing a regular game
     public Game(int numberOfPlayers, String[] names, boolean[] bots) {
@@ -80,7 +89,7 @@ public class Game {
 
         // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
-            players.add(new Player(names[i], i, colors[i], bots[i]));
+            players.add(new Player(names[i], colors[i], bots[i]));
         }
 
         // Create a new map
@@ -103,39 +112,54 @@ public class Game {
         this.map = new Map();
     }
 
-    public Map getMap() {
-        return this.map;
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    // Players
 
+    // Returns all players in their respective order
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    public String getPlayerOrder() {
-        String order = "";
+    // Sets all players in their RESPECTIVE ORDER!
+    public void setPlayers(ArrayList<Player> order) { players = order; }
+
+    public String getPlayerOrderToString() {
+        StringBuilder order = new StringBuilder();
         for (Player p : players) {
-            order += p.getName() + " --> ";
+            order.append(p.getName()).append(" --> ");
         }
         return order.substring(0, order.length()-4);
     }
 
-    public void setPlayerOrder(ArrayList<Player> order) {
-        players = order;
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    // Graph
 
     public void setGraph(Graph g) { this.graph = g; }
 
     public Graph getGraph() { return graph; }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Starting troops
+
     public int getStartingTroops() { return startingTroops; }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Cards
 
     public CardStack getCardStack() {
         return cardStack;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // Attacking logic
+
     public AttackingHandler getAttackingHandler() {
         return attackingHandler;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Graphics getters
 
     public Narrator getNarrator() { return narrator; }
 
@@ -145,7 +169,21 @@ public class Game {
 
     public DicePanel getDicePanel() { return dicePanel; }
 
+    public Map getMap() {
+        return this.map;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // AI
+
+    // Rule Based AI
     public AIMain getAi() { return ai; }
+
+    // MCTS AI
+    public MCTS getAIMCTS() { return AIMCTS; }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Continents
 
     // Checks how many continents a player has
     public void hasContinents(Player player) {
@@ -235,6 +273,9 @@ public class Game {
         }
         return value;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Sets
 
     public int getSetValue(int sets) {
         if (sets > 6) {

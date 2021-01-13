@@ -8,36 +8,35 @@ import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MCTS extends UsefulMethods {
 
     private Graph originalGraph;
-    private ArrayList<Player> order;
     private int maxIterations = 1000;
     // TODO UCT stuff
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
-    public Graph findNextMove(Graph g, Player player, int playerAmount) {
-        // New tree, new root
-        int iteration=0;
-        State originalState = new State(g, player);
+    public Graph findNextMove(Graph g, ArrayList<Player> order) {
+        // First player in the playerOrder is the MCTS bot
+        Player playerMCTS = order.get(0);
+
+        State originalState = new State(g, playerMCTS);
         Node root = new Node(originalState);
-        root.setVisitCount(1); //set the root as simulated so that we can
+        root.setVisitCount(1); // set the root as simulated so that we can
         Tree tree = new Tree(root);
 
+        // Time limit or iteration limit
+        long time = System.currentTimeMillis();
         int end = 10000; //time limit
 
-        // Update time properly
-        long time = System.currentTimeMillis();
-
+        int iteration=0;
         while (System.currentTimeMillis() - time < end && iteration<maxIterations) {
             Node promisingNode = selectPromisingChild(root);
 
             if (promisingNode.isSimulated()) {
-                expansion(g, player, promisingNode);
+                expansion(g, playerMCTS, promisingNode);
                 promisingNode = promisingNode.getChildren().get(0);
             }
 
@@ -48,7 +47,9 @@ public class MCTS extends UsefulMethods {
                 simulationNode = promisingNode.getRandomChildNode();
             }*/
 
-            int playResult = playOut(simulationNode.getState().getGraph(), simulationNode.getState().getPlayer());
+
+            int playResult = playOut(simulationNode.getState().getGraph(), order);
+
             backProp(simulationNode, playResult);
 
             iteration++;
@@ -56,11 +57,12 @@ public class MCTS extends UsefulMethods {
 
         Node winner = root.getMaxScoreChild();
         tree.setRoot(winner);
+        // TODO return attacker and defender vertex such that we can update visual variables in maingameloop
         return winner.getState().getGraph();
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // Selection, Play-out, Expansion, Back propagation
+    // Selection
 
     // Selection
     private Node selectPromisingChild(Node curNode) {
@@ -70,34 +72,34 @@ public class MCTS extends UsefulMethods {
         return curNode;
     }
 
-
-    public void setPlayerOrder(ArrayList<Player> players) {
-        this.order = players;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // Play-out
+    // Simulates a game
 
     // TODO Want to set player p as the first player in the order
-    public void changeOrder(Player p) {
-
+    public void changeOrder(ArrayList<Player> order) {
 
     }
 
-    // TODO Play-out
-    // Amount of players, board
-    public int playOut(Graph g, Player p) {
+
+    public int playOut(Graph g, ArrayList<Player> order) {
+        // TODO WE NEED TO CHANGE THE ORDER SO THAT THE MCTS BOT ACTUALLY BEGINS HIS TURN
         // order has to be set somewhere, or pass player as parameter to start there
-        changeOrder(p);
+        changeOrder(order);
         SimulatedGameLoop game = new SimulatedGameLoop(g, order);
         System.out.println(game.getWinner());
         int result = 0;
-        if (game.getWinner() == p) {
+        if (game.getWinner() == order.get(0)) {
             result = 10;
         }
         return result;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Expansion
+
     // Add all the first possible moves or add 1 node to the bottom of the best node
     public void expansion(Graph g, Player p, Node node) {
-
         originalGraph = new Graph(g.getArrayList());
         ArrayList<Vertex> owned = getOwnedVertices(originalGraph, p);
         // For all owned territories select the ones that have another adjacent owned territory
@@ -112,6 +114,9 @@ public class MCTS extends UsefulMethods {
             }
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Back propagation
 
     // Adds scores to nodes from this simulation
     public void backProp(Node node, int result) {

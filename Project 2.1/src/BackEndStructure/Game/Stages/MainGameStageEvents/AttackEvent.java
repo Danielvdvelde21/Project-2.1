@@ -49,6 +49,9 @@ public class AttackEvent {
                     break;
                 }
             }
+        } else if (player.isMCTSBot()) {
+            game.getAIMCTS().findNextMove(graph, game.getPlayers());
+            // TODO update visuals
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
@@ -128,7 +131,7 @@ public class AttackEvent {
         Vertex attacker = vertices[0];
         Vertex defender = vertices[1];
 
-        if(vertices[0] == null) {
+        if (vertices[0] == null) {
             // cancel the bot attack, there is no attack
             return false;
         }
@@ -211,7 +214,7 @@ public class AttackEvent {
     // Logic that needs to happen after a territory is captured
     private void territoryCaptured(Player player, Vertex defender, Vertex attack) { //TODO fix the isEliminated order
         // Player gets the territory
-        Player defenderOwner=defender.getTerritory().getOwner();
+        Player defenderOwner = defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();
         defender.getTerritory().setOwner(player);
         map.setTroopCountColor(defender.getTerritory().getTerritoryNumber(), player);
@@ -307,15 +310,20 @@ public class AttackEvent {
 
     // Creates a delay
     private void delay() {
-        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+        }
     }
 
     // If a territory is selected
-    private boolean territorySelected(Map map) { return map.getTerritoryNumber() != -1; }
+    private boolean territorySelected(Map map) {
+        return map.getTerritoryNumber() != -1;
+    }
 
     // If a territory belongs to a player
     private boolean isTerritoryOwnedBy(Territory t, Player p) {
-        return t.getOwner()==p;
+        return t.getOwner() == p;
     }
 
     // Logic for whether a player can place down a troop on a territory
@@ -378,6 +386,8 @@ public class AttackEvent {
         return winner;
     }
 
-    public boolean getGameState() { return gameOver; }
+    public boolean getGameState() {
+        return gameOver;
+    }
 
 }

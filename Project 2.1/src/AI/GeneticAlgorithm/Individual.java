@@ -10,7 +10,7 @@ public class Individual {
     private int fitness;
 
     public Individual(String name, int playerIndex, Color c) {
-        this.player = new Player(name, playerIndex, c, true);
+        this.player = new Player(name, c, true);
         this.fitness = 0;
     }
 
