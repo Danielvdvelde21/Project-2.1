@@ -100,6 +100,7 @@ public class Game {
     // For playing a simulated game
     public Game(Graph g, ArrayList<Player> players) {
         // Instantiate Graph
+        // TODO make sure that vertices are deep copied as well
         this.graph = new Graph(g.getArrayList());
 
         // Instantiate players

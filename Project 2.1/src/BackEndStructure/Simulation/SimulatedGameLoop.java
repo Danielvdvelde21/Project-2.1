@@ -40,4 +40,6 @@ public class SimulatedGameLoop {
 
     public Player getWinner() { return winner; }
 
+    public Graph getGraph() { return game.getGraph(); }
+
 }
