@@ -253,7 +253,7 @@ public class AttackEvent {
 
     // Forcing a player to turn in a set during an attacking phase
     private void turnInCardsAttacking(Player player) {
-        if (player.isBot()) {
+        if (player.isBot() || player.isMCTSBot()) {
             // Set of cards the bot is going to turn in
             ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
 
@@ -283,7 +283,7 @@ public class AttackEvent {
 
     public void placeReceivedTroops(Player player, int troops) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
-        if (player.isBot()) {
+        if (player.isBot() || player.isMCTSBot()) {
             for (int i = 0; i < troops; i++) {
                 placeTroop(player, game.getAi().getPlaceTroops().placeTroop(graph, player));
             }

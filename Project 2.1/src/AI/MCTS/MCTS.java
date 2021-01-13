@@ -57,6 +57,7 @@ public class MCTS extends UsefulMethods {
 
         Node winner = root.getMaxScoreChild();
         tree.setRoot(winner);
+
         // TODO return attacker and defender vertex such that we can update visual variables in maingameloop
         return winner.getState().getGraph();
     }
@@ -87,7 +88,10 @@ public class MCTS extends UsefulMethods {
         // order has to be set somewhere, or pass player as parameter to start there
         changeOrder(order);
         SimulatedGameLoop game = new SimulatedGameLoop(g, order);
+        // TODO Game probably wont end so stop simulated game loop after set iterations
+        // TODO evaluate state of the game and evaluate results (give points depding on how good the state is
         System.out.println(game.getWinner());
+        
         int result = 0;
         if (game.getWinner() == order.get(0)) {
             result = 10;
@@ -102,6 +106,7 @@ public class MCTS extends UsefulMethods {
     public void expansion(Graph g, Player p, Node node) {
         originalGraph = new Graph(g.getArrayList());
         ArrayList<Vertex> owned = getOwnedVertices(originalGraph, p);
+
         // For all owned territories select the ones that have another adjacent owned territory
         for (Vertex v : owned) {
             for (Edge e : v.getEdges()) {

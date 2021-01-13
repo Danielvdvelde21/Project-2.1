@@ -1,6 +1,5 @@
 package BackEndStructure.Simulation;
 
-import AI.MCTS.MCTS;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
@@ -14,13 +13,12 @@ public class SimulatedGameLoop {
     // Gameplay variables
     private final Game game;
     private Player winner;
-    private MCTS tree;
 
     // -----------------------------------------------------------------------------------------------------------------
 
     public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
         this.game = new Game(g, order);
-        
+
         // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();
 

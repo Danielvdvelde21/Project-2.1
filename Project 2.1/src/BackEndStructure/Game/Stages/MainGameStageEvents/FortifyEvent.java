@@ -29,7 +29,8 @@ public class FortifyEvent {
         narrator.addText("Player " + player.getName() + " is fortifying his territories!");
         boolean fortified = false;
 
-        if (player.isBot()) {
+        // Both bots use rules based fortification
+        if (player.isBot() || player.isMCTSBot()) {
             Vertex[] vertices = game.getAi().getBotReinforcement().reinforceDefense(graph, player);
             if (vertices != null) {
                 Vertex from = vertices[0];

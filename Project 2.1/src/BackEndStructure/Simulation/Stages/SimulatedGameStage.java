@@ -33,8 +33,30 @@ public class SimulatedGameStage {
     // Gameplay
 
     public void mainGameStage() {
-        game.setGraph(game.getAIMCTS().findNextMove(game.getGraph(), game.getPlayers()));
+        // First turn
+        // MCTS bots make their move
+        for (Player p : game.getPlayers()) {
+            if (p.isMCTSBot()) {
+                // Random
+                receiveTroops.placeReceivedTroops(p, receiveTroops.receivedTroops(p));
 
+                // Calculated attack
+                // TODO GET MOVE to attack
+                gameOver = attack.getGameState();
+
+                // Random
+                if (!gameOver) {
+                    fortify.randomFortification(p);
+                }
+            } else {
+                playerTurn(p);
+            }
+            if (gameOver) {
+                break;
+            }
+        }
+
+        // All the next turns
         while (!gameOver) {
             for (Player p : game.getPlayers()) {
                 playerTurn(p);
