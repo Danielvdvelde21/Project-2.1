@@ -26,6 +26,8 @@ public class AttackEvent {
 
     private boolean oneTerritoryCaptured;
 
+    private ArrayList<Player> eliminatedPlayers = new ArrayList<>();
+
     public AttackEvent(Game game) {
         this.game = game;
         this.map = game.getMap();
@@ -163,6 +165,12 @@ public class AttackEvent {
             } else {
                 dicePanel.removeDefendDie();
             }
+            dicePanel.allowRolling(true);
+            dicePanel.resetDiceRolls();
+            dicePanel.rollAttackDie();
+            dicePanel.rollDefDie();
+            dicePanel.allowRolling(false);
+
         } else {
             // Lock the attacking die --> player cant change bots strategy
             dicePanel.lockAttackingDie();
@@ -365,7 +373,11 @@ public class AttackEvent {
 
     // Remove player from player list
     private void eliminatePlayer(Player p) {
-        game.getPlayers().remove(p);
+        eliminatedPlayers.add(p);
+    }
+
+    public ArrayList<Player> getEliminatedPlayers() {
+        return eliminatedPlayers;
     }
 
     // Get cards from eliminated player

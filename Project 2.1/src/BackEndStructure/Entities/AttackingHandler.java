@@ -12,7 +12,7 @@ public class AttackingHandler {
             case 3:
                 break;
             case 2:
-                attackValues[1] = 0;
+                attackValues[2] = 0;
                 break;
             case 1:
                 attackValues[1] = 0;
@@ -76,7 +76,6 @@ public class AttackingHandler {
                 lostTroopsDefenders = 1;
             }
         }
-
     }
 
     public int getLostTroopsDefenders() {

@@ -7,6 +7,9 @@ import BackEndStructure.Game.Stages.MainGameStageEvents.ReceiveTroops;
 import BackEndStructure.Game.Game;
 import Visualisation.Map.Components.*;
 
+import java.util.Iterator;
+import java.util.ListIterator;
+
 public class MainGameStage {
 
     private final Game game;
@@ -34,13 +37,21 @@ public class MainGameStage {
 
     public void mainGameStage() {
         while (!gameOver) {
-            for (Player p : game.getPlayers()) {
-                // Set the player's inventory and turn
-                playerTurn.setPlayerTurn(p);
-                cardInventory.setCurrentPlayer(p);
-                playerTurn(p);
-                if(gameOver) {
-                    break;
+            Iterator<Player> itr = game.getPlayers().iterator();
+            while (itr.hasNext()){
+                Player player = itr.next();
+                if (attack.getEliminatedPlayers().contains(player)) {
+                    attack.getEliminatedPlayers().remove(player);
+                    itr.remove();
+                } else {
+                    // Set the player's inventory and turn
+                    playerTurn.setPlayerTurn(player);
+                    cardInventory.setCurrentPlayer(player);
+                    playerTurn(player);
+
+                    if (gameOver) {
+                        break;
+                    }
                 }
             }
         }
