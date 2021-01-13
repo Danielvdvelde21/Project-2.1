@@ -48,7 +48,7 @@ public class MCTS extends UsefulMethods {
                 simulationNode = promisingNode.getRandomChildNode();
             }*/
 
-            int playResult = playOut(playerAmount, simulationNode.getState().getGraph());
+            int playResult = playOut(simulationNode.getState().getGraph(), simulationNode.getState().getPlayer());
             backProp(simulationNode, playResult);
 
             iteration++;
@@ -75,14 +75,23 @@ public class MCTS extends UsefulMethods {
         this.order = players;
     }
 
+    // TODO Want to set player p as the first player in the order
+    public void changeOrder(Player p) {
+
+
+    }
+
+    // TODO Play-out
     // Amount of players, board
-    public int playOut(int playerNo, Graph g) {
-        // order has to be set somewhere
+    public int playOut(Graph g, Player p) {
+        // order has to be set somewhere, or pass player as parameter to start there
+        changeOrder(p);
         SimulatedGameLoop game = new SimulatedGameLoop(g, order);
         System.out.println(game.getWinner());
-
-        // TODO placeholder value, need to evaluate result
-        int result = 10;
+        int result = 0;
+        if (game.getWinner() == p) {
+            result = 10;
+        }
         return result;
     }
 

@@ -21,7 +21,6 @@ public class SimulatedGameLoop {
     public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
         this.game = new Game(g, order);
 
-        // The game starts by every player rolling die to determine who goes first
         setOrder(order);
 
         // The game is about attacking, using cards, fortifying, etc.
