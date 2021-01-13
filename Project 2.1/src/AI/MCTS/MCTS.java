@@ -7,6 +7,7 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class MCTS extends UsefulMethods {
@@ -27,7 +28,7 @@ public class MCTS extends UsefulMethods {
 
         // Time limit or iteration limit
         long time = System.currentTimeMillis();
-        int end = 10000; // Time limit
+        int end = 2500; // Time limit
 
         int iteration=0;
         while (System.currentTimeMillis() - time < end && iteration<maxIterations) {
@@ -83,7 +84,9 @@ public class MCTS extends UsefulMethods {
 
         ArrayList<Player> simulatedPlayerOrder = changeOrder(copiedOrder, node);
         SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder);
-        return analyzeGame(game);
+        // TODO
+        Player REMOVEME = new Player("1", Color.RED, true);
+        return analyzeGame(game, REMOVEME);
     }
 
     // Change order for simulated game such that MCTS bot in node starts
@@ -97,12 +100,14 @@ public class MCTS extends UsefulMethods {
     }
 
     // Evaluate the current graph and assigns points to the node
-    private int analyzeGame(SimulatedGameLoop game) {
+    private int analyzeGame(SimulatedGameLoop game, Player player) {
         int score = 0;
-//        if (game.getWinner() == player) {
-//            score += 100;
-//        }
-
+        if (game.getWinner() == player) {
+            score += 100;
+        }
+        score += player.getTerritoriesOwned();
+        score += player.getContinentsOwned().size() * 5;
+        // score += troopsOwned * 0.1;
         return score;
     }
 
