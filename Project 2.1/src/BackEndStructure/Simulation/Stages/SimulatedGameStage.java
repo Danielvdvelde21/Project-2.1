@@ -42,6 +42,7 @@ public class SimulatedGameStage {
 
                 // Calculated attack
                 // TODO GET MOVE to attack
+                // TODO
                 gameOver = attack.getGameState();
 
                 // Random

@@ -51,7 +51,8 @@ public class AttackEvent {
             }
         } else if (player.isMCTSBot()) {
             game.getAIMCTS().findNextMove(graph, game.getPlayers());
-            // TODO update visuals
+            // TODO make return vertices and take those into account with botattack
+            botAttack(player);
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
@@ -136,9 +137,8 @@ public class AttackEvent {
             return false;
         }
 
-        int initialAttack = attacker.getTerritory().getNumberOfTroops();
-
         // Set the amount of dice that the bot wants to use
+        // TODO set max for mcts
         switch (game.getAi().getBotAttacking().getAttackerDie()) {
             case 1:
                 dicePanel.removeAttackDie();
@@ -156,6 +156,7 @@ public class AttackEvent {
         narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
 
         // If the bot is attacking another bot, the defending bot will use a much defending dice
+        // TODO ownedbybot mcts
         if (ownedByBot(defender)) {
             if (defender.getTerritory().getNumberOfTroops() > 1) {
                 dicePanel.addDefendDie();
@@ -230,6 +231,7 @@ public class AttackEvent {
 
         // How many troops are sent over
         int troops;
+        // TODO MCTS
         if (player.isBot()) {
             troops = game.getAi().getBotAttacking().getTroopCarryOver(attack);
         } else {
