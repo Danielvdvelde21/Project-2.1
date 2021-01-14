@@ -47,14 +47,14 @@ public class AttackEvent {
 
         if (player.isBot()) {
             while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
-                if (!botAttack(player)) {
+                if (!botAttack(player, null)) {
                     break;
                 }
             }
         } else if (player.isMCTSBot()) {
-            game.getAIMCTS().findNextMove(graph, game.getPlayers());
-            // TODO make return vertices and take those into account with botattack
-            botAttack(player);
+            // TODO how many attacks is mcts going to do?
+            Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers());
+            botAttack(player, vertices);
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
@@ -129,10 +129,18 @@ public class AttackEvent {
         }
     }
 
-    private boolean botAttack(Player player) {
-        Vertex[] vertices = game.getAi().getBotAttacking().attack(graph, player);
-        Vertex attacker = vertices[0];
-        Vertex defender = vertices[1];
+    private boolean botAttack(Player player, Vertex[] attackerDefender) {
+        Vertex[] vertices;
+        Vertex attacker;
+        Vertex defender;
+
+        if (player.isBot()) {
+            vertices = game.getAi().getBotAttacking().attack(graph, player);
+        } else {
+            vertices = attackerDefender;
+        }
+        attacker = vertices[0];
+        defender = vertices[1];
 
         if (vertices[0] == null) {
             // cancel the bot attack, there is no attack
@@ -140,25 +148,42 @@ public class AttackEvent {
         }
 
         // Set the amount of dice that the bot wants to use
-        // TODO set max for mcts
-        switch (game.getAi().getBotAttacking().getAttackerDie()) {
-            case 1:
-                dicePanel.removeAttackDie();
-                dicePanel.removeAttackDie();
-                break;
-            case 2:
-                dicePanel.removeAttackDie();
-                dicePanel.removeAttackDie();
-                dicePanel.addAttackDie();
-                break;
-            case 3:
-                dicePanel.addAttackDie();
-                dicePanel.addAttackDie();
+        if (player.isBot()) {
+            switch (game.getAi().getBotAttacking().getAttackerDie()) {
+                case 1:
+                    dicePanel.removeAttackDie();
+                    dicePanel.removeAttackDie();
+                    break;
+                case 2:
+                    dicePanel.removeAttackDie();
+                    dicePanel.removeAttackDie();
+                    dicePanel.addAttackDie();
+                    break;
+                case 3:
+                    dicePanel.addAttackDie();
+                    dicePanel.addAttackDie();
+            }
+        } else {
+            switch (attacker.getTerritory().getNumberOfTroops()) {
+                case 1:
+                    throw new IllegalArgumentException("Cannot attack with 1 troop");
+                case 2:
+                    dicePanel.removeAttackDie();
+                    dicePanel.removeAttackDie();
+                    break;
+                case 3:
+                    dicePanel.removeAttackDie();
+                    dicePanel.removeAttackDie();
+                    dicePanel.addAttackDie();
+                    break;
+                default:
+                    dicePanel.addAttackDie();
+                    dicePanel.addAttackDie();
+            }
         }
         narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
 
         // If the bot is attacking another bot, the defending bot will use a much defending dice
-        // TODO ownedbybot mcts
         if (ownedByBot(defender)) {
             if (defender.getTerritory().getNumberOfTroops() > 1) {
                 dicePanel.addDefendDie();
@@ -221,7 +246,7 @@ public class AttackEvent {
     }
 
     // Logic that needs to happen after a territory is captured
-    private void territoryCaptured(Player player, Vertex defender, Vertex attack) { //TODO fix the isEliminated order
+    private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
         // Player gets the territory
         Player defenderOwner = defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();
@@ -239,8 +264,7 @@ public class AttackEvent {
 
         // How many troops are sent over
         int troops;
-        // TODO MCTS
-        if (player.isBot()) {
+        if (player.isBot() || player.isMCTSBot()) {
             troops = game.getAi().getBotAttacking().getTroopCarryOver(attack);
         } else {
             TerritoryCaptured popUp = new TerritoryCaptured(attack.getTerritory());
@@ -362,8 +386,7 @@ public class AttackEvent {
 
     // Check if vertex is owned by bot
     private boolean ownedByBot(Vertex defender) {
-        Player p = defender.getTerritory().getOwner();
-        return p.isBot();
+        return defender.getTerritory().getOwner().isMCTSBot() || defender.getTerritory().getOwner().isBot();
     }
 
     // If a player is defeated
