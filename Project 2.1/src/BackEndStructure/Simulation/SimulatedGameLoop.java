@@ -3,6 +3,7 @@ package BackEndStructure.Simulation;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedGameStage;
 
 import java.util.ArrayList;
@@ -16,11 +17,11 @@ public class SimulatedGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
+    public SimulatedGameLoop(Graph g, ArrayList<Player> order, Vertex[] firstAttack) {
         this.game = new Game(g, order);
 
         // The game is about attacking, using cards, fortifying, etc.
-        mainGameStage();
+        mainGameStage(firstAttack);
 
         // Game over
         System.out.println("Game over! Winner is " + winner.getName());
@@ -29,9 +30,9 @@ public class SimulatedGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
     // MainGameStage
 
-    public void mainGameStage() {
+    public void mainGameStage(Vertex[] firstAttack) {
         SimulatedGameStage stage = new SimulatedGameStage(game);
-        stage.mainGameStage();
+        stage.mainGameStage(firstAttack);
         winner = stage.getWinner();
     }
 

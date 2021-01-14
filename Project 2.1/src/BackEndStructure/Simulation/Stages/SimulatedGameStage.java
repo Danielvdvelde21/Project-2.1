@@ -3,6 +3,7 @@ package BackEndStructure.Simulation.Stages;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
+import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimAttackEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimFortifyEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimReceiveTroops;
@@ -34,7 +35,7 @@ public class SimulatedGameStage {
     //------------------------------------------------------------------------------------------------------------------
     // Gameplay
 
-    public void mainGameStage() {
+    public void mainGameStage(Vertex[] firstAttack) {
         // First turn
         // MCTS bot make their move
         // REQUIRES MCTS BOT TO BE THE FIRST IN THE PLAYERORDER!
@@ -52,8 +53,7 @@ public class SimulatedGameStage {
                     receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player));
 
                     // Calculated attack
-                    // TODO INPUT CORRECT VERTICES
-                    attack.MCTSAttack(player, null, null);
+                    attack.MCTSAttack(player, firstAttack[0], firstAttack[1]);
                     gameOver = attack.getGameState();
 
                     if (!gameOver) {

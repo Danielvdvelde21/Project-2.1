@@ -83,10 +83,8 @@ public class MCTS extends UsefulMethods {
         }
 
         ArrayList<Player> simulatedPlayerOrder = changeOrder(copiedOrder, node);
-        SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder);
-        // TODO
-        Player REMOVEME = new Player("1", Color.RED, true);
-        return analyzeGame(game, REMOVEME);
+        SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder, new Vertex[]{node.getAttacker(), node.getDefender()});
+        return analyzeGame(game, node.getState().getPlayer());
     }
 
     // Change order for simulated game such that MCTS bot in node starts
