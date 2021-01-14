@@ -3,6 +3,8 @@ package Visualisation.MainMenu;
 import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -25,8 +27,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -118,8 +118,23 @@ public class MainMenuScreen extends Application {
             Label botLabel = new Label("BOT");
             botLabel.setFont(Font.font ("Verdana", FontWeight.BOLD, 18));
             botLabel.setTextFill(Color.DARKRED);
-            botLabel.setTranslateY(5);
-            botLabel.setTranslateX(263);
+            botLabel.setTranslateY(10);
+            botLabel.setTranslateX(245);
+
+            Label basicLabel = new Label("Basic:");
+            basicLabel.setFont(Font.font ("Verdana", FontWeight.SEMI_BOLD, 14));
+            basicLabel.setTextFill(Color.DARKRED);
+            basicLabel.setTranslateY(5);
+            basicLabel.setTranslateX(215);
+
+            Label mctsLabel = new Label("MCTS:");
+            mctsLabel.setFont(Font.font ("Verdana", FontWeight.SEMI_BOLD, 14));
+            mctsLabel.setTextFill(Color.DARKRED);
+            mctsLabel.setTranslateY(5);
+            mctsLabel.setTranslateX(230);
+
+            HBox botLabelsHBox = new HBox();
+            botLabelsHBox.getChildren().addAll(basicLabel, mctsLabel);
 
             TextInput name1 = new TextInput("P1's name:");
             TextInput name2 = new TextInput("P2's name:");
@@ -133,18 +148,29 @@ public class MainMenuScreen extends Application {
                 //getting players' names from TextInput objects
                 int count = menu3.getChildren().size();
                 String[] pm = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
-                playerNames = Arrays.copyOf(pm, count-3);
+                playerNames = Arrays.copyOf(pm, count-4);
 
                 //getting bot checkBoxes from TextInput objects
-                CheckBox[] checkBoxes  = new CheckBox[]{name1.checkBox, name2.checkBox, name3.checkBox, name4.checkBox, name5.checkBox, name6.checkBox};
-                checkBoxes = Arrays.copyOf(checkBoxes, count-3);
+                CheckBox[] checkBoxesBasicBot  = new CheckBox[]{name1.checkBoxBasicBot, name2.checkBoxBasicBot, name3.checkBoxBasicBot, name4.checkBoxBasicBot, name5.checkBoxBasicBot, name6.checkBoxBasicBot};
+                checkBoxesBasicBot = Arrays.copyOf(checkBoxesBasicBot, count-4);
+
+                CheckBox[] checkBoxesMCTSBot  = new CheckBox[]{name1.checkBoxMCTSBot, name2.checkBoxMCTSBot, name3.checkBoxMCTSBot, name4.checkBoxMCTSBot, name5.checkBoxMCTSBot, name6.checkBoxMCTSBot};
+                checkBoxesMCTSBot = Arrays.copyOf(checkBoxesMCTSBot, count-4);
 
                 int i = 0;
-                boolean[] bots = new boolean[count-3];
-                for(CheckBox cb : checkBoxes) {
-                    bots[i] = cb.isSelected();
+                boolean[] botsBasic = new boolean[count-4];
+                for(CheckBox cb : checkBoxesBasicBot) {
+                    botsBasic[i] = cb.isSelected();
                     i++;
                 }
+
+                int j = 0;
+                boolean[] botsMCTS = new boolean[count-4];
+                for(CheckBox cb : checkBoxesMCTSBot) {
+                    botsMCTS[j] = cb.isSelected();
+                    j++;
+                }
+
 
                 if(emptyString(playerNames)) {  //name input restrictions
                     startBtn.addWarning("[ENTER NAMES]");
@@ -154,7 +180,7 @@ public class MainMenuScreen extends Application {
                 }
                 else {
                     ps.hide();  //hide menu
-                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, bots);
+                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic);   //TODO handle botsMCTS
                 }
             });
 
@@ -169,7 +195,7 @@ public class MainMenuScreen extends Application {
             MenuButton players2Btn = new MenuButton("2 Players");
             players2Btn.setOnMouseClicked(event -> {
                 menu3.getChildren().clear();
-                menu3.getChildren().addAll(botLabel, name1, name2, startBtn, backBtn);
+                menu3.getChildren().addAll(botLabel, botLabelsHBox, name1, name2, startBtn, backBtn);
                 getChildren().add(menu3);
                 getChildren().remove(menu2);
             });
@@ -177,7 +203,7 @@ public class MainMenuScreen extends Application {
             MenuButton players3Btn = new MenuButton("3 Players");
             players3Btn.setOnMouseClicked(event -> {
                 menu3.getChildren().clear();
-                menu3.getChildren().addAll(botLabel, name1, name2, name3, startBtn, backBtn);
+                menu3.getChildren().addAll(botLabel, botLabelsHBox, name1, name2, name3, startBtn, backBtn);
                 getChildren().add(menu3);
                 getChildren().remove(menu2);
             });
@@ -185,7 +211,7 @@ public class MainMenuScreen extends Application {
             MenuButton players4Btn = new MenuButton("4 Players");
             players4Btn.setOnMouseClicked(event -> {
                 menu3.getChildren().clear();
-                menu3.getChildren().addAll(botLabel, name1, name2, name3, name4, startBtn, backBtn);
+                menu3.getChildren().addAll(botLabel, botLabelsHBox, name1, name2, name3, name4, startBtn, backBtn);
                 getChildren().add(menu3);
                 getChildren().remove(menu2);
             });
@@ -193,7 +219,7 @@ public class MainMenuScreen extends Application {
             MenuButton players5Btn  = new MenuButton("5 Players");
             players5Btn.setOnMouseClicked(event -> {
                 menu3.getChildren().clear();
-                menu3.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, startBtn, backBtn);
+                menu3.getChildren().addAll(botLabel, botLabelsHBox, name1, name2, name3, name4, name5, startBtn, backBtn);
                 getChildren().add(menu3);
                 getChildren().remove(menu2);
             });
@@ -201,7 +227,7 @@ public class MainMenuScreen extends Application {
             MenuButton players6Btn = new MenuButton("6 Players");
             players6Btn.setOnMouseClicked(event -> {
                 menu3.getChildren().clear();
-                menu3.getChildren().addAll(botLabel, name1, name2, name3, name4, name5, name6, startBtn, backBtn);
+                menu3.getChildren().addAll(botLabel, botLabelsHBox, name1, name2, name3, name4, name5, name6, startBtn, backBtn);
                 getChildren().add(menu3);
                 getChildren().remove(menu2);
             });
@@ -297,12 +323,13 @@ public class MainMenuScreen extends Application {
     private static class TextInput extends StackPane {
 
         private TextField tf;
-        private CheckBox checkBox;
+        private CheckBox checkBoxBasicBot;
+        private CheckBox checkBoxMCTSBot;
 
         public TextInput(String name) {
             tf = new TextField();
             tf.setBackground(Background.EMPTY);
-            tf.setPrefColumnCount(10);
+            tf.setPrefColumnCount(7);
             tf.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
 
             Label label1 = new Label(name);
@@ -310,16 +337,36 @@ public class MainMenuScreen extends Application {
             label1.setTextFill(Color.GREY.brighter());
             label1.setTranslateY(5);    //fixing position
 
-            checkBox = new CheckBox(); //Bot player Check Box
-            checkBox.setCursor(Cursor.HAND);
-            checkBox.setStyle("-fx-body-color: black; -fx-faint-focus-color: darkred;");
-            checkBox.setScaleX(1.3);
-            checkBox.setScaleY(1.3);
-            checkBox.setTranslateY(9);  //fixing position
+            checkBoxBasicBot = new CheckBox(); //Bot player Check Box
+            checkBoxBasicBot.setCursor(Cursor.HAND);
+            checkBoxBasicBot.setStyle("-fx-body-color: black; -fx-faint-focus-color: darkred;");
+            checkBoxBasicBot.setScaleX(1.3);
+            checkBoxBasicBot.setScaleY(1.3);
+            checkBoxBasicBot.setTranslateY(9);  //fixing position
+
+            checkBoxMCTSBot = new CheckBox();
+            checkBoxMCTSBot.setCursor(Cursor.HAND);
+            checkBoxMCTSBot.setStyle("-fx-body-color: black; -fx-faint-focus-color: darkred;");
+            checkBoxMCTSBot.setScaleX(1.3);
+            checkBoxMCTSBot.setScaleY(1.3);
+            checkBoxMCTSBot.setTranslateY(9);
+
+            EventHandler eh = (EventHandler<ActionEvent>) event -> {    //user can only select one of the options
+                if (event.getSource() instanceof CheckBox) {
+                    CheckBox chk = (CheckBox) event.getSource();
+                    if (chk.equals(checkBoxBasicBot) && checkBoxMCTSBot.isSelected()) {
+                        checkBoxMCTSBot.setSelected(false); }
+                    else if (chk.equals(checkBoxMCTSBot) && checkBoxBasicBot.isSelected()) {
+                        checkBoxBasicBot.setSelected(false); }
+                }
+            };
+
+            checkBoxBasicBot.setOnAction(eh);
+            checkBoxMCTSBot.setOnAction(eh);
 
             HBox hb = new HBox();
-            hb.getChildren().addAll(label1, tf, checkBox);
-            hb.setSpacing(10);
+            hb.getChildren().addAll(label1, tf, checkBoxBasicBot, checkBoxMCTSBot);
+            hb.setSpacing(16);
 
             Rectangle r = new Rectangle(300, 35);   //background rectangle
             r.setOpacity(0.65);
