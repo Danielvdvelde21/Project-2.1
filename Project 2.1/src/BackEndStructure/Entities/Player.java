@@ -60,6 +60,9 @@ public class Player {
 
     //------------------------------------------------------------------------------------------------------------------
     // Get and Set territory/continent data
+
+    public void setTerritoriesOwned(int territories) { territoriesOwned = territories;    }
+
     public int getTerritoriesOwned() {
         return territoriesOwned;
     }
@@ -71,6 +74,8 @@ public class Player {
     public void decreaseTerritoriesOwned() {
         territoriesOwned--;
     }
+
+    public void setContinentsOwned(ArrayList<String> continents) { continentsOwned.addAll(continents);    }
 
     public ArrayList<String> getContinentsOwned() {
         return continentsOwned;
@@ -97,6 +102,8 @@ public class Player {
     public int getSetsTurnedIn() {
         return setsTurnedIn;
     }
+
+    public void setSetsTurnedIn(int sets) { setsTurnedIn = sets; }
 
     public void incrementSetsOwned() {
         setsTurnedIn++;

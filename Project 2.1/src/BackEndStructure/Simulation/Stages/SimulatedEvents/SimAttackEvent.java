@@ -182,6 +182,7 @@ public class SimAttackEvent {
                 // Update troops counts
                 attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
                 defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
+                System.out.println("Player: " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsDefenders() + ")" + " Using " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsAttackers() + ")");
 
                 // Reset classes
                 game.getAttackingHandler().resetTroopsLost();
@@ -199,7 +200,7 @@ public class SimAttackEvent {
     // Logic that needs to happen after a territory is captured
     private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
         // Player gets the territory
-        Player defenderOwner=defender.getTerritory().getOwner();
+        Player defenderOwner = defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();
         defender.getTerritory().setOwner(player);
 
@@ -305,5 +306,7 @@ public class SimAttackEvent {
         return winner;
     }
 
-    public boolean getGameState() { return gameOver; }
+    public boolean getGameState() {
+        return gameOver;
+    }
 }

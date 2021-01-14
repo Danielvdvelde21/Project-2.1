@@ -27,6 +27,11 @@ public class MCTS {
         // Deep copy players and update graph
         for (Player p : order) {
             Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot());
+            // Important to update each value!
+            newPlayer.setTerritoriesOwned(p.getTerritoriesOwned());
+            newPlayer.setContinentsOwned(p.getContinentsOwned());
+            newPlayer.addToHand(p.getHand());
+            newPlayer.setSetsTurnedIn(p.getSetsTurnedIn());
             copiedOrder.add(newPlayer);
             // Update the players to the copied players in the graph
             for(Vertex v : copiedGraph.getArrayList()) {

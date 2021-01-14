@@ -53,7 +53,7 @@ public class SimReceiveTroops {
         // Troops for continents owned
         game.hasContinents(player);
         int conti = game.getValueOfContinentsOwned(player.getContinentsOwned());
-
+        System.out.println("Player " + player.getName() + " received " + terri + " troop(s) from Territories, " + conti + " troop(s) from Continents and " + cards + " troop(s) from Cards");
         return cards + terri + conti;
     }
 
