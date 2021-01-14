@@ -26,7 +26,7 @@ public class SimulatedGameLoop {
         mainGameStage(firstAttack);
 
         // Game over
-        System.out.println("Game over! Winner is " + winner.getName());
+        System.out.println("Simulation over! Winner is " + winner.getName());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
