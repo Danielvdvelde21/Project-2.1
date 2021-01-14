@@ -1,14 +1,16 @@
 package AI.MCTS;
 
+import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Vertex;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Node {
     private final State state;
     private Node parent;
-    private List<Node> children;
+    private List<Node> children = new ArrayList<>();
 
     private Vertex attacker;
     private Vertex defender;

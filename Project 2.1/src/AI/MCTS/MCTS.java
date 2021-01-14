@@ -13,17 +13,24 @@ import java.util.ArrayList;
 public class MCTS extends UsefulMethods {
 
     private final int maxIterations = 1000;
+    private ArrayList<Player> copiedOrder = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order) {
-        // First player in the playerOrder is the MCTS bot
-        Player playerMCTS = order.get(0);
+        // Deep copy player order
+        for (Player p : order) {
+            copiedOrder.add(new Player(p.getName(), p.getColor(), p.isBot(),p.isMCTSBot()));
+        }
 
-        State originalState = new State(g, playerMCTS);
-        Node root = new Node(originalState);
-        root.setVisitCount(1); // Set the root as simulated so that we can
+        // First player in the copiedOrder is the MCTS bot
+        Player playerMCTS = copiedOrder.get(0);
+
+        // Construct the root node
+        Node root = new Node(new State(g, playerMCTS));
+        root.setVisitCount(1); // Sets the root as simulated
+
         Tree tree = new Tree(root);
 
         // Time limit or iteration limit
@@ -32,25 +39,21 @@ public class MCTS extends UsefulMethods {
 
         int iteration=0;
         while (System.currentTimeMillis() - time < end && iteration<maxIterations) {
+            // Selection
             Node promisingNode = selectPromisingChild(root);
 
+            // Expansion
             if (promisingNode.isSimulated()) {
                 expansion(g, playerMCTS, promisingNode);
                 promisingNode = promisingNode.getChildren().get(0);
             }
 
+            // Play out (simulation
             Node simulationNode = promisingNode;
-
-            //this is probably redundant since a promising node is always a leaf
-            /*if (promisingNode.getChildren().size() > 0) {
-                simulationNode = promisingNode.getRandomChildNode();
-            }*/
-
-
             int playResult = playOut(simulationNode.getState().getGraph(), order, simulationNode);
 
+            // Backpropagation
             backProp(simulationNode, playResult);
-
             iteration++;
         }
 
@@ -76,14 +79,12 @@ public class MCTS extends UsefulMethods {
 
     // Simulates a game
     private int playOut(Graph g, ArrayList<Player> order, Node node) {
-        // Deep copy player order
-        ArrayList<Player> copiedOrder = new ArrayList<>();
-        for (Player p : order) {
-            copiedOrder.add(new Player(p.getName(), p.getColor(), p.isBot(),p.isMCTSBot()));
-        }
-
+        // Fix player order for simulated game
         ArrayList<Player> simulatedPlayerOrder = changeOrder(copiedOrder, node);
+
+        // Simulate game
         SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder, new Vertex[]{node.getAttacker(), node.getDefender()});
+        // TODO return winner
         return analyzeGame(game, node.getState().getPlayer());
     }
 
