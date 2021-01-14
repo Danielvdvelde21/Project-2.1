@@ -8,22 +8,6 @@ public class AttackingHandler {
     // Simulates 1 fight with 1-3 attackers and 1-2 defenders
     // AttackValues is always size 3 and DefendValues always size 2
     public void oneFight(int attackers, int[] attackValues, int defenders, int[] defendValues) {
-        switch(attackers) {
-            case 3:
-                break;
-            case 2:
-                attackValues[2] = 0;
-                break;
-            case 1:
-                attackValues[1] = 0;
-                attackValues[2] = 0;
-        }
-        switch(defenders) {
-            case 2:
-                break;
-            case 1:
-                defendValues[1] = 0;
-        }
 
         int max = 0;
         int ndMax = 0;

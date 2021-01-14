@@ -9,6 +9,7 @@ import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class SimAttackEvent {
@@ -98,95 +99,99 @@ public class SimAttackEvent {
     }
 
     private void randomAttack(Player player) {
+        // Get all the owned territories for this player
         ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-        ArrayList<Vertex> enemyNeighbours = new ArrayList<>();
         for (int i = 0; i < graph.getSize(); i++) {
             if (graph.get(i).getTerritory().getOwner() == player) {
                 ownedTerritories.add(graph.get(i));
             }
         }
 
-        // Select random attacker
-        Random rn = new Random();
-        int atkIndex = rn.nextInt(ownedTerritories.size());
-
         // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
-        boolean enemy = false;
-        while (ownedTerritories.get(atkIndex).getTerritory().getNumberOfTroops() < 2 && !enemy) {
-            enemy = false;
-            atkIndex = rn.nextInt(ownedTerritories.size());
-            // Select neighbouring enemy territories
-            for (Edge e: ownedTerritories.get(atkIndex).getEdges()) {
-                if (e.getVertex().getTerritory().getOwner() != player) {
-                    enemy = true;
-                    break;
+        ArrayList<Vertex> validAttackers = new ArrayList<>();
+        for (Vertex v : ownedTerritories) {
+            if (v.getTerritory().getNumberOfTroops() > 1) {
+                boolean enemy = false;
+                for (Edge e : v.getEdges()) {
+                    if (e.getVertex().getTerritory().getOwner() != player) {
+                        enemy = true;
+                        break;
+                    }
+                }
+                if (enemy) {
+                    validAttackers.add(v);
                 }
             }
         }
 
-        for (Edge e: ownedTerritories.get(atkIndex).getEdges()) {
-            if (e.getVertex().getTerritory().getOwner() != player) {
-                enemyNeighbours.add(e.getVertex());
+        Random random = new Random();
+
+        // Randomly select attacker if there is a valid one
+        if (!validAttackers.isEmpty()) {
+            Vertex attacker = validAttackers.get(random.nextInt(validAttackers.size()));
+
+            // Randomly select defender
+            ArrayList<Edge> validDefenders = new ArrayList<>();
+            for (Edge e : attacker.getEdges()) {
+                if (e.getVertex().getTerritory().getOwner() != player) {
+                    validDefenders.add(e);
+                }
             }
-        }
+            Vertex defender = validDefenders.get(random.nextInt(validDefenders.size())).getVertex();
 
-        // Select random neighbour
-        int defIndex = rn.nextInt(enemyNeighbours.size());
+            // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
+            while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
 
-        Vertex attacker = ownedTerritories.get(atkIndex);
-        Vertex defender = enemyNeighbours.get(defIndex);
+                int numberOfAttackerDice;
+                int numberOfDefenderDice;
+                int[] attackerDiceValues = new int[3];
+                int[] defenderDiceValues = new int[2];
 
-        // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
-        while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
+                // Setting the attacker dice
+                switch (attacker.getTerritory().getNumberOfTroops()) {
+                    case 1:
+                        throw new IllegalArgumentException("Attacking with 1 troop");
+                    case 2:
+                        numberOfAttackerDice = 1;
+                        attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                        break;
+                    case 3:
+                        numberOfAttackerDice = 2;
+                        attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                        attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                        break;
+                    default:
+                        numberOfAttackerDice = 3;
+                        attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                        attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                        attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
+                }
 
-            int numberOfAttackerDice;
-            int numberOfDefenderDice;
-            int[] attackerDiceValues = new int[3];
-            int[] defenderDiceValues = new int[2];
+                // Setting the defender dice
+                if (defender.getTerritory().getNumberOfTroops() > 1) {
+                    numberOfDefenderDice = 2;
+                    defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
+                } else {
+                    numberOfDefenderDice = 1;
+                    defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+                }
+                // Perform a fight
+                game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
 
-            // Setting the attacker dice
-            switch (attacker.getTerritory().getNumberOfTroops()) {
-                case 1:
-                    numberOfAttackerDice = 1;
-                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    break;
-                case 2:
-                    numberOfAttackerDice = 2;
-                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
-                    break;
-                default:
-                    numberOfAttackerDice = 3;
-                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
-                    attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
-            }
+                // Update troops counts
+                attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
+                defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
 
-            // Setting the defender dice
-            if (defender.getTerritory().getNumberOfTroops() > 1) {
-                numberOfDefenderDice = 2;
-                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
-                defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
-            } else {
-                numberOfDefenderDice = 1;
-                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
-            }
+                // Reset classes
+                game.getAttackingHandler().resetTroopsLost();
 
-            // Perform a fight
-            game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
-
-            // Update troops counts
-            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
-            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
-
-            // Reset classes
-            game.getAttackingHandler().resetTroopsLost();
-
-            // If a territory is captured
-            if (defender.getTerritory().getNumberOfTroops() < 1) {
-                oneTerritoryCaptured = true;
-                territoryCaptured(player, defender, attacker);
-                return;
+                // If a territory is captured
+                if (defender.getTerritory().getNumberOfTroops() < 1) {
+                    oneTerritoryCaptured = true;
+                    territoryCaptured(player, defender, attacker);
+                    return;
+                }
             }
         }
     }

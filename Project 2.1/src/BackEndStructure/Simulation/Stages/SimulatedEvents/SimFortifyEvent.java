@@ -46,7 +46,13 @@ public class SimFortifyEvent {
             Vertex from = validFroms.get(random.nextInt(validFroms.size()));
 
             // Select a random territory that is adjacent to the from territory (this territory receives troops)
-            Vertex to = from.getEdges().get(random.nextInt(from.getEdges().size())).getVertex();
+            ArrayList<Edge> validTos = new ArrayList<>();
+            for (Edge e : from.getEdges()) {
+                if (e.getVertex().getTerritory().getOwner() == player) {
+                    validTos.add(e);
+                }
+            }
+            Vertex to = validTos.get(random.nextInt(validTos.size())).getVertex();
 
             // Send a random quantity of troops
             int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;
