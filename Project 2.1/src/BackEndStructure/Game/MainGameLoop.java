@@ -30,8 +30,8 @@ public class MainGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public MainGameLoop(int players, String[] playerNames, boolean[] bots) {
-        this.game = new Game(players, playerNames, bots);
+    public MainGameLoop(int players, String[] playerNames, boolean[] basicBots, boolean[] MCTSBots) {
+        this.game = new Game(players, playerNames, basicBots, MCTSBots);
         this.narrator = game.getNarrator();
         this.playerTurn = game.getPlayerTurn();
         this.cardInventory = game.getCardInventory();

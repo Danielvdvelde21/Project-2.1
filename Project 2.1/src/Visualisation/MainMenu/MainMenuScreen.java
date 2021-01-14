@@ -180,7 +180,7 @@ public class MainMenuScreen extends Application {
                 }
                 else {
                     ps.hide();  //hide menu
-                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic);   //TODO handle botsMCTS
+                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS);
                 }
             });
 

@@ -58,7 +58,7 @@ public class Game {
     // Constructors
 
     // For playing a regular game
-    public Game(int numberOfPlayers, String[] names, boolean[] bots) {
+    public Game(int numberOfPlayers, String[] names, boolean[] basicBots, boolean[] MCTSBots) {
         // How many troops each player gets from the start
         switch (numberOfPlayers) {
             case 2:
@@ -89,7 +89,7 @@ public class Game {
 
         // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
-            players.add(new Player(names[i], colors[i], bots[i]));
+            players.add(new Player(names[i], colors[i], basicBots[i], MCTSBots[i]));
         }
 
         // Create a new map
