@@ -26,6 +26,7 @@ public class SimFortifyEvent {
         }
 
         // For all owned territories select the ones that have another adjacent owned territory
+        ArrayList<Vertex> validFroms = new ArrayList<>();
         for (Vertex v : ownedTerritories) {
             boolean twoOwnedAdjacent = false;
             for (Edge e : v.getEdges()) {
@@ -34,24 +35,28 @@ public class SimFortifyEvent {
                     break;
                 }
             }
-            if (!twoOwnedAdjacent) {
-                ownedTerritories.remove(v);
+            if (twoOwnedAdjacent) {
+                validFroms.add(v);
             }
         }
 
-        // Select a random territory from this list (this territory will send troops)
-        Random random = new Random();
-        Vertex from = ownedTerritories.get(random.nextInt(ownedTerritories.size()));
+        if (!validFroms.isEmpty()) {
+            // Select a random territory from this list (this territory will send troops)
+            Random random = new Random();
+            Vertex from = validFroms.get(random.nextInt(validFroms.size()));
 
-        // Select a random territory that is adjacent to the from territory (this territory receives troops)
-        Vertex to = from.getEdges().get(random.nextInt(from.getEdges().size())).getVertex();
+            // Select a random territory that is adjacent to the from territory (this territory receives troops)
+            Vertex to = from.getEdges().get(random.nextInt(from.getEdges().size())).getVertex();
 
-        // Send a random quantity of troops
-        int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;
+            // Send a random quantity of troops
+            int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;
 
-        // Update the troop counts in the graph
-        from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
-        to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
+            // Update the troop counts in the graph
+            from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
+            to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
+        } else {
+            System.out.println("no valid reinforcements");
+        }
     }
 
 }
