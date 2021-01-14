@@ -29,6 +29,62 @@ public class SimAttackEvent {
         this.graph = game.getGraph();
     }
 
+    public void MCTSAttack(Player player, Vertex attacker, Vertex defender) {
+        // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
+        while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
+
+            int numberOfAttackerDice;
+            int numberOfDefenderDice;
+            int[] attackerDiceValues = new int[3];
+            int[] defenderDiceValues = new int[2];
+
+            // Setting the attacker dice
+            switch (attacker.getTerritory().getNumberOfTroops()) {
+                case 1:
+                    numberOfAttackerDice = 1;
+                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    break;
+                case 2:
+                    numberOfAttackerDice = 2;
+                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                    break;
+                default:
+                    numberOfAttackerDice = 3;
+                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                    attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
+            }
+
+            // Setting the defender dice
+            if (defender.getTerritory().getNumberOfTroops() > 1) {
+                numberOfDefenderDice = 2;
+                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+                defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
+            } else {
+                numberOfDefenderDice = 1;
+                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+            }
+
+            // Perform a fight
+            game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
+
+            // Update troops counts
+            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
+            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
+
+            // Reset classes
+            game.getAttackingHandler().resetTroopsLost();
+
+            // If a territory is captured
+            if (defender.getTerritory().getNumberOfTroops() < 1) {
+                oneTerritoryCaptured = true;
+                territoryCaptured(player, defender, attacker);
+                return;
+            }
+        }
+    }
+
     public void attacking(Player player) {
         oneTerritoryCaptured = false;
 

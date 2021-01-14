@@ -52,8 +52,8 @@ public class SimulatedGameStage {
                     receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player));
 
                     // Calculated attack
-                    // TODO GET MOVE to attack
-                    // TODO update gameState
+                    // TODO INPUT CORRECT VERTICES
+                    attack.MCTSAttack(player, null, null);
                     gameOver = attack.getGameState();
 
                     if (!gameOver) {
