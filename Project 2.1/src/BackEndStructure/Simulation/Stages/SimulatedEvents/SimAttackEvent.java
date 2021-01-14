@@ -22,6 +22,8 @@ public class SimAttackEvent {
     // One territory has been captured in the turn
     private boolean oneTerritoryCaptured;
 
+    private ArrayList<Player> eliminatedPlayers = new ArrayList<>();
+
     public SimAttackEvent(Game game) {
         this.game = game;
         this.graph = game.getGraph();
@@ -215,7 +217,11 @@ public class SimAttackEvent {
 
     // Remove player from player list
     private void eliminatePlayer(Player p) {
-        game.getPlayers().remove(p);
+        eliminatedPlayers.add(p);
+    }
+
+    public ArrayList<Player> getEliminatedPlayers() {
+        return eliminatedPlayers;
     }
 
     // Get cards from eliminated player

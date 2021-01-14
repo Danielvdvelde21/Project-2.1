@@ -7,6 +7,8 @@ import BackEndStructure.Simulation.Stages.SimulatedEvents.SimAttackEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimFortifyEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimReceiveTroops;
 
+import java.util.Iterator;
+
 public class SimulatedGameStage {
 
     private final Game game;
@@ -34,35 +36,52 @@ public class SimulatedGameStage {
 
     public void mainGameStage() {
         // First turn
-        // MCTS bots make their move
-        for (Player p : game.getPlayers()) {
-            if (p.isMCTSBot()) {
-                // Random
-                receiveTroops.placeReceivedTroops(p, receiveTroops.receivedTroops(p));
+        // MCTS bot make their move
+        // REQUIRES MCTS BOT TO BE THE FIRST IN THE PLAYERORDER!
 
-                // Calculated attack
-                // TODO GET MOVE to attack
-                // TODO
-                gameOver = attack.getGameState();
-
-                // Random
-                if (!gameOver) {
-                    fortify.randomFortification(p);
-                }
+        boolean MCTSFirstMove = true;
+        Iterator<Player> it1 = game.getPlayers().iterator();
+        while (it1.hasNext()) {
+            Player player = it1.next();
+            if (attack.getEliminatedPlayers().contains(player)) {
+                attack.getEliminatedPlayers().remove(player);
+                it1.remove();
             } else {
-                playerTurn(p);
-            }
-            if (gameOver) {
-                break;
+                if (MCTSFirstMove) {
+                    MCTSFirstMove = false;
+                    receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player));
+
+                    // Calculated attack
+                    // TODO GET MOVE to attack
+                    // TODO update gameState
+                    gameOver = attack.getGameState();
+
+                    if (!gameOver) {
+                        fortify.randomFortification(player);
+                    }
+                } else {
+                    playerTurn(player);
+                }
+                if (gameOver) {
+                    break;
+                }
             }
         }
 
         // All the next turns
         while (!gameOver) {
-            for (Player p : game.getPlayers()) {
-                playerTurn(p);
-                if (gameOver) {
-                    break;
+            Iterator<Player> it2 = game.getPlayers().iterator();
+            while (it2.hasNext()) {
+                Player player = it2.next();
+                if (attack.getEliminatedPlayers().contains(player)) {
+                    attack.getEliminatedPlayers().remove(player);
+                    it2.remove();
+                } else {
+                    playerTurn(player);
+
+                    if (gameOver) {
+                        break;
+                    }
                 }
             }
         }
