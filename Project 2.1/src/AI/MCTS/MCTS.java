@@ -83,7 +83,13 @@ public class MCTS {
         for (Player p : order) {
             Player newPlayer=p.clone();
             newOrder.add(newPlayer);
+            for (Vertex v : g.getArrayList()) {
+                if (v.getTerritory().getOwner() == p) {
+                    newPlayer.getOwnedTerritories().add(v);
+                }
+            }
         }
+
         State newState= new State(newGraph,newOrder);
         return newState;
     }
