@@ -2,7 +2,6 @@ package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Edge;
-import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;

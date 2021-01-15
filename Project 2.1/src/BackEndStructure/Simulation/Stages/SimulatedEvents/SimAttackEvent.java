@@ -3,7 +3,6 @@ package BackEndStructure.Simulation.Stages.SimulatedEvents;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Edge;
-import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -12,16 +11,14 @@ import java.util.Random;
 public class SimAttackEvent {
 
     private final Game game;
-    private final Graph graph;
 
     private boolean gameOver = false;
     private Player winner;
 
-    private ArrayList<Player> eliminatedPlayers = new ArrayList<>();
+    private final ArrayList<Player> eliminatedPlayers = new ArrayList<>();
 
     public SimAttackEvent(Game game) {
         this.game = game;
-        this.graph = game.getGraph();
     }
 
     public void randomAttack(Player player) {
@@ -112,7 +109,6 @@ public class SimAttackEvent {
                     territoryCaptured(player, defender, attacker);
                     return;
                 }
-
             }
         }
     }

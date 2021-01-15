@@ -2,7 +2,6 @@ package BackEndStructure.Simulation.Stages;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
-import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimAttackEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimFortifyEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimReceiveTroops;
