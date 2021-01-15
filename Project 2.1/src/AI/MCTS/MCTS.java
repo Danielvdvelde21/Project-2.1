@@ -99,7 +99,11 @@ public class MCTS {
         ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
 
         // Simulate game
-        SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder, new Vertex[]{node.getAttacker(), node.getDefender()});
+        long startTime = System.currentTimeMillis();
+        SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder);
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time: " + estimatedTime);
+
         // TODO return winner
         return analyzeGame(game, node.getState().getPlayer());
     }

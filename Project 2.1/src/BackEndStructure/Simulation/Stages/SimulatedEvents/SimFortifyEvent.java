@@ -60,9 +60,9 @@ public class SimFortifyEvent {
             // Update the troop counts in the graph
             from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
             to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
-            System.out.println("Player: " + player.getName() + " reinforced " + to.getTerritory().getTerritoryName() + "(-" + troopsSend + ")" + " Using " + from.getTerritory().getTerritoryName() + "(+" + troopsSend + ")");
+            // System.out.println("Player: " + player.getName() + " reinforced " + to.getTerritory().getTerritoryName() + "(-" + troopsSend + ")" + " Using " + from.getTerritory().getTerritoryName() + "(+" + troopsSend + ")");
         } else {
-            System.out.println("no valid reinforcements");
+            // System.out.println("no valid reinforcements");
         }
     }
 

@@ -17,13 +17,12 @@ public class SimulatedGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public SimulatedGameLoop(Graph g, ArrayList<Player> order, Vertex[] firstAttack) {
+    public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
         this.game = new Game(g, order);
-
         System.out.println("Simulation starts");
 
         // The game is about attacking, using cards, fortifying, etc.
-        mainGameStage(firstAttack);
+        mainGameStage();
 
         // Game over
         System.out.println("Simulation over! Winner is " + winner.getName());
@@ -32,9 +31,9 @@ public class SimulatedGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
     // MainGameStage
 
-    public void mainGameStage(Vertex[] firstAttack) {
+    public void mainGameStage() {
         SimulatedGameStage stage = new SimulatedGameStage(game);
-        stage.mainGameStage(firstAttack);
+        stage.mainGameStage();
         winner = stage.getWinner();
     }
 

@@ -2,7 +2,6 @@ package BackEndStructure.Simulation.Stages;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
-import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimAttackEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimFortifyEvent;
@@ -35,40 +34,7 @@ public class SimulatedGameStage {
     //------------------------------------------------------------------------------------------------------------------
     // Gameplay
 
-    public void mainGameStage(Vertex[] firstAttack) {
-        // First turn
-        // MCTS bot make their move
-        // REQUIRES MCTS BOT TO BE THE FIRST IN THE PLAYERORDER!
-
-        boolean MCTSFirstMove = true;
-        Iterator<Player> it1 = game.getPlayers().iterator();
-        while (it1.hasNext()) {
-            Player player = it1.next();
-            if (attack.getEliminatedPlayers().contains(player)) {
-                attack.getEliminatedPlayers().remove(player);
-                it1.remove();
-            } else {
-                if (MCTSFirstMove) {
-                    MCTSFirstMove = false;
-                    receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player));
-
-                    // Calculated attack
-                    attack.MCTSAttack(player, firstAttack[0], firstAttack[1]);
-                    gameOver = attack.getGameState();
-
-                    if (!gameOver) {
-                        fortify.randomFortification(player);
-                    }
-                } else {
-                    playerTurn(player);
-                }
-                if (gameOver) {
-                    break;
-                }
-            }
-        }
-
-        // All the next turns
+    public void mainGameStage() {
         while (!gameOver) {
             Iterator<Player> it2 = game.getPlayers().iterator();
             while (it2.hasNext()) {

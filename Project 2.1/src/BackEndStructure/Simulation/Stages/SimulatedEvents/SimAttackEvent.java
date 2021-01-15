@@ -21,7 +21,7 @@ public class SimAttackEvent {
     private Player winner;
 
     // One territory has been captured in the turn
-    private boolean oneTerritoryCaptured;
+    // private boolean oneTerritoryCaptured;
 
     private ArrayList<Player> eliminatedPlayers = new ArrayList<>();
 
@@ -30,64 +30,8 @@ public class SimAttackEvent {
         this.graph = game.getGraph();
     }
 
-    public void MCTSAttack(Player player, Vertex attacker, Vertex defender) {
-        // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
-        while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
-
-            int numberOfAttackerDice;
-            int numberOfDefenderDice;
-            int[] attackerDiceValues = new int[3];
-            int[] defenderDiceValues = new int[2];
-
-            // Setting the attacker dice
-            switch (attacker.getTerritory().getNumberOfTroops()) {
-                case 1:
-                    numberOfAttackerDice = 1;
-                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    break;
-                case 2:
-                    numberOfAttackerDice = 2;
-                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
-                    break;
-                default:
-                    numberOfAttackerDice = 3;
-                    attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
-                    attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
-            }
-
-            // Setting the defender dice
-            if (defender.getTerritory().getNumberOfTroops() > 1) {
-                numberOfDefenderDice = 2;
-                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
-                defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
-            } else {
-                numberOfDefenderDice = 1;
-                defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
-            }
-
-            // Perform a fight
-            game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
-
-            // Update troops counts
-            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
-            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
-
-            // Reset classes
-            game.getAttackingHandler().resetTroopsLost();
-
-            // If a territory is captured
-            if (defender.getTerritory().getNumberOfTroops() < 1) {
-                oneTerritoryCaptured = true;
-                territoryCaptured(player, defender, attacker);
-                return;
-            }
-        }
-    }
-
     public void attacking(Player player) {
-        oneTerritoryCaptured = false;
+        // oneTerritoryCaptured = false;
 
         randomAttack(player);
 
@@ -99,6 +43,7 @@ public class SimAttackEvent {
     }
 
     private void randomAttack(Player player) {
+
         // Get all the owned territories for this player
         ArrayList<Vertex> ownedTerritories = new ArrayList<>();
         for (int i = 0; i < graph.getSize(); i++) {
@@ -182,17 +127,18 @@ public class SimAttackEvent {
                 // Update troops counts
                 attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
                 defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
-                System.out.println("Player: " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsDefenders() + ")" + " Using " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsAttackers() + ")");
+                // System.out.println("Player: " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsDefenders() + ")" + " Using " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsAttackers() + ")");
 
                 // Reset classes
                 game.getAttackingHandler().resetTroopsLost();
 
                 // If a territory is captured
                 if (defender.getTerritory().getNumberOfTroops() < 1) {
-                    oneTerritoryCaptured = true;
+                    // oneTerritoryCaptured = true;
                     territoryCaptured(player, defender, attacker);
                     return;
                 }
+
             }
         }
     }
@@ -219,7 +165,6 @@ public class SimAttackEvent {
 
         attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - troops);
         defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + troops);
-
         // Cards are neglected in MCTS for now
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
         /*if (player.getHand().size() >= 6) {
@@ -227,47 +172,47 @@ public class SimAttackEvent {
         }*/
     }
 
-    // Forcing a player to turn in a set during an attacking phase
-    private void turnInCardsAttacking(Player player) {
-        // Set of cards the bot is going to turn in
-        ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
-
-        // Return cards to stack
-        game.getCardStack().returnCards(turnInSet);
-
-        // Remove cards from player hand
-        player.getHand().removeAll(turnInSet);
-
-        // Player has 1 more completed set
-        player.incrementSetsOwned();
-        placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Placing troops
-
-    public void placeReceivedTroops(Player player, int troops) {
-        for (int i = 0; i < troops; i++) {
-            placeTroopRandomly(player);
-        }
-    }
-
-    private void placeTroopRandomly(Player player) {
-        // Get all the owned territories for this player
-        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-        for (Vertex v : graph.getArrayList()) {
-            if (v.getTerritory().getOwner() == player) {
-                ownedTerritories.add(v);
-            }
-        }
-
-        // Select a random territory
-        Random random = new Random();
-        Territory t = ownedTerritories.get(random.nextInt(ownedTerritories.size())).getTerritory();
-
-        // place a troop on the random territory
-        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
-    }
+//    // Forcing a player to turn in a set during an attacking phase
+//    private void turnInCardsAttacking(Player player) {
+//        // Set of cards the bot is going to turn in
+//        ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
+//
+//        // Return cards to stack
+//        game.getCardStack().returnCards(turnInSet);
+//
+//        // Remove cards from player hand
+//        player.getHand().removeAll(turnInSet);
+//
+//        // Player has 1 more completed set
+//        player.incrementSetsOwned();
+//        placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
+//    }
+//
+//    // -----------------------------------------------------------------------------------------------------------------
+//    // Placing troops
+//
+//    public void placeReceivedTroops(Player player, int troops) {
+//        for (int i = 0; i < troops; i++) {
+//            placeTroopRandomly(player);
+//        }
+//    }
+//
+//    private void placeTroopRandomly(Player player) {
+//        // Get all the owned territories for this player
+//        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+//        for (Vertex v : graph.getArrayList()) {
+//            if (v.getTerritory().getOwner() == player) {
+//                ownedTerritories.add(v);
+//            }
+//        }
+//
+//        // Select a random territory
+//        Random random = new Random();
+//        Territory t = ownedTerritories.get(random.nextInt(ownedTerritories.size())).getTerritory();
+//
+//        // place a troop on the random territory
+//        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Extra Methods
@@ -286,10 +231,10 @@ public class SimAttackEvent {
         return eliminatedPlayers;
     }
 
-    // Get cards from eliminated player
-    private void receiveCards(Player receivingPlayer, Player donatingPlayer) {
-        receivingPlayer.addToHand(donatingPlayer.getHand());
-    }
+//    // Get cards from eliminated player
+//    private void receiveCards(Player receivingPlayer, Player donatingPlayer) {
+//        receivingPlayer.addToHand(donatingPlayer.getHand());
+//    }
 
     private void decreaseTerritories(Player p) {
         p.decreaseTerritoriesOwned();
