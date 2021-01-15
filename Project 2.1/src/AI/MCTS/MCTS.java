@@ -171,18 +171,14 @@ public class MCTS {
         else {
             nextPlayer = copiedOrder.get(playerIndex + 1);
         }
-        //TODO
-        /*
-        int[][] matrix = new matrix[2][42];
-        for (int i = 0; i < matrix[0].length; i++) {
-            if (matrix[0][i] == playerId) {
-                for (Edge e: copiedGraph.get(i).getEdges()) {
-                    if (matrix[0][e.getVertex().getTerritory().getTerritoryNumber()] != playerId) {
-                        addAllPossibleStates(matrix, i, e.getVertex().getTerritory().getTerritoryNumber(), node, nextPlayer);
-                    }
+        ArrayList<Vertex> owned = getOwnedVertices(g, node.getState().getPlayer());
+        for (Vertex v : owned) {
+            for (Edge e : v.getEdges()) {
+                if (e.getVertex().getTerritory().getOwner() != node.getState().getPlayer()) {
+                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, nextPlayer);
                 }
             }
-        }*/
+        }
     }
 
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
