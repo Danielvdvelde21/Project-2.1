@@ -39,23 +39,24 @@ public class MCTS {
 
         int iteration = 0;
         while (System.currentTimeMillis() - time < end && iteration < maxIterations) {
+            System.out.println("yo");
             // Selection
-            Node promisingNode = selectPromisingChild(root);
-
+            Node promisingNode = root;
 
             // Expansion
-            if (promisingNode.isSimulated()) {
+            /*if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
                 promisingNode = promisingNode.getChildren().get(0);
-            }
+            }*/
 
             // Play out (simulation)
             Node simulationNode = promisingNode;
+            
             int playResult = playOut(simulationNode.getState().getGraph(), simulationNode);
 
             // Backpropagation
-            backProp(simulationNode, playResult);
-            iteration++;
+            /*backProp(simulationNode, playResult);
+            iteration++;*/
         }
 
         Node winner = root.getMaxScoreChild();
