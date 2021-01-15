@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class MCTS {
 
-    private final int maxIterations = 1000;
+    private final int maxIterations = 10000;
 
     private Graph copiedGraph;
     private final ArrayList<Player> copiedOrder = new ArrayList<>();
@@ -65,7 +65,12 @@ public class MCTS {
                 System.out.println(iteration);
             }
         }
-        System.out.println(System.currentTimeMillis()-start);
+        long ft=System.currentTimeMillis()-start;
+        System.out.println("total time:" +ft);
+
+        System.out.println("time per iteration:" +(double)ft/(double)maxIterations+"ms");
+        int hz=(int)(1000.0/((double)ft/(double)maxIterations));
+        System.out.println("iterations per second:" +hz);
 
         Node winner = root.getMaxScoreChild();
         tree.setRoot(winner);

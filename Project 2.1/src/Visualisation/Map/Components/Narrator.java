@@ -10,14 +10,15 @@ public class Narrator {
     private String oldText = null;
 
     public Narrator() {
-        JPanel p2 = new JPanel();
-        p2.setBackground(Map.themeColor);
-        label.setFont(new Font("Courier New", Font.BOLD, 16));
-        label.setForeground(Color.white);
-        label.setLocation(200, 50);
-        p2.add(label);
-        Map.frame.add(p2, BorderLayout.BEFORE_FIRST_LINE);
-
+        if(!AI.GlobalVariables.SIMULATED) {
+            JPanel p2 = new JPanel();
+            p2.setBackground(Map.themeColor);
+            label.setFont(new Font("Courier New", Font.BOLD, 16));
+            label.setForeground(Color.white);
+            label.setLocation(200, 50);
+            p2.add(label);
+            Map.frame.add(p2, BorderLayout.BEFORE_FIRST_LINE);
+        }
     }
 
     public void addText(String text) {

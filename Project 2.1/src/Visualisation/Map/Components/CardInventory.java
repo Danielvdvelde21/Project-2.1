@@ -171,20 +171,22 @@ public class CardInventory {
     }
 
     public CardInventory() {
-        JButton cardInventory = new JButton("Card Inventory");
-        cardInventory.setFont(new Font("Courier New", Font.BOLD, 16));
-        cardInventory.setBackground(new Color(80, 100, 182));
-        cardInventory.setForeground(Color.WHITE);
-        cardInventory.setPreferredSize(new Dimension(170, 30));
-        cardInventory.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        cardInventory.addActionListener(e -> getInventory());
-        cardInventory.setEnabled(true);
+        if(!AI.GlobalVariables.SIMULATED) {
+            JButton cardInventory = new JButton("Card Inventory");
+            cardInventory.setFont(new Font("Courier New", Font.BOLD, 16));
+            cardInventory.setBackground(new Color(80, 100, 182));
+            cardInventory.setForeground(Color.WHITE);
+            cardInventory.setPreferredSize(new Dimension(170, 30));
+            cardInventory.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            cardInventory.addActionListener(e -> getInventory());
+            cardInventory.setEnabled(true);
 
-        JPanel p = new JPanel();
-        p.setBackground(Map.themeColor);
-        p.add(cardInventory);
-        p.setBounds(new Rectangle(Map.frameX, 218, 300, 100));
-        Map.frame.add(p);
+            JPanel p = new JPanel();
+            p.setBackground(Map.themeColor);
+            p.add(cardInventory);
+            p.setBounds(new Rectangle(Map.frameX, 218, 300, 100));
+            Map.frame.add(p);
+        }
     }
 
     public void setCurrentPlayer(Player p) {
