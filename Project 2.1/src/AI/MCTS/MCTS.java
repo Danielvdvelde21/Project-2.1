@@ -134,20 +134,46 @@ public class MCTS {
 
     // Add all the first possible moves or add 1 node to the bottom of the best node
     private void expansion(Node node) {
-        Graph g=node.getState().getGraph();
-        ArrayList<Player> order=node.getState().getOrder();
-        Player botPlayer=node.getPlayer();
+        Graph g = node.getState().getGraph();
+        ArrayList<Player> order = node.getState().getOrder();
+        Player botPlayer = node.getPlayer();
 
-        // For all owned territories select the ones that have another adjacent owned territory
-        for (Vertex v : botPlayer.getOwnedTerritories()) {
+        // TODO look at playerorder
+        // pruning: defender outnumbers attack
+        ArrayList<Vertex> owned = getOwnedVertices(g, node.getPlayer());
+        for (Vertex v : owned) {
             for (Edge e : v.getEdges()) {
-                if (e.getVertex().getTerritory().getOwner() != botPlayer) {
-                    Node n = node;
-                    n.setAttacker(v);
-                    n.setDefender(e.getVertex());
-                    node.addChild(n);
+                if (e.getVertex().getTerritory().getOwner() != node.getPlayer()) {
+                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, order, botPlayer);
                 }
             }
+        }
+    }
+
+    // Adds all possible states from a certain state given an attacker and defender and adds them as children
+    private void addAllPossibleStates(Graph g, int attackerIndex, int defenderIndex, Node leaf, ArrayList<Player> order, Player player) {
+        Graph copy;
+        // Generate wins
+        // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
+        for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
+            for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j++) {
+                if (j-i > 0) {
+                    copy = g.clone();
+                    copy.get(attackerIndex).getTerritory().setNumberOfTroops(i);
+                    copy.get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
+                    leaf.addChild(new Node(new State(copy, order), player));
+                }
+            }
+        }
+
+        // Generate losses
+        // Attacker has only 1 troop left, defender has anywhere between 1 and total defenders left
+        for (int i = 1; i < g.get(defenderIndex).getTerritory().getNumberOfTroops(); i++) {
+            //Create deep copy of graph
+            copy = g.clone();
+            copy.get(attackerIndex).getTerritory().setNumberOfTroops(1);
+            copy.get(defenderIndex).getTerritory().setNumberOfTroops(i);
+            leaf.addChild(new Node(new State(copy, order), player));
         }
     }
 
