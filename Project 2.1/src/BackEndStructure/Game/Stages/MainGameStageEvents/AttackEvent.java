@@ -53,7 +53,7 @@ public class AttackEvent {
             }
         } else if (player.isMCTSBot()) {
             // TODO how many attacks is mcts going to do?
-            Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers());
+            Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(),player);
             botAttack(player, vertices);
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
