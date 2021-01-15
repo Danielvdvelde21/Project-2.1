@@ -278,7 +278,6 @@ public class AttackEvent {
         map.updateTroopCount(attack.getTerritory().getTerritoryNumber(), attack.getTerritory().getNumberOfTroops());
         map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
         narrator.addText("Player " + player.getName() + " send " + troops + " troop(s) from " + attack.getTerritory().getTerritoryName() + " to " + defender.getTerritory().getTerritoryName());
-
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
         if (player.getHand().size() >= 6) {
             turnInCardsAttacking(player);
