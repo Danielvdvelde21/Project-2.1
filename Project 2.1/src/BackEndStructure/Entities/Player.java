@@ -110,7 +110,7 @@ public class Player {
         setsTurnedIn++;
     }
 
-    // MCTS BOT
+    // MCTS BOT ONLY METHODS
     private ArrayList<Vertex> ownedTerritories = new ArrayList<>();
 
     public ArrayList<Vertex> getOwnedTerritories() {

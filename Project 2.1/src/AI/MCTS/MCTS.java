@@ -45,7 +45,8 @@ public class MCTS {
             // Expansion
             if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
-                promisingNode = promisingNode.getChildren().get(0);
+                promisingNode = root; // TODO TEMP REMOVE ME
+                // promisingNode = promisingNode.getChildren().get(0);
             }
 
             // Play out (simulation)
@@ -79,11 +80,25 @@ public class MCTS {
         // Deep copy players and update graph
         for (Player p : order) {
             Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot());
-            // Important to update each value!
             newPlayer.setTerritoriesOwned(p.getTerritoriesOwned());
             newPlayer.setContinentsOwned(p.getContinentsOwned());
             this.copiedOrder.add(newPlayer);
             // Update the players to the copied players in the graph
+            for(Vertex v : copiedGraph.getArrayList()) {
+                if (v.getTerritory().getOwner() == p) {
+                    v.getTerritory().setOwner(newPlayer);
+                }
+            }
+        }
+
+        // Update territories owned for simulation only
+        for (Vertex v : copiedGraph.getArrayList()) {
+            for (Player p : copiedOrder) {
+                if (p == v.getTerritory().getOwner()){
+                    p.getOwnedTerritories().add(v);
+                    break;
+                }
+            }
         }
     }
 
@@ -102,6 +117,7 @@ public class MCTS {
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time: " + estimatedTime);
         System.out.println("Simulation over!");
+        System.exit(0);
 
         // TODO return winner
         return analyzeGame(game, node.getState().getPlayer());
