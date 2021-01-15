@@ -15,7 +15,7 @@ public class Player {
 
     // Territories and Continents
     private int territoriesOwned;
-    private final ArrayList<String> continentsOwned = new ArrayList<>();
+    private boolean[] continentsOwned = {false, false, false, false, false, false};
 
     // Cards
     private ArrayList<Card> hand = new ArrayList<>();
@@ -76,14 +76,18 @@ public class Player {
         territoriesOwned--;
     }
 
-    public void setContinentsOwned(ArrayList<String> continents) { continentsOwned.addAll(continents);    }
+    public void setContinentsOwned(boolean[] continents) { this.continentsOwned = continents; }
 
-    public ArrayList<String> getContinentsOwned() {
+    public boolean[] getContinentsOwned() {
         return continentsOwned;
     }
 
-    public void addContinent(String c) {
-        continentsOwned.add(c);
+    public void addContinent(int i) {
+        continentsOwned[i] = true;
+    }
+
+    public void removeContinent(int i) {
+        continentsOwned[i] = false;
     }
 
     //------------------------------------------------------------------------------------------------------------------
