@@ -5,6 +5,7 @@ import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedGameStage;
+import AI.MCTS.State;
 
 import java.util.ArrayList;
 
@@ -17,8 +18,9 @@ public class SimulatedGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
-        this.game = new Game(g, order);
+    public SimulatedGameLoop(State s) {
+
+        this.game = new Game(s.getGraph(), s.getOrder());
 
         // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();

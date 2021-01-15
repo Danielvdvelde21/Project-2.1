@@ -39,6 +39,19 @@ public class Player {
         assert (!(isBot()) && isMCTSBot());
     }
 
+    public Player(String playerName, Color playerColor, boolean isBot, boolean isMCTSBot, int territoriesOwned, ArrayList<String> continentsOwned) {
+        this.playerName = playerName;
+        this.playerColor = playerColor;
+        this.isBot = isBot;
+        this.isMCTSBot = isMCTSBot;
+        this.territoriesOwned = territoriesOwned;
+        int i = 0;
+        for (String s : continentsOwned) {
+            this.continentsOwned.set(i, s);
+            i++;
+        }
+    }
+
     // Get Player data
     public String getName() {
         return playerName;
@@ -62,7 +75,9 @@ public class Player {
     //------------------------------------------------------------------------------------------------------------------
     // Get and Set territory/continent data
 
-    public void setTerritoriesOwned(int territories) { territoriesOwned = territories;    }
+    public void setTerritoriesOwned(int territories) {
+        territoriesOwned = territories;
+    }
 
     public int getTerritoriesOwned() {
         return territoriesOwned;
@@ -76,7 +91,9 @@ public class Player {
         territoriesOwned--;
     }
 
-    public void setContinentsOwned(ArrayList<String> continents) { continentsOwned.addAll(continents);    }
+    public void setContinentsOwned(ArrayList<String> continents) {
+        continentsOwned.addAll(continents);
+    }
 
     public ArrayList<String> getContinentsOwned() {
         return continentsOwned;
@@ -104,10 +121,18 @@ public class Player {
         return setsTurnedIn;
     }
 
-    public void setSetsTurnedIn(int sets) { setsTurnedIn = sets; }
+    public void setSetsTurnedIn(int sets) {
+        setsTurnedIn = sets;
+    }
 
     public void incrementSetsOwned() {
         setsTurnedIn++;
+    }
+
+    public Player clone() {
+        Player p1 = new Player(playerName, playerColor, isBot, isMCTSBot, territoriesOwned, continentsOwned);
+
+        return p1;
     }
 
     // MCTS BOT

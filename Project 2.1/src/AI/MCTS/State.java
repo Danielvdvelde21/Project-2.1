@@ -7,19 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State {
-    private final Graph graph;
-    private final Player player;
 
-    public State(Graph g, Player player) {
+    private Graph graph;
+    ArrayList<Player> order=new ArrayList<Player>();
+
+    public State(Graph g, ArrayList<Player> order) {
         this.graph = g;
-        this.player = player;
+        this.order = order;
     }
 
     public Graph getGraph() {
         return graph;
     }
 
-    public Player getPlayer() {
-        return player;
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
+
+    public ArrayList<Player> getOrder() {
+        return order;
+    }
+
+    public void setOrder(ArrayList<Player> order) {
+        this.order = order;
     }
 }

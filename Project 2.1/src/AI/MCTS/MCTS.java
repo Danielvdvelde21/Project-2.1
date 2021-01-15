@@ -20,15 +20,15 @@ public class MCTS {
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
-    public Vertex[] findNextMove(Graph g, ArrayList<Player> order) {
+    public Vertex[] findNextMove(Graph g, ArrayList<Player> order,Player p) {
         // Deep copy graph, players and update graph
-        deepCopyState(g,order);
+        State rootState=deepCopyState(g,order);
 
         // Assign MCTS player, must be first player in order!
-        this.MCTSPlayer = copiedOrder.get(0);
+        //this.MCTSPlayer = copiedOrder.get(0);
 
         // Construct the root node
-        Node root = new Node(new State(g, MCTSPlayer));
+        Node root = new Node(rootState,p);
         root.setVisitCount(1); // Sets the root as simulated
 
         Tree tree = new Tree(root);
@@ -41,6 +41,7 @@ public class MCTS {
         while (System.currentTimeMillis() - time < end && iteration < maxIterations) {
             // Selection
             Node promisingNode = selectPromisingChild(root);
+
 
             // Expansion
             if (promisingNode.isSimulated()) {
@@ -73,18 +74,17 @@ public class MCTS {
         return curNode;
     }
 
-    private void deepCopyState(Graph g, ArrayList<Player> order){
-        this.copiedGraph = g.clone();
+    private State deepCopyState(Graph g, ArrayList<Player> order){
+        Graph newGraph = g.clone();
+        ArrayList<Player> newOrder=new ArrayList<Player>();
         
         // Deep copy players and update graph
         for (Player p : order) {
-            Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot());
-            // Important to update each value!
-            newPlayer.setTerritoriesOwned(p.getTerritoriesOwned());
-            newPlayer.setContinentsOwned(p.getContinentsOwned());
-            this.copiedOrder.add(newPlayer);
-            // Update the players to the copied players in the graph
+            Player newPlayer=p.clone();
+            newOrder.add(newPlayer);
         }
+        State newState= new State(newGraph,newOrder);
+        return newState;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -93,29 +93,29 @@ public class MCTS {
     // Simulates a game
     private int playOut(Graph g, Node node) {
         // Fix player order for simulated game
-        ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
+        //ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
 
         // Simulate game
         System.out.println("Simulation starts");
         long startTime = System.currentTimeMillis();
-        SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder);
+        SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time: " + estimatedTime);
         System.out.println("Simulation over!");
 
         // TODO return winner
-        return analyzeGame(game, node.getState().getPlayer());
+        return 0;
     }
 
     // Change order for simulated game such that MCTS bot in node starts
-    private ArrayList<Player> changeOrder(Node node) {
+    /*private ArrayList<Player> changeOrder(Node node) {
         while (!(copiedOrder.get(0) == node.getState().getPlayer())) {
             Player temp = copiedOrder.get(0);
             copiedOrder.remove(temp);
             copiedOrder.add(temp);
         }
         return copiedOrder;
-    }
+    }*/
 
     // Evaluate the current graph and assigns points to the node
     private int analyzeGame(SimulatedGameLoop game, Player player) {
@@ -134,13 +134,15 @@ public class MCTS {
 
     // Add all the first possible moves or add 1 node to the bottom of the best node
     private void expansion(Node node) {
-        ArrayList<Vertex> owned = getOwnedVertices(copiedGraph, MCTSPlayer);
+        Graph g=node.getState().getGraph();
+        ArrayList<Player> order=node.getState().getOrder();
+        Player botPlayer=node.getPlayer();
 
         // For all owned territories select the ones that have another adjacent owned territory
-        for (Vertex v : owned) {
+        for (Vertex v : botPlayer.getOwnedTerritories()) {
             for (Edge e : v.getEdges()) {
-                if (e.getVertex().getTerritory().getOwner() != MCTSPlayer) {
-                    Node n = new Node(new State(copiedGraph, MCTSPlayer));
+                if (e.getVertex().getTerritory().getOwner() != botPlayer) {
+                    Node n = node;
                     n.setAttacker(v);
                     n.setDefender(e.getVertex());
                     node.addChild(n);

@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Node {
+
     private final State state;
     private Node parent;
     private List<Node> children = new ArrayList<>();
+    private Player player;
 
     private Vertex attacker;
     private Vertex defender;
@@ -18,8 +20,9 @@ public class Node {
     private int visitCount;
     private int winScore;
 
-    public Node(State state) {
+    public Node(State state, Player player) {
         this.state = state;
+        this.player = player;
         this.visitCount = 0;
     }
 
@@ -94,4 +97,14 @@ public class Node {
     public int getVisitCount() { return visitCount; }
 
     public boolean isSimulated() { return visitCount != 0;}
+
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
 }

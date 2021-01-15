@@ -67,11 +67,21 @@ public class Graph {
         System.out.println("Printing Graph:");
         for (Vertex v : graph){
             System.out.print("Territory name: "+ v.getTerritory().getTerritoryName());
-            System.out.print(" Connected with: ");
+            System.out.print(", owned by: "+ v.getTerritory().getOwner().getName());
+            System.out.print(", Connected with: ");
             for (Edge e : v.getEdges()){
                 System.out.print(e.getVertex().getTerritory().getTerritoryName() + ", ");
             }
             System.out.print("\n");
         }
+    }
+
+    public void printGraphShort(){
+        System.out.println("Printing short graph:");
+        for (Vertex v : graph){
+            System.out.print("["+v.getTerritory().getTerritoryNumber());
+            System.out.print(", "+v.getTerritory().getOwner().getName()+"],");
+        }
+        System.out.print("\n");
     }
 }
