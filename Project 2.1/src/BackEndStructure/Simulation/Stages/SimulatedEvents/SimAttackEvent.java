@@ -106,7 +106,6 @@ public class SimAttackEvent {
                 if (defender.getTerritory().getNumberOfTroops() < 1) {
                     // oneTerritoryCaptured = true;
                     territoryCaptured(player, defender, attacker);
-                    return;
                 }
             }
         }
@@ -120,6 +119,9 @@ public class SimAttackEvent {
 
         // Player gets the territory
         Player defenderOwner = defender.getTerritory().getOwner();
+        if (!(attack.getTerritory().getOwner() == player)) {
+            throw new IllegalArgumentException("test");
+        }
         player.increaseTerritoriesOwned();
         defender.getTerritory().setOwner(player);
 
@@ -128,7 +130,6 @@ public class SimAttackEvent {
 
         isGameOver(player);
         if (isEliminated(defenderOwner)) {
-            //receiveCards(player, defenderOwner);
             eliminatePlayer(defenderOwner);
         }
 

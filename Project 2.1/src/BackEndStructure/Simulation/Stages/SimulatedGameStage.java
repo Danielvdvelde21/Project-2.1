@@ -6,6 +6,8 @@ import BackEndStructure.Simulation.Stages.SimulatedEvents.SimAttackEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimFortifyEvent;
 import BackEndStructure.Simulation.Stages.SimulatedEvents.SimReceiveTroops;
 
+import javax.xml.transform.Source;
+import java.sql.SQLOutput;
 import java.util.Iterator;
 
 public class SimulatedGameStage {
@@ -43,8 +45,6 @@ public class SimulatedGameStage {
                     it2.remove();
                 } else {
                     playerTurn(player);
-                    game.getGraph().printGraphShort();
-
                     if (gameOver) {
                         break;
                     }
