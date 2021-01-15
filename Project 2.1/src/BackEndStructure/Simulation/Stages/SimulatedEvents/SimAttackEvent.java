@@ -1,15 +1,12 @@
 package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
-import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
-import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class SimAttackEvent {
@@ -20,9 +17,6 @@ public class SimAttackEvent {
     private boolean gameOver = false;
     private Player winner;
 
-    // One territory has been captured in the turn
-    // private boolean oneTerritoryCaptured;
-
     private ArrayList<Player> eliminatedPlayers = new ArrayList<>();
 
     public SimAttackEvent(Game game) {
@@ -30,20 +24,7 @@ public class SimAttackEvent {
         this.graph = game.getGraph();
     }
 
-    public void attacking(Player player) {
-        // oneTerritoryCaptured = false;
-
-        randomAttack(player);
-
-        // Cards are neglected in MCTS for now
-        // if at least one territory is captured player receives a card
-        /*if (oneTerritoryCaptured) {
-            player.addToHand(game.getCardStack().draw());
-        }*/
-    }
-
-    private void randomAttack(Player player) {
-
+    public void randomAttack(Player player) {
         // Get all the owned territories for this player
         ArrayList<Vertex> ownedTerritories = new ArrayList<>();
         for (int i = 0; i < graph.getSize(); i++) {
@@ -94,8 +75,6 @@ public class SimAttackEvent {
 
                 // Setting the attacker dice
                 switch (attacker.getTerritory().getNumberOfTroops()) {
-                    case 1:
-                        throw new IllegalArgumentException("Attacking with 1 troop");
                     case 2:
                         numberOfAttackerDice = 1;
                         attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
@@ -165,54 +144,7 @@ public class SimAttackEvent {
 
         attack.getTerritory().setNumberOfTroops(attack.getTerritory().getNumberOfTroops() - troops);
         defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() + troops);
-        // Cards are neglected in MCTS for now
-        // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
-        /*if (player.getHand().size() >= 6) {
-            turnInCardsAttacking(player);
-        }*/
     }
-
-//    // Forcing a player to turn in a set during an attacking phase
-//    private void turnInCardsAttacking(Player player) {
-//        // Set of cards the bot is going to turn in
-//        ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
-//
-//        // Return cards to stack
-//        game.getCardStack().returnCards(turnInSet);
-//
-//        // Remove cards from player hand
-//        player.getHand().removeAll(turnInSet);
-//
-//        // Player has 1 more completed set
-//        player.incrementSetsOwned();
-//        placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
-//    }
-//
-//    // -----------------------------------------------------------------------------------------------------------------
-//    // Placing troops
-//
-//    public void placeReceivedTroops(Player player, int troops) {
-//        for (int i = 0; i < troops; i++) {
-//            placeTroopRandomly(player);
-//        }
-//    }
-//
-//    private void placeTroopRandomly(Player player) {
-//        // Get all the owned territories for this player
-//        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-//        for (Vertex v : graph.getArrayList()) {
-//            if (v.getTerritory().getOwner() == player) {
-//                ownedTerritories.add(v);
-//            }
-//        }
-//
-//        // Select a random territory
-//        Random random = new Random();
-//        Territory t = ownedTerritories.get(random.nextInt(ownedTerritories.size())).getTerritory();
-//
-//        // place a troop on the random territory
-//        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
-//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Extra Methods
@@ -230,11 +162,6 @@ public class SimAttackEvent {
     public ArrayList<Player> getEliminatedPlayers() {
         return eliminatedPlayers;
     }
-
-//    // Get cards from eliminated player
-//    private void receiveCards(Player receivingPlayer, Player donatingPlayer) {
-//        receivingPlayer.addToHand(donatingPlayer.getHand());
-//    }
 
     private void decreaseTerritories(Player p) {
         p.decreaseTerritoriesOwned();

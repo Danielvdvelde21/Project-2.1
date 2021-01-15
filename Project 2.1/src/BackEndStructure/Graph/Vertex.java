@@ -3,8 +3,8 @@ package BackEndStructure.Graph;
 import java.util.*;
 
 public class Vertex {
-    private LinkedList<Edge> edgeList;
-    private Territory territory;
+    private final LinkedList<Edge> edgeList;
+    private final Territory territory;
 
     public Vertex(Territory data) {
         this.territory = data;
@@ -29,4 +29,7 @@ public class Vertex {
     }
 
     public Territory getTerritory() { return territory; }
+
+    // MCTS bot
+
 }

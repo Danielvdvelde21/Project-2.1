@@ -59,7 +59,7 @@ public class SimulatedGameStage {
         receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player));
 
         // Player can start attacking different territories
-        attack.attacking(player);
+        attack.randomAttack(player);
         gameOver = attack.getGameState();
 
         // Player can fortify 1 territory if he chooses to do so at the end of his turn

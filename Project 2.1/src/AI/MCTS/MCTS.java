@@ -99,10 +99,12 @@ public class MCTS {
         ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
 
         // Simulate game
+        System.out.println("Simulation starts");
         long startTime = System.currentTimeMillis();
         SimulatedGameLoop game = new SimulatedGameLoop(g, simulatedPlayerOrder);
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time: " + estimatedTime);
+        System.out.println("Simulation over!");
 
         // TODO return winner
         return analyzeGame(game, node.getState().getPlayer());
