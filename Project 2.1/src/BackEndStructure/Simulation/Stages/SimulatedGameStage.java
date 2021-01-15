@@ -27,7 +27,7 @@ public class SimulatedGameStage {
         this.game = game;
 
         this.attack = new SimAttackEvent(game);
-        this.fortify = new SimFortifyEvent(game.getGraph());
+        this.fortify = new SimFortifyEvent();
         this.receiveTroops = new SimReceiveTroops(game);
     }
 

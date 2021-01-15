@@ -10,33 +10,24 @@ import java.util.Random;
 
 public class SimFortifyEvent {
 
-    private final Graph graph;
-
-    public SimFortifyEvent(Graph g) {
-        this.graph = g;
-    }
-
     public void randomFortification(Player player) {
-        // Get all the owned territories for this player that have more than 1 troop
-        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-        for (Vertex v : graph.getArrayList()) {
-            if (v.getTerritory().getOwner() == player && v.getTerritory().getNumberOfTroops() > 1) {
-                ownedTerritories.add(v);
-            }
-        }
+        // Get all the owned territories for this player
+        ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
 
-        // For all owned territories select the ones that have another adjacent owned territory
+        // For all owned territories select the ones that have another adjacent owned territory and have more than 1 troop
         ArrayList<Vertex> validFroms = new ArrayList<>();
         for (Vertex v : ownedTerritories) {
-            boolean twoOwnedAdjacent = false;
-            for (Edge e : v.getEdges()) {
-                if (e.getVertex().getTerritory().getOwner() == player) {
-                    twoOwnedAdjacent = true;
-                    break;
+            if (v.getTerritory().getNumberOfTroops() > 1) {
+                boolean twoOwnedAdjacent = false;
+                for (Edge e : v.getEdges()) {
+                    if (e.getVertex().getTerritory().getOwner() == player) {
+                        twoOwnedAdjacent = true;
+                        break;
+                    }
                 }
-            }
-            if (twoOwnedAdjacent) {
-                validFroms.add(v);
+                if (twoOwnedAdjacent) {
+                    validFroms.add(v);
+                }
             }
         }
 

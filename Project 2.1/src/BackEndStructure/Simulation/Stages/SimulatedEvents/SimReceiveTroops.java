@@ -1,6 +1,5 @@
 package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
-import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
@@ -13,11 +12,9 @@ import java.util.Random;
 public class SimReceiveTroops {
 
     private final Game game;
-    private final Graph graph;
 
     public SimReceiveTroops(Game game) {
         this.game = game;
-        this.graph = game.getGraph();
     }
 
     public int receivedTroops(Player player) {
@@ -46,12 +43,7 @@ public class SimReceiveTroops {
 
     private void placeTroopRandomly(Player player) {
         // Get all the owned territories for this player
-        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-        for (Vertex v : graph.getArrayList()) {
-            if (v.getTerritory().getOwner() == player) {
-                ownedTerritories.add(v);
-            }
-        }
+        ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
 
         // Select a random territory
         Random random = new Random();

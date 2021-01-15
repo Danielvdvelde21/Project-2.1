@@ -26,12 +26,7 @@ public class SimAttackEvent {
 
     public void randomAttack(Player player) {
         // Get all the owned territories for this player
-        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-        for (int i = 0; i < graph.getSize(); i++) {
-            if (graph.get(i).getTerritory().getOwner() == player) {
-                ownedTerritories.add(graph.get(i));
-            }
-        }
+        ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
 
         // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
         ArrayList<Vertex> validAttackers = new ArrayList<>();
@@ -124,6 +119,10 @@ public class SimAttackEvent {
 
     // Logic that needs to happen after a territory is captured
     private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
+        // MCTS BOT ONLY UPDATE OWNED TROOPS
+        defender.getTerritory().getOwner().getOwnedTerritories().remove(defender);
+        attack.getTerritory().getOwner().getOwnedTerritories().add(defender);
+
         // Player gets the territory
         Player defenderOwner = defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();

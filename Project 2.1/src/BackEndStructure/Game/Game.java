@@ -192,85 +192,76 @@ public class Game {
         // Australia
         // 9, 38, 23, 16
         int[] ausArr = new int[]{9, 16, 23, 38};
-        checkContinent(player, ausArr, "Australia");
+        checkContinent(player, ausArr, 0);
 
         // Europe
         // 12, 14, 26, 30, 34, 35, 39
         int[] euArr = new int[]{12, 14, 26, 30, 34, 39};
-        checkContinent(player, euArr, "Europe");
+        checkContinent(player, euArr, 1);
 
         // North America
         // 1, 2, 5, 10, 13, 25, 27, 29, 40
         int[] naArr = new int[]{1, 2, 5, 10, 13, 25, 27, 29, 40};
-        checkContinent(player, naArr, "North America");
+        checkContinent(player, naArr, 2);
 
         // South America
         // 3, 4, 28, 37
         int[] saArr = new int[]{3, 4, 28, 37};
-        checkContinent(player, saArr, "South America");
+        checkContinent(player, saArr, 3);
 
         // Africa
         // 7, 8, 11, 20, 24, 33
         int[] afArr = new int[]{7, 8, 11, 20, 24, 33};
-        checkContinent(player, afArr, "Africa");
+        checkContinent(player, afArr, 4);
 
         // Asia
         // 0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41
         int[] asArr = new int[]{0, 6, 15, 17, 18, 19, 21, 22, 31, 32, 36, 41};
-        checkContinent(player, asArr, "Asia");
+        checkContinent(player, asArr, 5);
     }
 
     // Checks whether a player owns all countries in a continent based on its territories
-    public void checkContinent(Player player, int[] terr, String continent) {
+    public void checkContinent(Player player, int[] terr, int contIndex) {
         int counter = 0;
         for (int i = 0; i < terr.length ; i++) {
             if (graph.get(terr[i]).getTerritory().getOwner() == player) {
                 counter++;
             }
         }
-        boolean check = false;
         if (counter == terr.length) {
-            // Making sure no duplicates are added to continents owned
-            for (int i = 0; i < player.getContinentsOwned().size(); i++) {
-                if (player.getContinentsOwned().get(i).equals(continent)) {
-                    check = true;
-                    break;
-                }
-            }
-            if (!check) {
-                player.addContinent(continent);
-            }
+            player.addContinent(contIndex);
         }
         else {
-            for (int i = 0; i < player.getContinentsOwned().size(); i++) {
-                if (player.getContinentsOwned().get(i).equals(continent)) {
-                    player.getContinentsOwned().remove(i);
-                    // Can break as there shouldn't be any duplicates and we don't want to run into bugs
-                    break;
-                }
-            }
+            player.removeContinent(contIndex);
         }
     }
 
     // Checks how money points a player gets for the amount of continents he owns
-    public int getValueOfContinentsOwned(ArrayList<String> list) {
+    public int getValueOfContinentsOwned(boolean[] continents) {
         int value = 0;
-        for (String c : list) {
-            switch (c) {
-                case "Asia":
-                    value += 7;
-                    break;
-                case "Europe":
-                case "North America":
-                    value += 5;
-                    break;
-                case "Australia":
-                case "South America":
-                    value += 2;
-                    break;
-                case "Africa":
-                    value += 3;
-            }
+        // Australia
+        if (continents[0]) {
+            value += 2;
+        }
+        // Europe
+        if (continents[1]) {
+            value += 5;
+        }
+        // North America
+        if (continents[2]) {
+            value += 5;
+        }
+        // South America
+        if (continents[3]) {
+            value += 2;
+        }
+        // Africa
+        if (continents[4]) {
+            value += 3;
+        }
+        // Asia
+        if (continents[5]) {
+            value += 7;
         }
         return value;
     }
