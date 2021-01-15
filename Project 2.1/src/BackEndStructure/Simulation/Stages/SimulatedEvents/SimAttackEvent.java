@@ -59,7 +59,6 @@ public class SimAttackEvent {
 
             // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
             while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
-
                 int numberOfAttackerDice;
                 int numberOfDefenderDice;
                 int[] attackerDiceValues = new int[3];

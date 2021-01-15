@@ -43,6 +43,7 @@ public class SimulatedGameStage {
                     it2.remove();
                 } else {
                     playerTurn(player);
+                    game.getGraph().printGraphShort();
 
                     if (gameOver) {
                         break;

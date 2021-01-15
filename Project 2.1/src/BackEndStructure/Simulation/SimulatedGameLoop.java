@@ -8,6 +8,7 @@ import BackEndStructure.Simulation.Stages.SimulatedGameStage;
 import AI.MCTS.State;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class SimulatedGameLoop {
 
@@ -19,10 +20,7 @@ public class SimulatedGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
 
     public SimulatedGameLoop(State s) {
-
         this.game = new Game(s.getGraph(), s.getOrder());
-
-        // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();
     }
 
