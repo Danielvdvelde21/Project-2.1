@@ -86,9 +86,6 @@ public class MCTS {
             // Update the players to the copied players in the graph
             for(Vertex v : this.copiedGraph.getArrayList()) {
                 v.setTerritory(v.getTerritory().clone());
-                if (v.getTerritory().getOwner() == p) {
-                    v.getTerritory().setOwner(newPlayer);
-                }
             }
         }
     }
