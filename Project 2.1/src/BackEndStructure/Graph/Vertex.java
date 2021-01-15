@@ -29,4 +29,8 @@ public class Vertex {
     }
 
     public Territory getTerritory() { return territory; }
+
+    public void setTerritory(Territory territory) {
+        this.territory = territory;
+    }
 }

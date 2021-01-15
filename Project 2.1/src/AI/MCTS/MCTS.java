@@ -21,25 +21,8 @@ public class MCTS {
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order) {
-        // Deep copy graph
-        this.copiedGraph = new Graph(g.getArrayList());;
-
-        // Deep copy players and update graph
-        for (Player p : order) {
-            Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot());
-            // Important to update each value!
-            newPlayer.setTerritoriesOwned(p.getTerritoriesOwned());
-            newPlayer.setContinentsOwned(p.getContinentsOwned());
-            newPlayer.addToHand(p.getHand());
-            newPlayer.setSetsTurnedIn(p.getSetsTurnedIn());
-            copiedOrder.add(newPlayer);
-            // Update the players to the copied players in the graph
-            for(Vertex v : copiedGraph.getArrayList()) {
-                if (v.getTerritory().getOwner() == p) {
-                    v.getTerritory().setOwner(newPlayer);
-                }
-            }
-        }
+        // Deep copy graph, players and update graph
+        deepCopyState(g,order);
 
         // Assign MCTS player, must be first player in order!
         this.MCTSPlayer = copiedOrder.get(0);
@@ -88,6 +71,26 @@ public class MCTS {
             curNode = UCT.findBestChildWithUCT(curNode);
         }
         return curNode;
+    }
+
+    private void deepCopyState(Graph g, ArrayList<Player> order){
+        this.copiedGraph = new Graph(g.getArrayList());;
+
+        // Deep copy players and update graph
+        for (Player p : order) {
+            Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot());
+            // Important to update each value!
+            newPlayer.setTerritoriesOwned(p.getTerritoriesOwned());
+            newPlayer.setContinentsOwned(p.getContinentsOwned());
+            this.copiedOrder.add(newPlayer);
+            // Update the players to the copied players in the graph
+            for(Vertex v : this.copiedGraph.getArrayList()) {
+                v.setTerritory(v.getTerritory().clone());
+                if (v.getTerritory().getOwner() == p) {
+                    v.getTerritory().setOwner(newPlayer);
+                }
+            }
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------

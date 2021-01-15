@@ -2,7 +2,7 @@ package BackEndStructure.Graph;
 
 public class Edge {
 
-    private Vertex vertex;
+    private final Vertex vertex;
 
     public Edge(Vertex newVertex) {
         this.vertex = newVertex;
