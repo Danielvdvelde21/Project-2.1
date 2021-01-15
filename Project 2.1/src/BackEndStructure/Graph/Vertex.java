@@ -11,6 +11,11 @@ public class Vertex {
         edgeList = new LinkedList<>();
     }
 
+    public Vertex(Territory data,LinkedList<Edge> edgeList) {
+        this.territory = data;
+        this.edgeList = edgeList;
+    }
+
     public LinkedList<Edge> getEdges() {
         return edgeList;
     }

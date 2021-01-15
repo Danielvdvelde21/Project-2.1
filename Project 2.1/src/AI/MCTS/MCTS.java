@@ -74,8 +74,8 @@ public class MCTS {
     }
 
     private void deepCopyState(Graph g, ArrayList<Player> order){
-        this.copiedGraph = new Graph(g.getArrayList());;
-
+        this.copiedGraph = g.clone();
+        
         // Deep copy players and update graph
         for (Player p : order) {
             Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot());
@@ -84,9 +84,6 @@ public class MCTS {
             newPlayer.setContinentsOwned(p.getContinentsOwned());
             this.copiedOrder.add(newPlayer);
             // Update the players to the copied players in the graph
-            for(Vertex v : this.copiedGraph.getArrayList()) {
-                v.setTerritory(v.getTerritory().clone());
-            }
         }
     }
 

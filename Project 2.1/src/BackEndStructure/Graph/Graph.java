@@ -50,6 +50,16 @@ public class Graph {
 
     public ArrayList<Vertex> getArrayList() { return graph; }
 
+    public Graph clone(){
+        ArrayList<Vertex> clonedVs=new ArrayList<Vertex>();
+        for(Vertex v : graph) {
+            Vertex newV=new Vertex(v.getTerritory().clone(),v.getEdges());
+            clonedVs.add(newV);
+        }
+        Graph g1=new Graph(clonedVs);
+        return g1;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // Printing the graph
 
