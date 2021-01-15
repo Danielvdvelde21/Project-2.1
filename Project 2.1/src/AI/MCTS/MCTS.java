@@ -139,6 +139,7 @@ public class MCTS {
 
     // Add all the first possible moves or add 1 node to the bottom of the best node
     private void expansion(Node node) {
+        System.out.println("expansion");
         Graph g = node.getState().getGraph();
         ArrayList<Player> order = node.getState().getOrder();
         Player botPlayer = node.getPlayer();
@@ -149,6 +150,7 @@ public class MCTS {
         for (Vertex v : owned) {
             for (Edge e : v.getEdges()) {
                 if (e.getVertex().getTerritory().getOwner() != node.getPlayer()) {
+                    System.out.println("loop expansion");
                     addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, order, botPlayer);
                 }
             }
@@ -161,12 +163,16 @@ public class MCTS {
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
-            for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j++) {
+            for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j--) {
                 if (j-i > 0) {
                     copy = g.clone();
                     copy.get(attackerIndex).getTerritory().setNumberOfTroops(i);
                     copy.get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
                     leaf.addChild(new Node(new State(copy, order), player));
+                    System.out.println("loop " + i + " and " + j);
+                }
+                else {
+                    break;
                 }
             }
         }
