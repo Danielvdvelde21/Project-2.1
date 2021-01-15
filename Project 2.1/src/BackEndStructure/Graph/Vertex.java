@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Vertex {
     private final LinkedList<Edge> edgeList;
-    private final Territory territory;
+    private Territory territory;
 
     public Vertex(Territory data) {
         this.territory = data;
@@ -30,6 +30,8 @@ public class Vertex {
 
     public Territory getTerritory() { return territory; }
 
-    // MCTS bot
+    public void setTerritory(Territory territory) {
+        this.territory = territory;
+    }
 
 }

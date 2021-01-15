@@ -14,6 +14,13 @@ public class Territory {
         this.numberOfTroops = 0;
     }
 
+    public Territory(String territoryName, int territoryNumber, int numberOfTroops, Player owner) {
+        this.territoryName = territoryName;
+        this.territoryNumber = territoryNumber;
+        this.numberOfTroops = numberOfTroops;
+        this.owner = owner;
+    }
+
     public String getTerritoryName() {
         return territoryName;
     }
@@ -23,6 +30,11 @@ public class Territory {
         if (troops < 0) {
             throw new IllegalArgumentException("Negative troops");
         }
+    }
+
+    public Territory clone(){
+        Territory t1=new Territory(territoryName, territoryNumber, numberOfTroops, owner);
+        return t1;
     }
 
     public int getNumberOfTroops() {

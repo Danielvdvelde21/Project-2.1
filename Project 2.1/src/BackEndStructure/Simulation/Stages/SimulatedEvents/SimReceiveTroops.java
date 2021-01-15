@@ -19,7 +19,7 @@ public class SimReceiveTroops {
         this.game = game;
         this.graph = game.getGraph();
     }
-    
+
     public int receivedTroops(Player player) {
         // Troops for territories owned
         int terri = player.getTerritoriesOwned() / 3;
