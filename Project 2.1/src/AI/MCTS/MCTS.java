@@ -124,7 +124,12 @@ public class MCTS {
             score += 100;
         }
         score += player.getTerritoriesOwned();
-        score += player.getContinentsOwned().size() * 5;
+        int continents = 0;
+        for (int i = 0; i < player.getContinentsOwned().length; i++) {
+            if (player.getContinentsOwned()[i]) {
+                continents++;
+            }
+        }
         // score += troopsOwned * 0.1;
         return score;
     }

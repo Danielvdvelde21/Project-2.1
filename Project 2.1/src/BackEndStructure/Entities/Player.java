@@ -15,7 +15,7 @@ public class Player {
 
     // Territories and Continents
     private int territoriesOwned;
-    private final ArrayList<String> continentsOwned = new ArrayList<>();
+    private boolean[] continentsOwned = {false, false, false, false, false, false};
 
     // Cards
     private ArrayList<Card> hand = new ArrayList<>();
@@ -39,17 +39,14 @@ public class Player {
         assert (!(isBot()) && isMCTSBot());
     }
 
-    public Player(String playerName, Color playerColor, boolean isBot, boolean isMCTSBot, int territoriesOwned, ArrayList<String> continentsOwned) {
+    public Player(String playerName, Color playerColor, boolean isBot, boolean isMCTSBot, int territoriesOwned, boolean[] continentsOwned) {
         this.playerName = playerName;
         this.playerColor = playerColor;
         this.isBot = isBot;
         this.isMCTSBot = isMCTSBot;
         this.territoriesOwned = territoriesOwned;
         int i = 0;
-        for (String s : continentsOwned) {
-            this.continentsOwned.set(i, s);
-            i++;
-        }
+        this.continentsOwned = continentsOwned;
     }
 
     // Get Player data
@@ -91,16 +88,20 @@ public class Player {
         territoriesOwned--;
     }
 
-    public void setContinentsOwned(ArrayList<String> continents) {
-        continentsOwned.addAll(continents);
+    public void setContinentsOwned(boolean[] continents) {
+        this.continentsOwned = continents;
     }
 
-    public ArrayList<String> getContinentsOwned() {
+    public boolean[] getContinentsOwned() {
         return continentsOwned;
     }
 
-    public void addContinent(String c) {
-        continentsOwned.add(c);
+    public void addContinent(int i) {
+        continentsOwned[i] = true;
+    }
+
+    public void removeContinent(int i) {
+        continentsOwned[i] = false;
     }
 
     //------------------------------------------------------------------------------------------------------------------
