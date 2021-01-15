@@ -3,7 +3,7 @@ package BackEndStructure.Graph;
 import java.util.*;
 
 public class Vertex {
-    private LinkedList<Edge> edgeList;
+    private final LinkedList<Edge> edgeList;
     private Territory territory;
 
     public Vertex(Territory data) {
@@ -38,4 +38,5 @@ public class Vertex {
     public void setTerritory(Territory territory) {
         this.territory = territory;
     }
+
 }

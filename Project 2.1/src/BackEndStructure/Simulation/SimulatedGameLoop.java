@@ -19,13 +19,9 @@ public class SimulatedGameLoop {
 
     public SimulatedGameLoop(Graph g, ArrayList<Player> order) {
         this.game = new Game(g, order);
-        System.out.println("Simulation starts");
 
         // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();
-
-        // Game over
-        System.out.println("Simulation over! Winner is " + winner.getName());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

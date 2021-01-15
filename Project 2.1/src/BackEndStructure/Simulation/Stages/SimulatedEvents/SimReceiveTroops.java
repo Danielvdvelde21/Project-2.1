@@ -21,28 +21,6 @@ public class SimReceiveTroops {
     }
 
     public int receivedTroops(Player player) {
-        // Troops for turning in cards
-        int cards = 0;
-
-        // Cards are neglected in MCTS for now
-//        // Set of cards the bot is going to turn in
-//        ArrayList<Card> turnInSet = game.getAi().getBotCards().cards(graph, player);
-//
-//        // Return cards to stack
-//        if (turnInSet != null) {
-//            game.getCardStack().returnCards(turnInSet);
-//
-//            // Remove cards from player hand
-//            player.getHand().removeAll(turnInSet);
-//
-//            // Player has 1 more completed set
-//            player.incrementSetsOwned();
-//
-//            cards = game.getSetValue(player.getSetsTurnedIn());
-//        } else {
-//            cards = 0;
-//        }
-
         // Troops for territories owned
         int terri = player.getTerritoriesOwned() / 3;
         // Min 3 troops
@@ -50,11 +28,11 @@ public class SimReceiveTroops {
             terri = 3;
         }
 
-        // Troops for continents owned
         game.hasContinents(player);
+
         int conti = game.getValueOfContinentsOwned(player.getContinentsOwned());
-        // System.out.println("Player " + player.getName() + " received " + terri + " troop(s) from Territories, " + conti + " troop(s) from Continents and " + cards + " troop(s) from Cards");
-        return cards + terri + conti;
+        // System.out.println("Player " + player.getName() + " received " + terri + " troop(s) from Territories, " + conti + " troop(s) from Continents");
+        return terri + conti;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 package BackEndStructure.Entities;
 
 import BackEndStructure.Entities.Cards.Card;
+import BackEndStructure.Graph.Vertex;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -107,5 +108,12 @@ public class Player {
 
     public void incrementSetsOwned() {
         setsTurnedIn++;
+    }
+
+    // MCTS BOT
+    private ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+
+    public ArrayList<Vertex> getOwnedTerritories() {
+        return ownedTerritories;
     }
 }
