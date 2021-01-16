@@ -24,9 +24,6 @@ public class MCTS {
         Node root = new Node(rootState, p); // TODO fix this!
         root.setVisitCount(1); // Sets the root as simulated
 
-        // The tree with assigned root
-        Tree tree = new Tree(root);
-
         // Initialize duration variable
         long beginTimer = System.currentTimeMillis();
         int iteration = 0;
@@ -62,8 +59,7 @@ public class MCTS {
         System.out.println("iterations per second:" + hz);
          */
 
-        Node winner = root.getMaxScoreChild(); // TODO Fix
-        tree.setRoot(winner);
+        Node winner = root.getMaxScoreChild();
         return new Vertex[]{winner.getAttacker(), winner.getDefender()};
     }
 
