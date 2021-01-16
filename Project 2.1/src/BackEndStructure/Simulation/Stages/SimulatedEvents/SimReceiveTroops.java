@@ -2,7 +2,6 @@ package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
-import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 

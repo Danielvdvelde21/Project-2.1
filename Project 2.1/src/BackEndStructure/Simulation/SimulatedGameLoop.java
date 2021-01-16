@@ -3,14 +3,8 @@ package BackEndStructure.Simulation;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
-import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedGameStage;
 import AI.MCTS.State;
-import AI.GlobalVariables;
-
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class SimulatedGameLoop {
 

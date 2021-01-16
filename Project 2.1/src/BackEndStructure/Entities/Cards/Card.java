@@ -1,7 +1,6 @@
 package BackEndStructure.Entities.Cards;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Card {
     // Territory name or WILDCARD

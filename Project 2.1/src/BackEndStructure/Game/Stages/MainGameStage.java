@@ -8,7 +8,6 @@ import BackEndStructure.Game.Game;
 import Visualisation.Map.Components.*;
 
 import java.util.Iterator;
-import java.util.ListIterator;
 
 public class MainGameStage {
 

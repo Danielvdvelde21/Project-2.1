@@ -4,12 +4,11 @@ import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Graph;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class State {
 
     private Graph graph;
-    ArrayList<Player> order=new ArrayList<Player>();
+    ArrayList<Player> order = new ArrayList<Player>();
 
     public State(Graph g, ArrayList<Player> order) {
         this.graph = g;
