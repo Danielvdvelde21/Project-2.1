@@ -32,11 +32,6 @@ public class Territory {
         }
     }
 
-    public Territory clone(){
-        Territory t1=new Territory(territoryName, territoryNumber, numberOfTroops, owner);
-        return t1;
-    }
-
     public int getNumberOfTroops() {
         return numberOfTroops;
     }

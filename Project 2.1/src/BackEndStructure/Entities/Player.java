@@ -130,9 +130,7 @@ public class Player {
     }
 
     public Player clone() {
-        Player p1 = new Player(playerName, playerColor, isBot, isMCTSBot, territoriesOwned, continentsOwned);
-
-        return p1;
+        return new Player(playerName, playerColor, isBot, isMCTSBot, territoriesOwned, continentsOwned);
     }
 
     // MCTS BOT

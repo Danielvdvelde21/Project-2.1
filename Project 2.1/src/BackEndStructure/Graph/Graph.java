@@ -1,7 +1,5 @@
 package BackEndStructure.Graph;
 
-import BackEndStructure.Entities.Player;
-
 import java.util.*;
 
 public class Graph {
@@ -56,20 +54,6 @@ public class Graph {
 
     public ArrayList<Vertex> getArrayList() {
         return graph;
-    }
-
-    public Graph clone(ArrayList<Player> order) {
-        ArrayList<Vertex> clonedVs = new ArrayList<Vertex>();
-        for (Vertex v : graph) {
-            Vertex newV = new Vertex(v.getTerritory().clone(), v.getEdges());
-            for (Player p : order) {
-                if (p.getName().equals(v.getTerritory().getOwner().getName())) {
-                    newV.getTerritory().setOwner(p);
-                }
-            }
-            clonedVs.add(newV);
-        }
-        return new Graph(clonedVs);
     }
 
     //------------------------------------------------------------------------------------------------------------------

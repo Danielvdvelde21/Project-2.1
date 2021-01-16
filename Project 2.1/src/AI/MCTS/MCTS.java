@@ -88,9 +88,23 @@ public class MCTS {
         return curNode;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Play-out
+
+    // Simulates a game
+    private int playOut(Graph g, Node node) {
+        // Fix player order for simulated game
+        //ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
+
+        // Simulate game
+        SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
+
+        // TODO return winner
+        return 0;
+    }
+
     private State deepCopyState(Graph g, ArrayList<Player> order) {
-        // Then copy graph
-        // Graph newGraph = g.clone(newOrder);
+        // Deep copy graph
         Territories t = new Territories();
         Graph newGraph = t.getGraph();
 
@@ -115,26 +129,6 @@ public class MCTS {
         return new State(newGraph, newOrder);
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Play-out
-
-    // Simulates a game
-    private int playOut(Graph g, Node node) {
-        // Fix player order for simulated game
-        //ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
-
-        // Simulate game
-        //System.out.println("Simulation starts");
-        //long startTime = System.currentTimeMillis();
-        SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
-        //long estimatedTime = System.currentTimeMillis() - startTime;
-        //System.out.println("Time: " + estimatedTime);
-        //System.out.println("Simulation over!");
-
-        // TODO return winner
-        return 0;
-    }
-
     // Change order for simulated game such that MCTS bot in node starts
     /*private ArrayList<Player> changeOrder(Node node) {
         while (!(copiedOrder.get(0) == node.getState().getPlayer())) {
@@ -144,23 +138,6 @@ public class MCTS {
         }
         return copiedOrder;
     }*/
-
-    // Evaluate the current graph and assigns points to the node
-    private int analyzeGame(SimulatedGameLoop game, Player player) {
-        int score = 0;
-        if (game.getWinner() == player) {
-            score += 100;
-        }
-        score += player.getTerritoriesOwned();
-        int continents = 0;
-        for (int i = 0; i < player.getContinentsOwned().length; i++) {
-            if (player.getContinentsOwned()[i]) {
-                continents++;
-            }
-        }
-        // score += troopsOwned * 0.1;
-        return score;
-    }
 
     //------------------------------------------------------------------------------------------------------------------
     // Expansion
@@ -193,10 +170,11 @@ public class MCTS {
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
             for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j++) {
                 if (j - i > 0) {
-                    copy = g.clone(order);
-                    copy.get(attackerIndex).getTerritory().setNumberOfTroops(i);
-                    copy.get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
-                    leaf.addChild(new Node(new State(copy, order), player));
+                    // TODO PROPER CLONE
+                    // copy = g.clone(order); // TODO HERE
+                    // copy.get(attackerIndex).getTerritory().setNumberOfTroops(i);
+                    // copy.get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
+                    // leaf.addChild(new Node(new State(copy, order), player));
                     System.out.println("loop " + i + " and " + j);
                 }
                 else {
@@ -209,10 +187,11 @@ public class MCTS {
         // Attacker has only 1 troop left, defender has anywhere between 1 and total defenders left
         for (int i = 1; i < g.get(defenderIndex).getTerritory().getNumberOfTroops(); i++) {
             //Create deep copy of graph
-            copy = g.clone(order);
-            copy.get(attackerIndex).getTerritory().setNumberOfTroops(1);
-            copy.get(defenderIndex).getTerritory().setNumberOfTroops(i);
-            leaf.addChild(new Node(new State(copy, order), player));
+            // TODO proper clone
+            // copy = g.clone(order); // TODO here
+            // copy.get(attackerIndex).getTerritory().setNumberOfTroops(1);
+            // copy.get(defenderIndex).getTerritory().setNumberOfTroops(i);
+            // leaf.addChild(new Node(new State(copy, order), player));
         }
     }
 
@@ -227,6 +206,9 @@ public class MCTS {
             backProp(node.getParent(), result);
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Extra methods
 
     // Get all owned vertices for a player
     public ArrayList<Vertex> getOwnedVertices(Graph g, Player p) {
