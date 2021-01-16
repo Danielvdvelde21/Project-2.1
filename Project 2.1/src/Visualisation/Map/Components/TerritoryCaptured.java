@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 
 public class TerritoryCaptured {
 
-    private JFrame f = new JFrame();
+    private final JFrame f = new JFrame();
     private boolean validNumberInserted = false;
     private int troops;
 

@@ -181,10 +181,7 @@ public class BotAttacking extends UsefulMethods {
     // Evaluate when bot stops attacking
     public boolean botWantsToAttack(Graph g, Player p) {
         Vertex[] vertices = attack(g, p);
-        if(vertices[0] == null){
-            return false;
-        }
-        return true;
+        return vertices[0] != null;
     }
 
     // How many troops will be sent over when a territory is captured

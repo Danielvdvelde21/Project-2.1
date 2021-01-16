@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Narrator {
-    private JLabel label = new JLabel();
+    private final JLabel label = new JLabel();
     private String oldText = null;
 
     public Narrator() {

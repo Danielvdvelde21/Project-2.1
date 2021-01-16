@@ -266,9 +266,9 @@ public class MainMenuScreen extends Application {
 
     private static class MenuButton extends StackPane {
 
-        private Text text;
-        private Rectangle r;
-        private Text w = new Text();
+        private final Text text;
+        private final Rectangle r;
+        private final Text w = new Text();
 
         public void addWarning(String warning) {
             w.setText(warning);
@@ -322,9 +322,9 @@ public class MainMenuScreen extends Application {
 
     private static class TextInput extends StackPane {
 
-        private TextField tf;
-        private CheckBox checkBoxBasicBot;
-        private CheckBox checkBoxMCTSBot;
+        private final TextField tf;
+        private final CheckBox checkBoxBasicBot;
+        private final CheckBox checkBoxMCTSBot;
 
         public TextInput(String name) {
             tf = new TextField();

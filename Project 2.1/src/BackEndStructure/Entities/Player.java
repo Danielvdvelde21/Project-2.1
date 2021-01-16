@@ -18,7 +18,7 @@ public class Player {
     private boolean[] continentsOwned = {false, false, false, false, false, false};
 
     // Cards
-    private ArrayList<Card> hand = new ArrayList<>();
+    private final ArrayList<Card> hand = new ArrayList<>();
     private int setsTurnedIn;
 
     //------------------------------------------------------------------------------------------------------------------

@@ -26,7 +26,7 @@ public class AttackEvent {
 
     private boolean oneTerritoryCaptured;
 
-    private ArrayList<Player> eliminatedPlayers = new ArrayList<>();
+    private final ArrayList<Player> eliminatedPlayers = new ArrayList<>();
 
     public AttackEvent(Game game) {
         this.game = game;

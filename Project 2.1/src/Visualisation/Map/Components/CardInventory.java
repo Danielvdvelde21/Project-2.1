@@ -22,8 +22,8 @@ public class CardInventory {
     private boolean allowTrading;
     private boolean attacking;
 
-    private ArrayList<Card> selectedCards = new ArrayList<>();
-    private ArrayList<JLabel> selectedLabels = new ArrayList<>();
+    private final ArrayList<Card> selectedCards = new ArrayList<>();
+    private final ArrayList<JLabel> selectedLabels = new ArrayList<>();
 
     private WindowAdapter getWindowAdapter() {
         return new WindowAdapter() {

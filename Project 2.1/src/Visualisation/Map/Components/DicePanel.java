@@ -316,10 +316,7 @@ public class DicePanel {
             return false;
         }
         // numberOfDefendingDice is 1 or 2
-        if (numberOfDefendingDice > defendingTroops) {
-            return false;
-        }
-        return true;
+        return numberOfDefendingDice <= defendingTroops;
     }
 
     public int getNumberOfAttackingDice() {

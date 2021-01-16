@@ -11,7 +11,7 @@ public class Node {
 
     private final State state;
     private Node parent;
-    private List<Node> children = new ArrayList<>();
+    private final List<Node> children = new ArrayList<>();
     private Player player;
 
     private Vertex attacker;

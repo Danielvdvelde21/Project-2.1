@@ -8,9 +8,9 @@ import java.awt.*;
 
 public class PlayerTurn {
     private final JLabel nameLabel = new JLabel();
-    private JPanel p1 = new JPanel();
-    private JPanel p2 = new JPanel();
-    private JPanel p3 = new JPanel();
+    private final JPanel p1 = new JPanel();
+    private final JPanel p2 = new JPanel();
+    private final JPanel p3 = new JPanel();
 
     private boolean turnEnded = false;
 

@@ -5,12 +5,12 @@ import java.awt.*;
 
 public class Card {
     // Territory name or WILDCARD
-    private String cardName;
+    private final String cardName;
 
     // Infantry, Cavalry, Artillery or WILDCARD
-    private String cardType;
+    private final String cardType;
 
-    private int cardImageId;
+    private final int cardImageId;
 
     public Card(String name, String type, int cardImageId) {
         this.cardName = name;
