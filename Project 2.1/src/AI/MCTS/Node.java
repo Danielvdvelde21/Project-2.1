@@ -1,6 +1,5 @@
 package AI.MCTS;
 
-import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ public class Node {
     private final State state;
     private Node parent;
     private final List<Node> children = new ArrayList<>();
-    private Player player;
 
     private Vertex attacker;
     private Vertex defender;
@@ -20,9 +18,8 @@ public class Node {
     private int visitCount;
     private int winScore;
 
-    public Node(State state, Player player) {
+    public Node(State state) {
         this.state = state;
-        this.player = player;
         this.visitCount = 0;
     }
 
@@ -97,13 +94,5 @@ public class Node {
     public int getVisitCount() { return visitCount; }
 
     public boolean isSimulated() { return visitCount != 0;}
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
 }
