@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class State {
 
     private Graph graph;
-    ArrayList<Player> order = new ArrayList<Player>();
+    ArrayList<Player> order;
 
     public State(Graph g, ArrayList<Player> order) {
         this.graph = g;

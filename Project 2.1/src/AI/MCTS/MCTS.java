@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    private final long maxTime = 10000; // 10 seconds
-    private final int maxIterations = 10000;
+    private final long maxTime = 10000; // Milliseconds
+    private final int maxIterations = 10000; // Attacks
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
@@ -38,7 +38,7 @@ public class MCTS {
                 if (promisingNode.getChildren().size() == 0) {
                     throw new RuntimeException("Expansion error! children not added!");
                 }
-                promisingNode = promisingNode.getChildren().get(0);
+                promisingNode = promisingNode.getChildren().get(0); // TODO why the first child?
             }
 
             // Play out (simulation)
@@ -121,6 +121,7 @@ public class MCTS {
         System.out.println("expansion");
 
         // Move first player to back of the order
+        // TODO im not sure about this but it should have only a small impact anyway
         ArrayList<Player> order = expandNode.getState().getOrder();
         Player currentMovePlayer = order.remove(0);
         order.add(currentMovePlayer);
@@ -168,7 +169,7 @@ public class MCTS {
                     defender.getOwnedTerritories().remove(defendingVertex);
 
                     // Add to tree
-                    Node newNode = new Node(newState, botPlayer);
+                    Node newNode = new Node(newState, botPlayer); // TODO botPlayer
                     expandNode.addChild(newNode);
                     newNode.setParent(expandNode);
                 } else {
@@ -188,7 +189,7 @@ public class MCTS {
             newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(i);
 
             // Add to tree
-            Node newNode = new Node(newState, botPlayer);
+            Node newNode = new Node(newState, botPlayer); // TODO botPlayer
             expandNode.addChild(newNode);
             newNode.setParent(expandNode);
         }
