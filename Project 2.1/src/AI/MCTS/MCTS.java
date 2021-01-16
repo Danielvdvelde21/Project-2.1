@@ -154,6 +154,7 @@ public class MCTS {
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
     private void addAllPossibleStates(Graph g, int attackerIndex, int defenderIndex, Node leaf, ArrayList<Player> order, Player player) {
         State newState;
+        Node newNode;
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
@@ -167,8 +168,9 @@ public class MCTS {
 
                     newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
                     newState.getGraph().get(defenderIndex).getTerritory().getOwner().decreaseTerritoriesOwned();
-
-                    leaf.addChild(new Node(newState, player));
+                    newNode = new Node(newState, player);
+                    leaf.addChild(newNode);
+                    newNode.setParent(leaf);
                     //System.out.println("loop " + i + " and " + j);
                 } else {
                     // when j - i is 0 or smaller, we can stop the inner loop
@@ -186,7 +188,9 @@ public class MCTS {
             newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(1);
             newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(i);
 
-            leaf.addChild(new Node(newState, player));
+            newNode = new Node(newState, player);
+            leaf.addChild(newNode);
+            newNode.setParent(leaf);
         }
     }
 
