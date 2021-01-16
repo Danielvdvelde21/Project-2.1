@@ -98,7 +98,6 @@ public class Node {
 
     public boolean isSimulated() { return visitCount != 0;}
 
-
     public Player getPlayer() {
         return player;
     }

@@ -37,7 +37,7 @@ public class MCTS {
 
         while (System.currentTimeMillis() - beginTimer < maxTime && iteration < maxIterations) {
             // Selection
-            Node promisingNode = root;
+            Node promisingNode = selectPromisingChild(root);
 
             // Expansion
             if (promisingNode.isSimulated()) {
@@ -47,7 +47,7 @@ public class MCTS {
 
             // Play out (simulation)
             Node simulationNode = promisingNode;
-            int playResult = playOut(simulationNode.getState().getGraph(), simulationNode);
+            int playResult = playOut(simulationNode);
 
             // Backpropagation
             backProp(simulationNode, playResult);
@@ -83,10 +83,7 @@ public class MCTS {
     // Play-out
 
     // Simulates a game
-    private int playOut(Graph g, Node node) {
-        // Fix player order for simulated game
-        //ArrayList<Player> simulatedPlayerOrder = changeOrder(node);
-
+    private int playOut(Node node) {
         // Simulate game
         SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
         if (game.getWinner() == node.getState().getOrder().get(0)) {
@@ -133,19 +130,22 @@ public class MCTS {
     private void expansion(Node node) {
         System.out.println("expansion");
         Graph g = node.getState().getGraph();
-        ArrayList<Player> newOrder = deepCopyPlayers(node.getState().getOrder(), g);
+        ArrayList<Player> order = node.getState().getOrder();
+
         // Move first player to back of the order
-        Player temp = newOrder.remove(0);
-        newOrder.add(temp);
+        Player temp = order.remove(0);
+        order.add(temp);
+
+        // Select bot player
         Player botPlayer = node.getPlayer();
 
         // pruning: defender outnumbers attack
-        ArrayList<Vertex> owned = getOwnedVertices(g, node.getPlayer());
+        ArrayList<Vertex> owned = botPlayer.getOwnedTerritories();
         for (Vertex v : owned) {
             for (Edge e : v.getEdges()) {
                 if (e.getVertex().getTerritory().getOwner() != node.getPlayer()) {
                     System.out.println("loop expansion");
-                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, newOrder, botPlayer);
+                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, order, botPlayer);
                 }
             }
         }
@@ -153,8 +153,6 @@ public class MCTS {
 
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
     private void addAllPossibleStates(Graph g, int attackerIndex, int defenderIndex, Node leaf, ArrayList<Player> order, Player player) {
-        State newState;
-        Node newNode;
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
@@ -162,13 +160,13 @@ public class MCTS {
                 if (j - i > 0) {
                     // I'm not sure if this is the right way to make the copies, so check for errors
                     // New state has updated troop counts and players territoriesOwned changes
-                    newState = deepCopyState(g, order);
+                    State newState = deepCopyState(g, order);
                     newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(i);
                     newState.getGraph().get(attackerIndex).getTerritory().getOwner().increaseTerritoriesOwned();
-
+                    // TODO update ownedVertices in player
                     newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
                     newState.getGraph().get(defenderIndex).getTerritory().getOwner().decreaseTerritoriesOwned();
-                    newNode = new Node(newState, player);
+                    Node newNode = new Node(newState, player);
                     leaf.addChild(newNode);
                     newNode.setParent(leaf);
                     //System.out.println("loop " + i + " and " + j);
@@ -183,12 +181,12 @@ public class MCTS {
         // Attacker has only 1 troop left, defender has anywhere between 1 and total defenders left
         for (int i = 1; i < g.get(defenderIndex).getTerritory().getNumberOfTroops(); i++) {
             //Create deep copy of state
-            newState = deepCopyState(g, order);
+            State newState = deepCopyState(g, order);
 
             newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(1);
             newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(i);
 
-            newNode = new Node(newState, player);
+            Node newNode = new Node(newState, player);
             leaf.addChild(newNode);
             newNode.setParent(leaf);
         }
@@ -204,21 +202,6 @@ public class MCTS {
         if (node.getParent() != null) {
             backProp(node.getParent(), result);
         }
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    // Extra methods
-
-    // Get all owned vertices for a player
-    public ArrayList<Vertex> getOwnedVertices(Graph g, Player p) {
-        ArrayList<Vertex> verticesOwned = new ArrayList<>();
-
-        for (int i = 0; i < g.getSize(); i++) {
-            if (g.get(i).getTerritory().getOwner() == p) {
-                verticesOwned.add(g.get(i));
-            }
-        }
-        return verticesOwned;
     }
 
 }
