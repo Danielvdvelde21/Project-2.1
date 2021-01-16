@@ -168,7 +168,7 @@ public class MCTS {
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
-            for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j++) {
+            for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j--) {
                 if (j - i > 0) {
                     // TODO PROPER CLONE
                     // copy = g.clone(order); // TODO HERE
