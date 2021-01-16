@@ -149,7 +149,6 @@ public class MCTS {
         ArrayList<Player> order = node.getState().getOrder();
         Player botPlayer = node.getPlayer();
 
-        // TODO look at playerorder
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = getOwnedVertices(g, node.getPlayer());
         for (Vertex v : owned) {
@@ -165,19 +164,26 @@ public class MCTS {
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
     private void addAllPossibleStates(Graph g, int attackerIndex, int defenderIndex, Node leaf, ArrayList<Player> order, Player player) {
         Graph copy;
+        State newState;
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
             for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j--) {
                 if (j - i > 0) {
-                    // TODO PROPER CLONE
-                    // copy = g.clone(order); // TODO HERE
-                    // copy.get(attackerIndex).getTerritory().setNumberOfTroops(i);
-                    // copy.get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
-                    // leaf.addChild(new Node(new State(copy, order), player));
-                    System.out.println("loop " + i + " and " + j);
+                    // I'm not sure if this is the right way to make the copies, so check for errors
+                    // New state has updated troop counts and players territoriesOwned changes
+                    newState = deepCopyState(g, order);
+                    newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(i);
+                    newState.getGraph().get(attackerIndex).getTerritory().getOwner().increaseTerritoriesOwned();
+
+                    newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
+                    newState.getGraph().get(defenderIndex).getTerritory().getOwner().decreaseTerritoriesOwned();
+
+                    leaf.addChild(new Node(newState, player));
+                    //System.out.println("loop " + i + " and " + j);
                 }
                 else {
+                    // when j - i is 0 or smaller, we can stop the inner loop
                     break;
                 }
             }
@@ -186,12 +192,13 @@ public class MCTS {
         // Generate losses
         // Attacker has only 1 troop left, defender has anywhere between 1 and total defenders left
         for (int i = 1; i < g.get(defenderIndex).getTerritory().getNumberOfTroops(); i++) {
-            //Create deep copy of graph
-            // TODO proper clone
-            // copy = g.clone(order); // TODO here
-            // copy.get(attackerIndex).getTerritory().setNumberOfTroops(1);
-            // copy.get(defenderIndex).getTerritory().setNumberOfTroops(i);
-            // leaf.addChild(new Node(new State(copy, order), player));
+            //Create deep copy of state
+            newState = deepCopyState(g, order);
+
+            newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(1);
+            newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(i);
+
+            leaf.addChild(new Node(newState, player));
         }
     }
 
