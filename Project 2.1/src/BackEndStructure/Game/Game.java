@@ -221,13 +221,14 @@ public class Game {
 
     // Checks whether a player owns all countries in a continent based on its territories
     public void checkContinent(Player player, int[] terr, int contIndex) {
-        int counter = 0;
-        for (int i = 0; i < terr.length ; i++) {
-            if (graph.get(terr[i]).getTerritory().getOwner() == player) {
-                counter++;
+        boolean continentsOwned = true;
+        for (int j : terr) {
+            if (graph.get(j).getTerritory().getOwner() != player) {
+                continentsOwned = false;
+                break;
             }
         }
-        if (counter == terr.length) {
+        if (continentsOwned) {
             player.addContinent(contIndex);
         }
         else {
