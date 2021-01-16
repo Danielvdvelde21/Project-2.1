@@ -50,101 +50,103 @@ public class DicePanel {
     private boolean attackingDieLocked = false;
 
     public DicePanel() {
-        playerOrder.setFont(new Font("Courier New", Font.BOLD, 16));
-        playerOrder.setForeground(Color.white);
-        offence.setFont(new Font("Courier New", Font.BOLD, 16));
-        offence.setForeground(Color.white);
-        defence.setFont(new Font("Courier New", Font.BOLD, 16));
-        defence.setForeground(Color.white);
+        if(!AI.GlobalVariables.SIMULATED) {
+            playerOrder.setFont(new Font("Courier New", Font.BOLD, 16));
+            playerOrder.setForeground(Color.white);
+            offence.setFont(new Font("Courier New", Font.BOLD, 16));
+            offence.setForeground(Color.white);
+            defence.setFont(new Font("Courier New", Font.BOLD, 16));
+            defence.setForeground(Color.white);
 
-        p1.setBackground(Map.themeColor);
-        p1a.setBackground(Map.themeColor);
-        p1b.setBackground(Map.themeColor);
-        p2.setBackground(Map.themeColor);
-        p2a.setBackground(Map.themeColor);
-        p2b.setBackground(Map.themeColor);
+            p1.setBackground(Map.themeColor);
+            p1a.setBackground(Map.themeColor);
+            p1b.setBackground(Map.themeColor);
+            p2.setBackground(Map.themeColor);
+            p2a.setBackground(Map.themeColor);
+            p2b.setBackground(Map.themeColor);
 
-        next.setFont(new Font("Courier News", Font.BOLD, 10));
-        next.setForeground(Color.white);
-        next.setBackground(null);
-        next.setBorderPainted(false);
-        next.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        next.setEnabled(true);
-        next.setPreferredSize(next.getPreferredSize());
+            next.setFont(new Font("Courier News", Font.BOLD, 10));
+            next.setForeground(Color.white);
+            next.setBackground(null);
+            next.setBorderPainted(false);
+            next.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            next.setEnabled(true);
+            next.setPreferredSize(next.getPreferredSize());
 
-        previous.setFont(new Font("Courier News", Font.BOLD, 10));
-        previous.setForeground(Color.white);
-        previous.setBackground(null);
-        previous.setBorderPainted(false);
-        previous.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        previous.setEnabled(true);
-        previous.setPreferredSize(previous.getPreferredSize());
+            previous.setFont(new Font("Courier News", Font.BOLD, 10));
+            previous.setForeground(Color.white);
+            previous.setBackground(null);
+            previous.setBorderPainted(false);
+            previous.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            previous.setEnabled(true);
+            previous.setPreferredSize(previous.getPreferredSize());
 
-        previous.addActionListener(actionEvent -> {
-            removeAttackDie();
-        });
-        next.addActionListener(actionEvent -> {
-            addAttackDie();
-        });
+            previous.addActionListener(actionEvent -> {
+                removeAttackDie();
+            });
+            next.addActionListener(actionEvent -> {
+                addAttackDie();
+            });
 
-        next1.setFont(new Font("Courier News", Font.BOLD, 10));
-        next1.setForeground(Color.white);
-        next1.setBackground(null);
-        next1.setBorderPainted(false);
-        next1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        next1.setEnabled(true);
-        next1.setPreferredSize(next.getPreferredSize());
+            next1.setFont(new Font("Courier News", Font.BOLD, 10));
+            next1.setForeground(Color.white);
+            next1.setBackground(null);
+            next1.setBorderPainted(false);
+            next1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            next1.setEnabled(true);
+            next1.setPreferredSize(next.getPreferredSize());
 
-        previous1.setFont(new Font("Courier News", Font.BOLD, 10));
-        previous1.setForeground(Color.white);
-        previous1.setBackground(null);
-        previous1.setBorderPainted(false);
-        previous1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        previous1.setEnabled(true);
-        previous1.setPreferredSize(previous.getPreferredSize());
+            previous1.setFont(new Font("Courier News", Font.BOLD, 10));
+            previous1.setForeground(Color.white);
+            previous1.setBackground(null);
+            previous1.setBorderPainted(false);
+            previous1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            previous1.setEnabled(true);
+            previous1.setPreferredSize(previous.getPreferredSize());
 
-        previous1.addActionListener(actionEvent -> {
-            removeDefendDie();
-        });
-        next1.addActionListener(actionEvent -> {
-            addDefendDie();
-        });
+            previous1.addActionListener(actionEvent -> {
+                removeDefendDie();
+            });
+            next1.addActionListener(actionEvent -> {
+                addDefendDie();
+            });
 
-        attackDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
-        attackDiceRoll.setBackground(new Color(80, 100, 182));
-        attackDiceRoll.setForeground(Color.WHITE);
-        attackDiceRoll.setPreferredSize(new Dimension(170, 30));
-        attackDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        attackDiceRoll.addActionListener(actionEvent -> {
-            rollAttackDie();
-        });
+            attackDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
+            attackDiceRoll.setBackground(new Color(80, 100, 182));
+            attackDiceRoll.setForeground(Color.WHITE);
+            attackDiceRoll.setPreferredSize(new Dimension(170, 30));
+            attackDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            attackDiceRoll.addActionListener(actionEvent -> {
+                rollAttackDie();
+            });
 
 
-        defendDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
-        defendDiceRoll.setBackground(new Color(80, 100, 182));
-        defendDiceRoll.setForeground(Color.WHITE);
-        defendDiceRoll.setPreferredSize(new Dimension(170, 30));
-        defendDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        defendDiceRoll.addActionListener(actionEvent -> {
-            rollDefDie();
-        });
+            defendDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
+            defendDiceRoll.setBackground(new Color(80, 100, 182));
+            defendDiceRoll.setForeground(Color.WHITE);
+            defendDiceRoll.setPreferredSize(new Dimension(170, 30));
+            defendDiceRoll.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            defendDiceRoll.addActionListener(actionEvent -> {
+                rollDefDie();
+            });
 
-        p1.add(playerOrder);
-        p1a.add(attackDice1);
-        p1b.add(attackDiceRoll);
+            p1.add(playerOrder);
+            p1a.add(attackDice1);
+            p1b.add(attackDiceRoll);
 
-        p1.setBounds(new Rectangle(Map.frameX, 218 + 100, 300, 40));
-        p1a.setBounds(new Rectangle(Map.frameX, 218 + 140, 300, 80));
-        p1b.setBounds(new Rectangle(Map.frameX, 218 + 140 + 80, 300, 120));
-        p2.setBounds(new Rectangle(Map.frameX, 218 + 140 + 200, 300, 40));
-        p2a.setBounds(new Rectangle(Map.frameX, 218 + 380, 300, 80));
-        p2b.setBounds(new Rectangle(Map.frameX, 218 + 380 + 80, 300, 135));
-        Map.frame.add(p1);
-        Map.frame.add(p1a);
-        Map.frame.add(p1b);
-        Map.frame.add(p2);
-        Map.frame.add(p2a);
-        Map.frame.add(p2b);
+            p1.setBounds(new Rectangle(Map.frameX, 218 + 100, 300, 40));
+            p1a.setBounds(new Rectangle(Map.frameX, 218 + 140, 300, 80));
+            p1b.setBounds(new Rectangle(Map.frameX, 218 + 140 + 80, 300, 120));
+            p2.setBounds(new Rectangle(Map.frameX, 218 + 140 + 200, 300, 40));
+            p2a.setBounds(new Rectangle(Map.frameX, 218 + 380, 300, 80));
+            p2b.setBounds(new Rectangle(Map.frameX, 218 + 380 + 80, 300, 135));
+            Map.frame.add(p1);
+            Map.frame.add(p1a);
+            Map.frame.add(p1b);
+            Map.frame.add(p2);
+            Map.frame.add(p2a);
+            Map.frame.add(p2b);
+        }
     }
 
     public void playerOrderObtained() {

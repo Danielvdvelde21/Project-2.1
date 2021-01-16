@@ -59,7 +59,6 @@ public class SimAttackEvent {
 
             // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
             while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
-
                 int numberOfAttackerDice;
                 int numberOfDefenderDice;
                 int[] attackerDiceValues = new int[3];
@@ -107,7 +106,6 @@ public class SimAttackEvent {
                 if (defender.getTerritory().getNumberOfTroops() < 1) {
                     // oneTerritoryCaptured = true;
                     territoryCaptured(player, defender, attacker);
-                    return;
                 }
             }
         }
@@ -121,6 +119,9 @@ public class SimAttackEvent {
 
         // Player gets the territory
         Player defenderOwner = defender.getTerritory().getOwner();
+        if (!(attack.getTerritory().getOwner() == player)) {
+            throw new IllegalArgumentException("test");
+        }
         player.increaseTerritoriesOwned();
         defender.getTerritory().setOwner(player);
 
@@ -129,7 +130,6 @@ public class SimAttackEvent {
 
         isGameOver(player);
         if (isEliminated(defenderOwner)) {
-            //receiveCards(player, defenderOwner);
             eliminatePlayer(defenderOwner);
         }
 

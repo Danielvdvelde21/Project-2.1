@@ -45,7 +45,6 @@ public class Player {
         this.isBot = isBot;
         this.isMCTSBot = isMCTSBot;
         this.territoriesOwned = territoriesOwned;
-        int i = 0;
         this.continentsOwned = continentsOwned;
     }
 
@@ -137,7 +136,7 @@ public class Player {
     }
 
     // MCTS BOT
-    private ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+    private final ArrayList<Vertex> ownedTerritories = new ArrayList<>();
 
     public ArrayList<Vertex> getOwnedTerritories() {
         return ownedTerritories;

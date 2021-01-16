@@ -1,5 +1,7 @@
 package BackEndStructure.Graph;
 
+import BackEndStructure.Entities.Player;
+
 import java.util.*;
 
 public class Graph {
@@ -20,7 +22,7 @@ public class Graph {
     //------------------------------------------------------------------------------------------------------------------
     // Building a graph
 
-    public void AddVertex (Vertex newVertex){
+    public void AddVertex(Vertex newVertex) {
         graph.add(newVertex);
     }
 
@@ -34,7 +36,7 @@ public class Graph {
 
     public boolean isAdjacent(Vertex vertex1, Vertex vertex2) {
         for (int i = 0; i < vertex1.getEdges().size(); i++) {
-            if(vertex1.getEdges().get(i).getVertex() == vertex2) {
+            if (vertex1.getEdges().get(i).getVertex() == vertex2) {
                 return true;
             }
         }
@@ -44,43 +46,53 @@ public class Graph {
     //------------------------------------------------------------------------------------------------------------------
     // Getters
 
-    public Vertex get(int i) { return graph.get(i); }
+    public Vertex get(int i) {
+        return graph.get(i);
+    }
 
-    public int getSize() { return graph.size(); }
+    public int getSize() {
+        return graph.size();
+    }
 
-    public ArrayList<Vertex> getArrayList() { return graph; }
+    public ArrayList<Vertex> getArrayList() {
+        return graph;
+    }
 
-    public Graph clone(){
-        ArrayList<Vertex> clonedVs=new ArrayList<Vertex>();
-        for(Vertex v : graph) {
-            Vertex newV=new Vertex(v.getTerritory().clone(),v.getEdges());
+    public Graph clone(ArrayList<Player> order) {
+        ArrayList<Vertex> clonedVs = new ArrayList<Vertex>();
+        for (Vertex v : graph) {
+            Vertex newV = new Vertex(v.getTerritory().clone(), v.getEdges());
+            for (Player p : order) {
+                if (p.getName().equals(v.getTerritory().getOwner().getName())) {
+                    newV.getTerritory().setOwner(p);
+                }
+            }
             clonedVs.add(newV);
         }
-        Graph g1=new Graph(clonedVs);
-        return g1;
+        return new Graph(clonedVs);
     }
 
     //------------------------------------------------------------------------------------------------------------------
     // Printing the graph
 
-    public void printGraph(){
+    public void printGraph() {
         System.out.println("Printing Graph:");
-        for (Vertex v : graph){
-            System.out.print("Territory name: "+ v.getTerritory().getTerritoryName());
-            System.out.print(", owned by: "+ v.getTerritory().getOwner().getName());
+        for (Vertex v : graph) {
+            System.out.print("Territory name: " + v.getTerritory().getTerritoryName());
+            System.out.print(", owned by: " + v.getTerritory().getOwner().getName());
             System.out.print(", Connected with: ");
-            for (Edge e : v.getEdges()){
+            for (Edge e : v.getEdges()) {
                 System.out.print(e.getVertex().getTerritory().getTerritoryName() + ", ");
             }
             System.out.print("\n");
         }
     }
 
-    public void printGraphShort(){
+    public void printGraphShort() {
         System.out.println("Printing short graph:");
-        for (Vertex v : graph){
-            System.out.print("["+v.getTerritory().getTerritoryNumber());
-            System.out.print(", "+v.getTerritory().getOwner().getName()+"],");
+        for (Vertex v : graph) {
+            System.out.print("[" + v.getTerritory().getTerritoryNumber());
+            System.out.print(", " + v.getTerritory().getOwner().getName() + "],");
         }
         System.out.print("\n");
     }

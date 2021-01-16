@@ -47,6 +47,7 @@ public class SimReceiveTroops {
 
         // Select a random territory
         Random random = new Random();
+
         Territory t = ownedTerritories.get(random.nextInt(ownedTerritories.size())).getTerritory();
 
         // place a troop on the random territory

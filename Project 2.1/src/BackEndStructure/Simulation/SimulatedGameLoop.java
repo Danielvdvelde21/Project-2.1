@@ -6,8 +6,11 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.Stages.SimulatedGameStage;
 import AI.MCTS.State;
+import AI.GlobalVariables;
+
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class SimulatedGameLoop {
 
@@ -19,11 +22,10 @@ public class SimulatedGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
 
     public SimulatedGameLoop(State s) {
-
+        AI.GlobalVariables.SIMULATED=true;
         this.game = new Game(s.getGraph(), s.getOrder());
-
-        // The game is about attacking, using cards, fortifying, etc.
         mainGameStage();
+        AI.GlobalVariables.SIMULATED=false;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
