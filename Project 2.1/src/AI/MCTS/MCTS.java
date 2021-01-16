@@ -127,18 +127,17 @@ public class MCTS {
         ArrayList<Player> order = node.getState().getOrder();
 
         // Move first player to back of the order
-        Player temp = order.remove(0);
-        order.add(temp);
+        Player currentMovePlayer = order.remove(0);
+        order.add(currentMovePlayer);
 
         // Select bot player
-        Player botPlayer = node.getPlayer(); // TODO this isnt the right player
+        Player botPlayer = node.getPlayer();
 
         // pruning: defender outnumbers attack
-        ArrayList<Vertex> owned = botPlayer.getOwnedTerritories();
+        ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
         for (Vertex v : owned) {
             for (Edge e : v.getEdges()) {
-                if (e.getVertex().getTerritory().getOwner() != node.getPlayer()) {
-                    System.out.println("loop expansion");
+                if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
                     addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, order, botPlayer);
                 }
             }
