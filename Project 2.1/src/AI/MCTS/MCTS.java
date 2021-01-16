@@ -102,12 +102,6 @@ public class MCTS {
         }
 
         // Deep copy players and update graph
-        ArrayList<Player> newOrder = deepCopyPlayers(order, newGraph);
-
-        return new State(newGraph, newOrder);
-    }
-
-    private ArrayList<Player> deepCopyPlayers(ArrayList<Player> order, Graph g) {
         ArrayList<Player> newOrder = new ArrayList<>();
         for (Player p : order) {
             Player newPlayer = p.clone();
@@ -119,7 +113,8 @@ public class MCTS {
                 }
             }
         }
-        return newOrder;
+
+        return new State(newGraph, newOrder);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -136,7 +131,7 @@ public class MCTS {
         order.add(temp);
 
         // Select bot player
-        Player botPlayer = node.getPlayer();
+        Player botPlayer = node.getPlayer(); // TODO this isnt the right player
 
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = botPlayer.getOwnedTerritories();
