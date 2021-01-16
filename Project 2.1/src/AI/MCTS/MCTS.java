@@ -11,66 +11,57 @@ import java.util.ArrayList;
 
 public class MCTS {
 
+    // Variables that determine the maximum time or iterations the bot has
+    private final long maxTime = 10000; // 10 seconds
     private final int maxIterations = 10000;
 
+    // Copied variables
     private Graph copiedGraph;
     private final ArrayList<Player> copiedOrder = new ArrayList<>();
-
-    private Player MCTSPlayer;
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
-        // Deep copy graph, players and update graph
-        State rootState = deepCopyState(g, order);
-        State duplicate = deepCopyState(g,order);
-
-        // Assign MCTS player, must be first player in order!
-        //this.MCTSPlayer = copiedOrder.get(0);
-
         // Construct the root node
+        State rootState = deepCopyState(g, order);
         Node root = new Node(rootState, p);
-        root.setVisitCount(1); // Sets the root as simulated
+        root.setVisitCount(1); // Sets the root as simulated // TODO make sure it works!
 
+        // The tree with assigned root
         Tree tree = new Tree(root);
 
-        // Time limit or iteration limit
-        long time = System.currentTimeMillis();
-        int end = 2500; // Time limit
-
+        // Initialize duration variable
+        long beginTimer = System.currentTimeMillis();
         int iteration = 0;
-        long start = System.currentTimeMillis();
-        while (iteration < maxIterations) {
-             duplicate = deepCopyState(rootState.getGraph(),rootState.getOrder());
-             root = new Node(duplicate, p);
+
+        while (System.currentTimeMillis() - beginTimer < maxTime && iteration < maxIterations) {
             // Selection
             Node promisingNode = root;
 
             // Expansion
-            /*if (promisingNode.isSimulated()) {
+            if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
                 promisingNode = promisingNode.getChildren().get(0);
-            }*/
+            }
 
             // Play out (simulation)
             Node simulationNode = promisingNode;
-
             int playResult = playOut(simulationNode.getState().getGraph(), simulationNode);
 
             // Backpropagation
-            //backProp(simulationNode, playResult);
+            backProp(simulationNode, playResult);
             iteration++;
-            if (iteration%100 == 0) {
-                System.out.println(iteration);
-            }
         }
-        long ft=System.currentTimeMillis()-start;
-        System.out.println("total time:" +ft);
 
-        System.out.println("time per iteration:" +(double)ft/(double)maxIterations+"ms");
-        int hz=(int)(1000.0/((double)ft/(double)maxIterations));
-        System.out.println("iterations per second:" +hz);
+        /* Time tracking code
+        long ft = System.currentTimeMillis() - beginTimer;
+        System.out.println("total time:" + ft);
+
+        System.out.println("time per iteration:" + (double) ft / (double) maxIterations + "ms");
+        int hz = (int) (1000.0 / ((double) ft / (double) maxIterations));
+        System.out.println("iterations per second:" + hz);
+         */
 
         Node winner = root.getMaxScoreChild();
         tree.setRoot(winner);
@@ -135,16 +126,6 @@ public class MCTS {
         return newOrder;
     }
 
-    // Change order for simulated game such that MCTS bot in node starts
-    /*private ArrayList<Player> changeOrder(Node node) {
-        while (!(copiedOrder.get(0) == node.getState().getPlayer())) {
-            Player temp = copiedOrder.get(0);
-            copiedOrder.remove(temp);
-            copiedOrder.add(temp);
-        }
-        return copiedOrder;
-    }*/
-
     //------------------------------------------------------------------------------------------------------------------
     // Expansion
 
@@ -189,8 +170,7 @@ public class MCTS {
 
                     leaf.addChild(new Node(newState, player));
                     //System.out.println("loop " + i + " and " + j);
-                }
-                else {
+                } else {
                     // when j - i is 0 or smaller, we can stop the inner loop
                     break;
                 }
