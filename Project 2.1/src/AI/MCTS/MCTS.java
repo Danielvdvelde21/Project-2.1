@@ -98,8 +98,9 @@ public class MCTS {
 
         // Simulate game
         SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
-
-        // TODO return winner
+        if (game.getWinner() == node.getState().getOrder().get(0)) {
+            return 10;
+        }
         return 0;
     }
 
@@ -114,19 +115,24 @@ public class MCTS {
         }
 
         // Deep copy players and update graph
+        ArrayList<Player> newOrder = deepCopyPlayers(order, newGraph);
+
+        return new State(newGraph, newOrder);
+    }
+
+    private ArrayList<Player> deepCopyPlayers(ArrayList<Player> order, Graph g) {
         ArrayList<Player> newOrder = new ArrayList<>();
         for (Player p : order) {
             Player newPlayer = p.clone();
             newOrder.add(newPlayer);
-            for (Vertex v : newGraph.getArrayList()) {
+            for (Vertex v : g.getArrayList()) {
                 if (v.getTerritory().getOwner() == p) {
                     v.getTerritory().setOwner(newPlayer);
                     newPlayer.getOwnedTerritories().add(v);
                 }
             }
         }
-
-        return new State(newGraph, newOrder);
+        return newOrder;
     }
 
     // Change order for simulated game such that MCTS bot in node starts
@@ -146,7 +152,10 @@ public class MCTS {
     private void expansion(Node node) {
         System.out.println("expansion");
         Graph g = node.getState().getGraph();
-        ArrayList<Player> order = node.getState().getOrder();
+        ArrayList<Player> newOrder = deepCopyPlayers(node.getState().getOrder(), g);
+        // Move first player to back of the order
+        Player temp = newOrder.remove(0);
+        newOrder.add(temp);
         Player botPlayer = node.getPlayer();
 
         // pruning: defender outnumbers attack
@@ -155,7 +164,7 @@ public class MCTS {
             for (Edge e : v.getEdges()) {
                 if (e.getVertex().getTerritory().getOwner() != node.getPlayer()) {
                     System.out.println("loop expansion");
-                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, order, botPlayer);
+                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, newOrder, botPlayer);
                 }
             }
         }
@@ -163,7 +172,6 @@ public class MCTS {
 
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
     private void addAllPossibleStates(Graph g, int attackerIndex, int defenderIndex, Node leaf, ArrayList<Player> order, Player player) {
-        Graph copy;
         State newState;
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
