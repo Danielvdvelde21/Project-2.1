@@ -15,18 +15,14 @@ public class MCTS {
     private final long maxTime = 10000; // 10 seconds
     private final int maxIterations = 10000;
 
-    // Copied variables
-    private Graph copiedGraph;
-    private final ArrayList<Player> copiedOrder = new ArrayList<>();
-
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
         // Construct the root node
         State rootState = deepCopyState(g, order);
-        Node root = new Node(rootState, p);
-        root.setVisitCount(1); // Sets the root as simulated // TODO make sure it works!
+        Node root = new Node(rootState, p); // TODO fix this!
+        root.setVisitCount(1); // Sets the root as simulated
 
         // The tree with assigned root
         Tree tree = new Tree(root);
@@ -37,11 +33,14 @@ public class MCTS {
 
         while (System.currentTimeMillis() - beginTimer < maxTime && iteration < maxIterations) {
             // Selection
-            Node promisingNode = selectPromisingChild(root);
+            Node promisingNode = selectPromisingChild(root); // TODO not use root?
 
             // Expansion
             if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
+                if (promisingNode.getChildren().size() == 0) {
+                    throw new RuntimeException("Expansion error! children not added!");
+                }
                 promisingNode = promisingNode.getChildren().get(0);
             }
 
