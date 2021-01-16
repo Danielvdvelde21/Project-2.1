@@ -62,7 +62,7 @@ public class MCTS {
         System.out.println("iterations per second:" + hz);
          */
 
-        Node winner = root.getMaxScoreChild();
+        Node winner = root.getMaxScoreChild(); // TODO Fix
         tree.setRoot(winner);
         return new Vertex[]{winner.getAttacker(), winner.getDefender()};
     }
@@ -85,7 +85,7 @@ public class MCTS {
     private int playOut(Node node) {
         // Simulate game
         SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
-        if (game.getWinner() == node.getState().getOrder().get(0)) {
+        if (game.getWinner() == node.getPlayer()) {
             return 10;
         }
         return 0;
@@ -121,48 +121,60 @@ public class MCTS {
     // Expansion
 
     // Add all the first possible moves or add 1 node to the bottom of the best node
-    private void expansion(Node node) {
+    private void expansion(Node expandNode) {
         System.out.println("expansion");
-        Graph g = node.getState().getGraph();
-        ArrayList<Player> order = node.getState().getOrder();
 
         // Move first player to back of the order
+        ArrayList<Player> order = expandNode.getState().getOrder();
         Player currentMovePlayer = order.remove(0);
         order.add(currentMovePlayer);
-
-        // Select bot player
-        Player botPlayer = node.getPlayer();
 
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
         for (Vertex v : owned) {
             for (Edge e : v.getEdges()) {
                 if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
-                    addAllPossibleStates(g, v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), node, order, botPlayer);
+                    addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
                 }
             }
         }
     }
 
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
-    private void addAllPossibleStates(Graph g, int attackerIndex, int defenderIndex, Node leaf, ArrayList<Player> order, Player player) {
+    private void addAllPossibleStates(int attackerIndex, int defenderIndex, Node expandNode) {
+        Graph g = expandNode.getState().getGraph();
+        ArrayList<Player> order = expandNode.getState().getOrder();
+        Player botPlayer = expandNode.getPlayer();
+
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
             for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j--) {
                 if (j - i > 0) {
-                    // I'm not sure if this is the right way to make the copies, so check for errors
-                    // New state has updated troop counts and players territoriesOwned changes
+                    // Deep copy state
                     State newState = deepCopyState(g, order);
-                    newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(i);
-                    newState.getGraph().get(attackerIndex).getTerritory().getOwner().increaseTerritoriesOwned();
-                    // TODO update ownedVertices in player
-                    newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(j - i);
-                    newState.getGraph().get(defenderIndex).getTerritory().getOwner().decreaseTerritoriesOwned();
-                    Node newNode = new Node(newState, player);
-                    leaf.addChild(newNode);
-                    newNode.setParent(leaf);
-                    //System.out.println("loop " + i + " and " + j);
+
+                    Player attacker = newState.getGraph().get(attackerIndex).getTerritory().getOwner();
+                    Player defender = newState.getGraph().get(defenderIndex).getTerritory().getOwner();
+                    Vertex attackingVertex = newState.getGraph().get(attackerIndex);
+                    Vertex defendingVertex = newState.getGraph().get(defenderIndex);
+
+                    // Update territory attacker
+                    attackingVertex.getTerritory().setNumberOfTroops(i);
+                    // Update attacker
+                    defendingVertex.getTerritory().setOwner(attacker);
+                    attacker.increaseTerritoriesOwned();
+                    attacker.getOwnedTerritories().add(defendingVertex);
+                    // Update territory defender
+                    defendingVertex.getTerritory().setNumberOfTroops(j - i);
+                    // Update defender
+                    defender.decreaseTerritoriesOwned();
+                    defender.getOwnedTerritories().remove(defendingVertex);
+
+                    // Add to tree
+                    Node newNode = new Node(newState, botPlayer);
+                    expandNode.addChild(newNode);
+                    newNode.setParent(expandNode);
                 } else {
                     // when j - i is 0 or smaller, we can stop the inner loop
                     break;
@@ -173,15 +185,16 @@ public class MCTS {
         // Generate losses
         // Attacker has only 1 troop left, defender has anywhere between 1 and total defenders left
         for (int i = 1; i < g.get(defenderIndex).getTerritory().getNumberOfTroops(); i++) {
-            //Create deep copy of state
+            // Deep copy state
             State newState = deepCopyState(g, order);
 
             newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(1);
             newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(i);
 
-            Node newNode = new Node(newState, player);
-            leaf.addChild(newNode);
-            newNode.setParent(leaf);
+            // Add to tree
+            Node newNode = new Node(newState, botPlayer);
+            expandNode.addChild(newNode);
+            newNode.setParent(expandNode);
         }
     }
 
