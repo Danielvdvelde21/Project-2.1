@@ -28,11 +28,19 @@ public class Map {
     public static int frameX = 1100;
     public static int frameY = 700;
 
-    private final ArrayList<JButton> buttonList = new ArrayList<JButton>();
-    private final ArrayList<JLabel> labelList = new ArrayList<>();
+    private ArrayList<JButton> buttonList = new ArrayList<JButton>();
+    private ArrayList<JLabel> labelList = new ArrayList<>();
 
     public static JFrame frame = new JFrame("RISK");
     public static Color themeColor = Color.darkGray;
+
+    public void refresh(){
+        this.buttonList = new ArrayList<JButton>();
+        this.labelList = new ArrayList<>();
+        frame.dispose();
+        frame = new JFrame("RISK");
+        themeColor = Color.darkGray;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Label for how many troops a territory has

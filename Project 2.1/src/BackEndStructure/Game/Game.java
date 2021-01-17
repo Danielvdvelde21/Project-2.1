@@ -34,10 +34,10 @@ public class Game {
     private final MCTS AIMCTS = new MCTS();
 
     // Visual variables
-    private final Narrator narrator = new Narrator();
-    private final PlayerTurn playerTurn = new PlayerTurn();
-    private final CardInventory cardInventory = new CardInventory();
-    private final DicePanel dicePanel = new DicePanel();
+    private Narrator narrator = new Narrator();
+    private  PlayerTurn playerTurn = new PlayerTurn();
+    private  CardInventory cardInventory = new CardInventory();
+    private  DicePanel dicePanel = new DicePanel();
 
     // All the territories in a graph (with edges)
     private Graph graph;
@@ -93,7 +93,13 @@ public class Game {
         }
 
         // Create a new map
+
         this.map = new Map();
+        map.refresh();
+        narrator = new Narrator();
+        playerTurn = new PlayerTurn();
+        cardInventory = new CardInventory();
+        dicePanel = new DicePanel();
         map.createMap();
     }
 
