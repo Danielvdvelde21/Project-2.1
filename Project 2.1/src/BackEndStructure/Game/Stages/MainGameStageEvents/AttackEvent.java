@@ -159,7 +159,6 @@ public class AttackEvent {
         // Set the amount of dice that the bot wants to use
         int attackerdie = -1;
         if (player.isBot()) {
-            switch (game.getAi().getBotAttacking().getAttackerDie()) {
             attackerdie = game.getAi().getBotAttacking().getAttackerDie();
             switch (attackerdie) {
                 case 1:
