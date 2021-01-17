@@ -102,7 +102,7 @@ public class MCTS {
         // Simulate game
         Node simNode = new Node(deepCopyState(node.getState().getGraph(), node.getState().getOrder(), node.getState().getPlayerMCTS(), true));
         SimulatedGameLoop game = new SimulatedGameLoop(simNode.getState());
-        if (game.getWinner() == node.getState().getPlayerMCTS()) {
+        if (game.getWinner() == simNode.getState().getPlayerMCTS()) {
             return 10;
         }
         return 0;
