@@ -183,7 +183,9 @@ public class MainMenuScreen extends Application {
                     int winsMCTS = 0;
                     int winsBasicBot = 0;
                     for (int game = 0; game < 100; game++) {
-                        MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS);
+                        // Instead of having normal player have a random player
+                        boolean randomPlayer = true;
+                        MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
                         if (mainGameLoop.getWinner().isMCTSBot()) {
                             winsMCTS++;
                         } else {

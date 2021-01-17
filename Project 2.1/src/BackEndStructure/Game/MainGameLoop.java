@@ -30,7 +30,7 @@ public class MainGameLoop {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public MainGameLoop(int players, String[] playerNames, boolean[] basicBots, boolean[] MCTSBots) {
+    public MainGameLoop(int players, String[] playerNames, boolean[] basicBots, boolean[] MCTSBots, boolean randomPlayer) {
         this.game = new Game(players, playerNames, basicBots, MCTSBots);
         this.narrator = game.getNarrator();
         this.playerTurn = game.getPlayerTurn();
@@ -40,13 +40,13 @@ public class MainGameLoop {
         dicePanel.setGame(game);
 
         // The game starts by every player rolling die to determine who goes first
-        determinePlayerOrder();
+        determinePlayerOrder(randomPlayer);
 
         // The game starts by every player starting to place troops on the board
-        placementStage();
+        placementStage(randomPlayer);
 
         // The game is about attacking, using cards, fortifying, etc.
-        mainGameStage();
+        mainGameStage(randomPlayer);
 
         // Game over
         narrator.addText("GAME OVER! PLAYER " + winner.getName() + " IS VICTORIOUS");
@@ -56,7 +56,7 @@ public class MainGameLoop {
     // Player Order
 
     // If players throw the same number the one that first threw that number goes first
-    private void determinePlayerOrder() {
+    private void determinePlayerOrder(boolean randomPlayer) {
         dicePanel.allowRolling(true);
         order = new ArrayList<>();
         ArrayList<Integer> values = new ArrayList<>();
@@ -66,7 +66,7 @@ public class MainGameLoop {
             narrator.addText("Player " + game.getPlayers().get(i).getName() + " may roll the dice!");
             playerTurn.setPlayerTurn(game.getPlayers().get(i));
             // Set order for bots
-            if (game.getPlayers().get(i).isBot() || game.getPlayers().get(i).isMCTSBot()) {
+            if (game.getPlayers().get(i).isBot() || game.getPlayers().get(i).isMCTSBot() || randomPlayer) {
                 dicePanel.rollAttackDie();
                 dicePanel.resetDiceRolled();
             } else {
@@ -90,17 +90,17 @@ public class MainGameLoop {
     // -----------------------------------------------------------------------------------------------------------------
     // PlacementStage
 
-    private void placementStage() {
+    private void placementStage(boolean randomPlayer) {
         PlacementStage stage = new PlacementStage(game);
-        stage.placementStage();
+        stage.placementStage(randomPlayer);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     // MainGameStage
 
-   public void mainGameStage() {
+   public void mainGameStage(boolean randomPlayer) {
         MainGameStage stage = new MainGameStage(game);
-        stage.mainGameStage();
+        stage.mainGameStage(randomPlayer);
         winner = stage.getWinner();
    }
 

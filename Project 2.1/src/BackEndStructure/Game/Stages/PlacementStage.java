@@ -9,6 +9,8 @@ import Visualisation.Map.Components.Narrator;
 import Visualisation.Map.Components.PlayerTurn;
 import Visualisation.Map.Map;
 
+import javax.print.attribute.standard.PrinterMakeAndModel;
+
 public class PlacementStage {
 
     private final Game game;
@@ -31,7 +33,7 @@ public class PlacementStage {
         cardInventory.setGame(game);
     }
 
-    public void placementStage() {
+    public void placementStage(boolean randomPlayer) {
         // For each player till all countries are chosen
         int round = 1;
 
@@ -41,15 +43,15 @@ public class PlacementStage {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 cardInventory.setCurrentPlayer(p);
                 playerTurn.setPlayerTurn(p);
-                placementTurn(p);
+                placementTurn(p, randomPlayer);
             }
             round++;
         }
     }
 
-    private void placementTurn(Player player) {
+    private void placementTurn(Player player, boolean randomPlayer) {
         // Both bots use the rule based approach in the placement phase
-        if (player.isBot() || player.isMCTSBot()) {
+        if (player.isBot() || player.isMCTSBot() || randomPlayer) {
             placeTroop(player, game.getAi().getPlaceTroops().placementDecider(graph, player));
         } else {
             placeTroop(player, getSelectedTerritoryNumber(player));

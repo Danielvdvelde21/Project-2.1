@@ -5,13 +5,17 @@ import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
+import BackEndStructure.Graph.Vertex;
 import Visualisation.Map.Components.CardInventory;
 import Visualisation.Map.Components.Narrator;
 import Visualisation.Map.Map;
+import java.util.SplittableRandom;
 
 import java.util.ArrayList;
 
 public class ReceiveTroops {
+
+    SplittableRandom splittableRandom = new SplittableRandom();
 
     private final Game game;
     private final Map map;
@@ -28,10 +32,10 @@ public class ReceiveTroops {
         cardInventory.setGame(game);
     }
 
-    public int receivedTroops(Player player) {
+    public int receivedTroops(Player player, boolean randomPlayer) {
         // Troops for turning in cards
         int cards;
-        if (player.isBot() || player.isMCTSBot()) {
+        if (player.isBot() || player.isMCTSBot() || randomPlayer) {
             // Set of cards the bot is going to turn in
             ArrayList<Card> turnInSet = game.getAi().getBotCards().cards(graph, player);
 
@@ -96,17 +100,40 @@ public class ReceiveTroops {
     // -----------------------------------------------------------------------------------------------------------------
     // Placing troops
 
-    public void placeReceivedTroops(Player player, int troops) {
+    public void placeReceivedTroops(Player player, int troops, boolean randomPlayer) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot() || player.isMCTSBot()) {
             for (int i = 0; i < troops; i++) {
                 placeTroop(player, game.getAi().getPlaceTroops().placeTroop(graph, player));
+            }
+        } else if (randomPlayer) {
+            for (int i = 0; i < troops; i++) {
+                placeTroopRandomly(player);
             }
         } else {
             for (int i = 0; i < troops; i++) {
                 placeTroop(player, getSelectedTerritoryNumber(player));
             }
         }
+    }
+
+    private void placeTroopRandomly(Player player) {
+        ArrayList<Vertex> owned = new ArrayList<>();
+        for (Vertex v : game.getGraph().getArrayList()) {
+            if (v.getTerritory().getOwner() == player) {
+                owned.add(v);
+            }
+        }
+
+        // Select a random territory
+        Territory t = owned.get(splittableRandom.nextInt(owned.size())).getTerritory();
+
+        // place a troop on the random territory
+        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
+
+        // Update the Map
+        narrator.addText(player.getName() + " put a troop on " + t.getTerritoryName());
+        map.updateTroopCount(t.getTerritoryNumber(), t.getNumberOfTroops());
     }
 
     private void placeTroop(Player player, int territoryNumber) {
