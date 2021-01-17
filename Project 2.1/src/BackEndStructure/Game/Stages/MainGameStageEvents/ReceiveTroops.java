@@ -152,10 +152,10 @@ public class ReceiveTroops {
 
     // Creates a delay
     private void delay() {
-        try {
+        /*try {
             Thread.sleep(100);
         } catch (InterruptedException ignored) {
-        }
+        }*/
     }
 
     // If a territory is selected

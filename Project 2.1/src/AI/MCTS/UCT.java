@@ -19,11 +19,18 @@ public class UCT {
         double uct=0;
         for (int i=0;i<node.getChildrenSize();i++) {
             Node n=node.getChildren()[i];
-            uct=uctValue(n.getParent().getVisitCount(), n.getWinScore(), n.getVisitCount());
+            if(!n.isTerminal()){
+                uct=uctValue(n.getParent().getVisitCount(), n.getWinScore(), n.getVisitCount());
+            } else {
+                uct=0;
+            }
             if(uct>maxUCT){
                 maxUCT=uct;
                 maxUCTind=i;
             }
+        }
+        if(node.getChildren()[maxUCTind].isTerminal()){
+            node.setTerminal();
         }
         return node.getChildren()[maxUCTind];
     }

@@ -13,19 +13,21 @@ import java.util.Collections;
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    private final long maxTime = 100; // Milliseconds
-    private final int maxIterations = 100000; // Attacks
+    private final long maxTime = 1000; // Milliseconds
+    private final int maxIterations = 10000; // Attacks
     public static ArrayList<Integer> childrenNo;
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
-    public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
+    public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p){
+        long continueCount=0;
         childrenNo = new ArrayList<Integer>();
         // Construct the root node
         State rootState = deepCopyState(g, order, p, true);
         Node root = new Node(rootState);
         root.visit(); // Sets the root as simulated
+        Node promisingNode = root;
 
         // Initialize duration variable
         long beginTimer = System.currentTimeMillis();
@@ -33,17 +35,18 @@ public class MCTS {
 
         while (System.currentTimeMillis() - beginTimer < maxTime && iteration < maxIterations) {
             // Selection
-            Node promisingNode = selectPromisingChild(root);
-
+            Node oldPromisingNode = promisingNode;
+            promisingNode = selectPromisingChild(root);
+            if(root.isTerminal()){
+                break;
+            }
             // Expansion
             if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
-                if (promisingNode.isTerminal()) {
+                if(promisingNode.isTerminal()){
+                    continueCount++;
                     continue;
-                } else {
-                    childrenNo.add(promisingNode.getChildrenSize());
                 }
-
                 promisingNode = promisingNode.getChildren()[0];
             }
 
@@ -55,6 +58,7 @@ public class MCTS {
             backProp(simulationNode, playResult);
             iteration++;
         }
+        System.out.println(continueCount+" - "+iteration);
 
         // Time tracking code
         System.out.println("iterations: " + iteration);
@@ -86,9 +90,9 @@ public class MCTS {
         }*/
         
         System.out.println("number of expansions: " + childrenNo.size());
-        System.out.println("max expansion size: " + Collections.max(childrenNo));
+        /*System.out.println("max expansion size: " + Collections.max(childrenNo));
         System.out.println("min expansion size: " + Collections.min(childrenNo));
-        System.out.println("average: " + calculateAverage(childrenNo));
+        System.out.println("average: " + calculateAverage(childrenNo));*/
 
         root = null;
         rootState = null;
