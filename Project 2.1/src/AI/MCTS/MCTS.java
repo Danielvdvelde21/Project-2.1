@@ -58,13 +58,13 @@ public class MCTS {
             backProp(simulationNode, playResult);
             iteration++;
         }
-        System.out.println(continueCount+" - "+iteration);
-
-        // Time tracking code
-        System.out.println("iterations: " + iteration);
-        long ft = System.currentTimeMillis() - beginTimer;
-        int hz = (int) (1000.0 / ((double) ft / (double) iteration));
-        System.out.println("iterations per second:" + hz);
+//        System.out.println(continueCount+" - "+iteration);
+//
+//        // Time tracking code
+//        System.out.println("iterations: " + iteration);
+//        long ft = System.currentTimeMillis() - beginTimer;
+//        int hz = (int) (1000.0 / ((double) ft / (double) iteration));
+//        System.out.println("iterations per second:" + hz);
 
 
         // The vertices from the winner node are not the same objects as the vertices in the original graph
@@ -89,7 +89,7 @@ public class MCTS {
             throw new RuntimeException("Duplicated vertices are returned");
         }*/
         
-        System.out.println("number of expansions: " + childrenNo.size());
+//        System.out.println("number of expansions: " + childrenNo.size());
         /*System.out.println("max expansion size: " + Collections.max(childrenNo));
         System.out.println("min expansion size: " + Collections.min(childrenNo));
         System.out.println("average: " + calculateAverage(childrenNo));*/

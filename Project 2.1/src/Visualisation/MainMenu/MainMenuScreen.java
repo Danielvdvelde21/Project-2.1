@@ -182,21 +182,21 @@ public class MainMenuScreen extends Application {
                     ps.hide();  //hide menu
                     int winsMCTS = 0;
                     int winsBasicBot = 0;
+                    int winsRandomPlayer = 0;
                     for (int game = 0; game < 100; game++) {
                         // Instead of having normal player have a random player
                         boolean randomPlayer = true;
                         MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
                         if (mainGameLoop.getWinner().isMCTSBot()) {
                             winsMCTS++;
-                        } else {
+                        } else if (mainGameLoop.getWinner().isBot()){
                             winsBasicBot++;
+                        } else {
+                            winsRandomPlayer++;
                         }
                         mainGameLoop = null;
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        System.out.println();
+                        System.out.println("Wins random Bot " + winsRandomPlayer);
                         System.out.println("Wins MCTS Bot " + winsMCTS);
                         System.out.println("Wins Basic Bot " + winsBasicBot);
                     }
