@@ -180,7 +180,18 @@ public class MainMenuScreen extends Application {
                 }
                 else {
                     ps.hide();  //hide menu
-                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS);
+                    int winsMCTS = 0;
+                    int winsBasicBot = 0;
+                    for (int game = 0; game < 100; game++) {
+                        MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS);
+                        if (mainGameLoop.getWinner().isMCTSBot()) {
+                            winsMCTS++;
+                        } else {
+                            winsBasicBot++;
+                        }
+                        System.out.println("Wins MCTS Bot " + winsMCTS);
+                        System.out.println("Wins Basic Bot " + winsMCTS);
+                    }
                 }
             });
 
