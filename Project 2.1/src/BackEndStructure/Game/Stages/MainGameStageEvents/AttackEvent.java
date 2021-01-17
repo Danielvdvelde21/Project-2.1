@@ -53,7 +53,6 @@ public class AttackEvent {
                 }
             }
         } else if (player.isMCTSBot()) {
-            // TODO how many attacks is mcts going to do?
             boolean validAttacks = true;
 
             while (validAttacks) {
@@ -73,8 +72,10 @@ public class AttackEvent {
                         break;
                     }
                 }
-                Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(), player);
-                botAttack(player, vertices);
+                if (validAttacks) {
+                    Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(), player);
+                    botAttack(player, vertices);
+                }
             }
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
@@ -304,6 +305,7 @@ public class AttackEvent {
         map.updateTroopCount(attack.getTerritory().getTerritoryNumber(), attack.getTerritory().getNumberOfTroops());
         map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
         narrator.addText("Player " + player.getName() + " send " + troops + " troop(s) from " + attack.getTerritory().getTerritoryName() + " to " + defender.getTerritory().getTerritoryName());
+
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
         if (player.getHand().size() >= 6) {
             turnInCardsAttacking(player);

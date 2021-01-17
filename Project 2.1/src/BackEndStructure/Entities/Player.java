@@ -21,6 +21,9 @@ public class Player {
     private final ArrayList<Card> hand = new ArrayList<>();
     private int setsTurnedIn;
 
+    // MCTS BOT
+    private ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+
     //------------------------------------------------------------------------------------------------------------------
     // Constructors
 
@@ -71,10 +74,6 @@ public class Player {
     //------------------------------------------------------------------------------------------------------------------
     // Get and Set territory/continent data
 
-    public void setTerritoriesOwned(int territories) {
-        territoriesOwned = territories;
-    }
-
     public int getTerritoriesOwned() {
         return territoriesOwned;
     }
@@ -85,10 +84,6 @@ public class Player {
 
     public void decreaseTerritoriesOwned() {
         territoriesOwned--;
-    }
-
-    public void setContinentsOwned(boolean[] continents) {
-        this.continentsOwned = continents;
     }
 
     public boolean[] getContinentsOwned() {
@@ -121,22 +116,14 @@ public class Player {
         return setsTurnedIn;
     }
 
-    public void setSetsTurnedIn(int sets) {
-        setsTurnedIn = sets;
-    }
-
     public void incrementSetsOwned() {
         setsTurnedIn++;
     }
 
-    public Player clone() {
-        return new Player(playerName, playerColor, isBot, isMCTSBot, territoriesOwned, continentsOwned);
-    }
-
-    // MCTS BOT
-    private final ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Owned territory list
     public ArrayList<Vertex> getOwnedTerritories() {
         return ownedTerritories;
     }
+
 }

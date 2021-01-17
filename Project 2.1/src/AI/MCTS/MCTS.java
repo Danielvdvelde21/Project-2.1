@@ -116,21 +116,30 @@ public class MCTS {
     // Add all the first possible moves or add 1 node to the bottom of the best node
     private void expansion(Node expandNode) {
         // Move first player to back of the order
-        ArrayList<Player> order = expandNode.getState().getOrder();
-//        Player currentMovePlayer = order.remove(0);
-//        order.add(currentMovePlayer);
+        // ArrayList<Player> order = expandNode.getState().getOrder();
+        // Player currentMovePlayer = order.remove(0);
+        // order.add(currentMovePlayer);
         Player currentMovePlayer = expandNode.getState().getPlayerMCTS();
 
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
+        boolean noNewStates = true;
         for (Vertex v : owned) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 for (Edge e : v.getEdges()) {
                     if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
+                        noNewStates = false;
                         addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
                     }
                 }
             }
+        }
+        if (noNewStates) {
+            State newState = deepCopyState(expandNode.getState().getGraph(), expandNode.getState().getOrder(), expandNode.getState().getPlayerMCTS(), false);
+            Node newNode = new Node(newState);
+
+            expandNode.addChild(newNode);
+            newNode.setParent(expandNode);
         }
     }
 
@@ -225,7 +234,7 @@ public class MCTS {
         // Deep copy players and update graph
         ArrayList<Player> newOrder = new ArrayList<>();
         for (Player p : order) {
-            Player newPlayer = p.clone();
+            Player newPlayer = new Player(p.getName(), p.getColor(), p.isBot(), p.isMCTSBot(), p.getTerritoriesOwned(), p.getContinentsOwned());
             newOrder.add(newPlayer);
             for (Vertex v : newGraph.getArrayList()) {
                 if (v.getTerritory().getOwner() == p) {
