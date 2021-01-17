@@ -189,8 +189,9 @@ public class MainMenuScreen extends Application {
                         } else {
                             winsBasicBot++;
                         }
+                        mainGameLoop.dispose();
                         System.out.println("Wins MCTS Bot " + winsMCTS);
-                        System.out.println("Wins Basic Bot " + winsMCTS);
+                        System.out.println("Wins Basic Bot " + winsBasicBot);
                     }
                 }
             });

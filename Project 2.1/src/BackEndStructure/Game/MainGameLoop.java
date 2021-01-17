@@ -121,4 +121,6 @@ public class MainGameLoop {
     public void setOrder(ArrayList<Player> order) {
         this.order = order;
     }
+
+    public void dispose() { game.getMap().dispose(); }
 }
