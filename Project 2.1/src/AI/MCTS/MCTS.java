@@ -60,9 +60,27 @@ public class MCTS {
         System.out.println("iterations per second:" + hz);
          */
 
+        // The vertices from the winner node are not the same objects as the vertices in the original graph
+        // So we do some name detection and make sure we return vertices that are also in the original graph
         Node winner = root.getMaxScoreChild();
-        // TODO Winner has vertices that arent in the original graph update them using name comparison with g
-        return new Vertex[]{winner.getAttacker(), winner.getDefender()};
+
+        Vertex[] returner = new Vertex[2];
+        String attackerTerritoryName = winner.getAttacker().getTerritory().getTerritoryName();
+        String defenderTerritoryName = winner.getDefender().getTerritory().getTerritoryName();
+
+        for (int i = 0; i < g.getSize(); i++) {
+            if (g.get(i).getTerritory().getTerritoryName().equals(attackerTerritoryName)) {
+                returner[0] = g.get(i);
+            }
+            if (g.get(i).getTerritory().getTerritoryName().equals(defenderTerritoryName)) {
+                returner[1] = g.get(i);
+            }
+        }
+        // Make sure the territories are the same
+        if (!g.getArrayList().contains(returner[0]) || !g.getArrayList().contains(returner[1])) {
+            throw new RuntimeException("Duplicated vertices are returned");
+        }
+        return returner;
     }
 
     //------------------------------------------------------------------------------------------------------------------
