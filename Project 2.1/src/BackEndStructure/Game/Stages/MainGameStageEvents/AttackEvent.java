@@ -54,8 +54,9 @@ public class AttackEvent {
             }
         } else if (player.isMCTSBot()) {
             boolean validAttacks = true;
+            int counter = 0;
 
-            while (validAttacks) {
+            while (validAttacks && counter < 3) {
                 for (Vertex v : graph.getArrayList()) {
                     validAttacks = false;
                     if (v.getTerritory().getOwner() == player) {
@@ -69,6 +70,7 @@ public class AttackEvent {
                         }
                     }
                     if (validAttacks){
+                        counter++;
                         break;
                     }
                 }

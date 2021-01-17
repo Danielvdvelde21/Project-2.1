@@ -34,7 +34,13 @@ public class MCTS {
 
             // Expansion
             if (promisingNode.isSimulated()) {
-                expansion(promisingNode);
+                if (promisingNode == root) {
+                    System.out.println("does it?");
+                    prunedExpansion(promisingNode);
+                }
+                else {
+                    expansion(promisingNode);
+                }
                 if (promisingNode.getChildren().size() == 0) {
                     throw new RuntimeException("Expansion error! children not added!");
                 }
@@ -66,6 +72,7 @@ public class MCTS {
         Vertex[] returner = new Vertex[2];
         String attackerTerritoryName = winner.getAttacker().getTerritory().getTerritoryName();
         String defenderTerritoryName = winner.getDefender().getTerritory().getTerritoryName();
+        System.out.println(attackerTerritoryName + " attacks " + defenderTerritoryName);
 
         for (int i = 0; i < g.getSize(); i++) {
             if (g.get(i).getTerritory().getTerritoryName().equals(attackerTerritoryName)) {
@@ -141,6 +148,106 @@ public class MCTS {
             expandNode.addChild(newNode);
             newNode.setParent(expandNode);
         }
+    }
+
+    // Add all the first possible moves or add 1 node to the bottom of the best node
+    private void prunedExpansion(Node expandNode) {
+        // Move first player to back of the order
+        // ArrayList<Player> order = expandNode.getState().getOrder();
+        // Player currentMovePlayer = order.remove(0);
+        // order.add(currentMovePlayer);
+        Player currentMovePlayer = expandNode.getState().getPlayerMCTS();
+
+        // pruning: defender outnumbers attack
+        ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
+        boolean noNewStates = true;
+        for (Vertex v : owned) {
+            if (v.getTerritory().getNumberOfTroops() > 1) {
+                for (Edge e : v.getEdges()) {
+                    if (e.getVertex().getTerritory().getOwner() != currentMovePlayer && e.getVertex().getTerritory().getNumberOfTroops() < v.getTerritory().getNumberOfTroops()) {
+                        noNewStates = false;
+                        addPositivePrunedStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+                    }
+                }
+            }
+        }
+        if (noNewStates) {
+            State newState = deepCopyState(expandNode.getState().getGraph(), expandNode.getState().getOrder(), expandNode.getState().getPlayerMCTS(), false);
+            Node newNode = new Node(newState);
+
+            expandNode.addChild(newNode);
+            newNode.setParent(expandNode);
+        }
+    }
+
+
+
+    // Assumes every dice roll ends in 1 lost troop for attackers, 1 lost troop for defenders
+    private void addPositivePrunedStates(int attackerIndex, int defenderIndex, Node expandNode) {
+        Graph g = expandNode.getState().getGraph();
+        ArrayList<Player> order = expandNode.getState().getOrder();
+        Player botPlayer = expandNode.getState().getPlayerMCTS();
+
+        State newState = deepCopyState(g, order, botPlayer, false);
+
+        Player attacker = newState.getGraph().get(attackerIndex).getTerritory().getOwner();
+        Player defender = newState.getGraph().get(defenderIndex).getTerritory().getOwner();
+        Vertex attackingVertex = newState.getGraph().get(attackerIndex);
+        Vertex defendingVertex = newState.getGraph().get(defenderIndex);
+        int temp = 0;
+        while (defendingVertex.getTerritory().getNumberOfTroops() > 0 && attackingVertex.getTerritory().getNumberOfTroops() > 2) {
+            if (temp % 2 == 0) {
+                attackingVertex.getTerritory().setNumberOfTroops(attackingVertex.getTerritory().getNumberOfTroops() - 1);
+            }
+            else {
+                attackingVertex.getTerritory().setNumberOfTroops(attackingVertex.getTerritory().getNumberOfTroops() - 2);
+            }
+            defendingVertex.getTerritory().setNumberOfTroops(defendingVertex.getTerritory().getNumberOfTroops() - 1);
+        }
+        State secondState = deepCopyState(newState.getGraph(),newState.getOrder(), newState.getPlayerMCTS(), false);
+
+        // Update attacker
+        attackingVertex.getTerritory().setNumberOfTroops(attackingVertex.getTerritory().getNumberOfTroops() - 1);
+        defendingVertex.getTerritory().setOwner(attacker);
+        attacker.increaseTerritoriesOwned();
+        attacker.getOwnedTerritories().add(defendingVertex);
+        // Update defender
+        defendingVertex.getTerritory().setNumberOfTroops(1);
+        defender.decreaseTerritoriesOwned();
+        defender.getOwnedTerritories().remove(defendingVertex);
+
+        // Add to tree
+        Node newNode = new Node(newState);
+        newNode.setAttacker(attackingVertex);
+        newNode.setDefender(defendingVertex);
+
+        expandNode.addChild(newNode);
+        newNode.setParent(expandNode);
+
+        // Second one
+        Player attacker2 = secondState.getGraph().get(attackerIndex).getTerritory().getOwner();
+        Player defender2 = secondState.getGraph().get(defenderIndex).getTerritory().getOwner();
+        Vertex attackingVertex2 = secondState.getGraph().get(attackerIndex);
+        Vertex defendingVertex2 = secondState.getGraph().get(defenderIndex);
+        // Update attacker
+        int atkTroops = attackingVertex2.getTerritory().getNumberOfTroops();
+        attackingVertex2.getTerritory().setNumberOfTroops(1);
+        defendingVertex2.getTerritory().setOwner(attacker2);
+        attacker2.increaseTerritoriesOwned();
+        attacker2.getOwnedTerritories().add(defendingVertex2);
+        // Update defender
+        defendingVertex2.getTerritory().setNumberOfTroops((atkTroops-1));
+        defender2.decreaseTerritoriesOwned();
+        defender2.getOwnedTerritories().remove(defendingVertex2);
+
+        // Add to tree
+        Node secondNode = new Node(secondState);
+        secondNode.setAttacker(attackingVertex2);
+        secondNode.setDefender(defendingVertex2);
+
+        expandNode.addChild(secondNode);
+        secondNode.setParent(expandNode);
+
     }
 
     // Adds all possible states from a certain state given an attacker and defender and adds them as children

@@ -22,7 +22,7 @@ public class Narrator {
     }
 
     public void addText(String text) {
-        System.out.println(text);
+        /*System.out.println(text);
         String newText = text;
         if (oldText == null) {
             label.setText("<html><br>" + ">> " + newText + "</html>");
@@ -31,7 +31,7 @@ public class Narrator {
         }
         oldText = newText;
 
-        label.setVisible(true);
+        label.setVisible(true);*/
 
     }
 
