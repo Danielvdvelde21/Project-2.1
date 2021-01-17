@@ -24,9 +24,9 @@ public class SimAttackEvent {
     public void randomAttack(Player player) {
         // Get all the owned territories for this player
         ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
-
         // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
         ArrayList<Vertex> validAttackers = new ArrayList<>();
+
         for (Vertex v : ownedTerritories) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 boolean enemy = false;
