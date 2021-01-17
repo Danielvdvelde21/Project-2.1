@@ -53,15 +53,17 @@ public class AttackEvent {
             }
         } else if (player.isMCTSBot()) {
             // TODO how many attacks is mcts going to do?
-            Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(),player);
-            System.out.println("attack " + vertices[0].getTerritory().getTerritoryName());
-            System.out.println("defend " + vertices[1].getTerritory().getTerritoryName());
-            try {
-                Thread.sleep(12000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (int i = 0; i < 5; i++) {
+                Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(), player);
+                System.out.println("attack " + vertices[0].getTerritory().getTerritoryName());
+                System.out.println("defend " + vertices[1].getTerritory().getTerritoryName());
+                try {
+                    Thread.sleep(12000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                botAttack(player, vertices);
             }
-            botAttack(player, vertices);
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();
@@ -155,8 +157,11 @@ public class AttackEvent {
         }
 
         // Set the amount of dice that the bot wants to use
+        int attackerdie = -1;
         if (player.isBot()) {
             switch (game.getAi().getBotAttacking().getAttackerDie()) {
+            attackerdie = game.getAi().getBotAttacking().getAttackerDie();
+            switch (attackerdie) {
                 case 1:
                     dicePanel.removeAttackDie();
                     dicePanel.removeAttackDie();
@@ -175,20 +180,23 @@ public class AttackEvent {
                 case 1:
                     throw new IllegalArgumentException("Cannot attack with 1 troop");
                 case 2:
+                    attackerdie = 1;
                     dicePanel.removeAttackDie();
                     dicePanel.removeAttackDie();
                     break;
                 case 3:
+                    attackerdie = 2;
                     dicePanel.removeAttackDie();
                     dicePanel.removeAttackDie();
                     dicePanel.addAttackDie();
                     break;
                 default:
+                    attackerdie = 3;
                     dicePanel.addAttackDie();
                     dicePanel.addAttackDie();
             }
         }
-        narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + game.getAi().getBotAttacking().getAttackerDie() + " Dice(s)");
+        narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + attackerdie + " Dice(s)");
 
         // If the bot is attacking another bot, the defending bot will use a much defending dice
         if (ownedByBot(defender)) {

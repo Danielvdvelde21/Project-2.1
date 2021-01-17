@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    private final long maxTime = 20000; // Milliseconds
+    private final long maxTime = 5000; // Milliseconds
     private final int maxIterations = 100000; // Attacks
 
     //------------------------------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ public class MCTS {
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
         // Construct the root node
-        State rootState = deepCopyState(g, order, p, false);
+        State rootState = deepCopyState(g, order, p, true);
         Node root = new Node(rootState);
         root.visit(); // Sets the root as simulated
 
@@ -114,8 +114,9 @@ public class MCTS {
     private void expansion(Node expandNode) {
         // Move first player to back of the order
         ArrayList<Player> order = expandNode.getState().getOrder();
-        Player currentMovePlayer = order.remove(0);
-        order.add(currentMovePlayer);
+//        Player currentMovePlayer = order.remove(0);
+//        order.add(currentMovePlayer);
+        Player currentMovePlayer = expandNode.getState().getPlayerMCTS();
 
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
@@ -243,17 +244,16 @@ public class MCTS {
         } else {
             for (Player p : order) {
                 if (p == mctsPlayer) {
-                    if (order.indexOf(p) + 1 == order.size()) {
-                        newMctsPlayer = newOrder.get(0);
-                    } else {
-                        newMctsPlayer = newOrder.get(order.indexOf(p) + 1);
-                    }
+                    newMctsPlayer = newOrder.get(order.indexOf(p));
                     break;
                 }
             }
         }
         if (newMctsPlayer == null) {
             throw new RuntimeException("Player not updated properly");
+        }
+        if (!newMctsPlayer.getName().equals(mctsPlayer.getName())) {
+            throw new RuntimeException("MCTS player updated incorrectly");
         }
         return new State(newGraph, newOrder, newMctsPlayer);
     }
