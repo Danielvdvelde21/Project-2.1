@@ -5,16 +5,19 @@ import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class SimFortifyEvent {
+    SplittableRandom splittableRandom = new SplittableRandom();
 
     public void randomFortification(Player player) {
         // Get all the owned territories for this player
         ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
 
         // For all owned territories select the ones that have another adjacent owned territory and have more than 1 troop
-        ArrayList<Vertex> validFroms = new ArrayList<>();
+        Vertex[] validFroms = new Vertex[10];
+        int validFromsNo = 0;
+
         for (Vertex v : ownedTerritories) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 boolean twoOwnedAdjacent = false;
@@ -28,27 +31,28 @@ public class SimFortifyEvent {
                     }
                 }
                 if (twoOwnedAdjacent) {
-                    validFroms.add(v);
+                    validFroms[validFromsNo]=v;
                 }
             }
         }
 
-        if (!validFroms.isEmpty()) {
+        if (validFromsNo!=0) {
             // Select a random territory from this list (this territory will send troops)
-            Random random = new Random();
-            Vertex from = validFroms.get(random.nextInt(validFroms.size()));
+
+            Vertex from = validFroms[splittableRandom.nextInt(validFromsNo)];
 
             // Select a random territory that is adjacent to the from territory (this territory receives troops)
-            ArrayList<Edge> validTos = new ArrayList<>();
+            Edge[] validTos = new Edge[5];
+            int validTosNo=0;
             Edge[] neighbours = from.getEdges();
             int neighboursNo = from.getEdgeNo();
             for (int i=0;i<neighboursNo;i++) {
                 Edge e=neighbours[i];
                 if (e.getVertex().getTerritory().getOwner() == player) {
-                    validTos.add(e);
+                    validTos[validTosNo]=e;
                 }
             }
-            Vertex to = validTos.get(random.nextInt(validTos.size())).getVertex();
+            Vertex to = validTos[splittableRandom.nextInt(validTosNo)].getVertex();
 
             // Send a random quantity of troops
             int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;

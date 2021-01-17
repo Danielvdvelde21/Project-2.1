@@ -45,9 +45,8 @@ public class Node {
     //------------------------------------------------------------------------------------------------------------------
     // Child
     public void addChild(Node node) {
-        Node[]children2 = new Node[0];
-        if(childrenSize==children.length-10){
-            children2=new Node[children.length*2];
+        if(childrenSize==children.length-1){
+            Node[]children2=new Node[children.length*2];
             copyAintoB(children,children2);
             children=children2;
         }

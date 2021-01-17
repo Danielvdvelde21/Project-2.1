@@ -8,18 +8,24 @@ import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
+<<<<<<< Updated upstream
     private final long maxTime = 10000; // Milliseconds
+=======
+    private final long maxTime = 1000; // Milliseconds
+>>>>>>> Stashed changes
     private final int maxIterations = 100000; // Attacks
+    public static ArrayList<Integer> childrenNo;
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
-
+        childrenNo = new ArrayList<Integer>();
         // Construct the root node
         State rootState = deepCopyState(g, order, p, true);
         Node root = new Node(rootState);
@@ -39,6 +45,8 @@ public class MCTS {
 
                 if (promisingNode.getChildrenSize() == 0) {
                     throw new RuntimeException("Expansion error! children not added!");
+                } else {
+                    childrenNo.add(promisingNode.getChildrenSize());
                 }
                 promisingNode = promisingNode.getChildren()[0];
             }
@@ -53,13 +61,11 @@ public class MCTS {
         }
 
         // Time tracking code
-        /*System.out.println("iterations: " + iteration);
+        System.out.println("iterations: " + iteration);
         long ft = System.currentTimeMillis() - beginTimer;
-        System.out.println("total time:" + ft);
-
-        System.out.println("time per iteration:" + (double) ft / (double) iteration + "ms");
         int hz = (int) (1000.0 / ((double) ft / (double) iteration));
-        System.out.println("iterations per second:" + hz);*/
+        System.out.println("iterations per second:" + hz);
+
 
         // The vertices from the winner node are not the same objects as the vertices in the original graph
         // So we do some name detection and make sure we return vertices that are also in the original graph
@@ -78,13 +84,31 @@ public class MCTS {
             }
         }
         // Make sure the territories are the same
-        if (!g.getArrayList().contains(returner[0]) || !g.getArrayList().contains(returner[1])) {
+        /*if (!g.getArrayList().contains(returner[0]) || !g.getArrayList().contains(returner[1])) {
             throw new RuntimeException("Duplicated vertices are returned");
-        }
-        root=null;
-        rootState=null;
+        }*/
+
+        System.out.println("this turn:");
+        System.out.println("number of expansions: " + childrenNo.size());
+        System.out.println("max expansion size: " + Collections.max(childrenNo));
+        System.out.println("min expansion size: " + Collections.min(childrenNo));
+        System.out.println("average: " + calculateAverage(childrenNo));
+
+        root = null;
+        rootState = null;
         System.gc();
         return returner;
+    }
+
+    private double calculateAverage(ArrayList<Integer> marks) {//thanks StackOverflow
+        Integer sum = 0;
+        if (!marks.isEmpty()) {
+            for (Integer mark : marks) {
+                sum += mark;
+            }
+            return sum.doubleValue() / marks.size();
+        }
+        return sum;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -130,8 +154,8 @@ public class MCTS {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 Edge[] neighbours = v.getEdges();
                 int neighboursNo = v.getEdgeNo();
-                for (int i=0;i<neighboursNo;i++) {
-                    Edge e=neighbours[i];
+                for (int i = 0; i < neighboursNo; i++) {
+                    Edge e = neighbours[i];
                     if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
                         if (v.getTerritory().getNumberOfTroops() > e.getVertex().getTerritory().getNumberOfTroops()) {
                             noNewStates = false;

@@ -6,9 +6,10 @@ import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class SimReceiveTroops {
+    SplittableRandom splittableRandom = new SplittableRandom();
 
     private final Game game;
 
@@ -45,9 +46,12 @@ public class SimReceiveTroops {
         ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
 
         // Select a random territory
-        Random random = new Random();
 
-        Territory t = ownedTerritories.get(random.nextInt(ownedTerritories.size())).getTerritory();
+        if(ownedTerritories.size()<1){
+            System.out.println(ownedTerritories.size());
+            game.getGraph().printGraphShort();
+        }
+        Territory t = ownedTerritories.get(splittableRandom.nextInt(ownedTerritories.size())).getTerritory();
 
         // place a troop on the random territory
         t.setNumberOfTroops(t.getNumberOfTroops() + 1);

@@ -1,12 +1,13 @@
 package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
+import AI.MCTS.Node;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class SimAttackEvent {
 
@@ -14,6 +15,7 @@ public class SimAttackEvent {
 
     private boolean gameOver = false;
     private Player winner;
+    SplittableRandom splittableRandom = new SplittableRandom();
 
     private final ArrayList<Player> eliminatedPlayers = new ArrayList<>();
 
@@ -25,7 +27,8 @@ public class SimAttackEvent {
         // Get all the owned territories for this player
         ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
         // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
-        ArrayList<Vertex> validAttackers = new ArrayList<>();
+        Vertex[] validAttackers = new Vertex[10];
+        int validAttackersNo=0;
 
         for (Vertex v : ownedTerritories) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
@@ -40,28 +43,41 @@ public class SimAttackEvent {
                     }
                 }
                 if (enemy) {
-                    validAttackers.add(v);
+                    if(validAttackersNo==validAttackers.length-1){
+                        Vertex[] validAttackers2= new Vertex[validAttackers.length * 2];
+                        copyAintoB(validAttackers,validAttackers2);
+                        validAttackers=validAttackers2;
+                    }
+                    validAttackers[validAttackersNo]=v;
+                    validAttackersNo++;
                 }
             }
         }
 
-        Random random = new Random();
+        
 
         // Randomly select attacker if there is a valid one
-        if (!validAttackers.isEmpty()) {
-            Vertex attacker = validAttackers.get(random.nextInt(validAttackers.size()));
+        if (validAttackersNo!=0) {
+            Vertex attacker = validAttackers[splittableRandom.nextInt(validAttackersNo)];
 
             // Randomly select defender
-            ArrayList<Edge> validDefenders = new ArrayList<>();
+            Edge[] validDefenders = new Edge[10];
+            int validDefendersNo=0;
             Edge[] neighbours = attacker.getEdges();
             int neighboursNo = attacker.getEdgeNo();
             for (int i=0;i<neighboursNo;i++) {
                 Edge e=neighbours[i];
                 if (e.getVertex().getTerritory().getOwner() != player) {
-                    validDefenders.add(e);
+                    if(validDefendersNo==validDefenders.length-1){
+                        Edge[] validDefenders2= new Edge[validDefenders.length * 2];
+                        copyAintoB(validDefenders,validDefenders2);
+                        validDefenders=validDefenders2;
+                    }
+                    validDefenders[validDefendersNo]=e;
+                    validDefendersNo++;
                 }
             }
-            Vertex defender = validDefenders.get(random.nextInt(validDefenders.size())).getVertex();
+            Vertex defender = validDefenders[splittableRandom.nextInt(validDefendersNo)].getVertex();
 
             // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
             while (attacker.getTerritory().getNumberOfTroops() >= 2 && defender.getTerritory().getOwner() != player) {
@@ -74,28 +90,28 @@ public class SimAttackEvent {
                 switch (attacker.getTerritory().getNumberOfTroops()) {
                     case 2:
                         numberOfAttackerDice = 1;
-                        attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
+                        attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
                         break;
                     case 3:
                         numberOfAttackerDice = 2;
-                        attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                        attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
+                        attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
+                        attackerDiceValues[1] = splittableRandom.nextInt(6) + 1;
                         break;
                     default:
                         numberOfAttackerDice = 3;
-                        attackerDiceValues[0] = (int) (Math.random() * 6) + 1;
-                        attackerDiceValues[1] = (int) (Math.random() * 6) + 1;
-                        attackerDiceValues[2] = (int) (Math.random() * 6) + 1;
+                        attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
+                        attackerDiceValues[1] = splittableRandom.nextInt(6) + 1;
+                        attackerDiceValues[2] = splittableRandom.nextInt(6) + 1;
                 }
 
                 // Setting the defender dice
                 if (defender.getTerritory().getNumberOfTroops() > 1) {
                     numberOfDefenderDice = 2;
-                    defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
-                    defenderDiceValues[1] = (int) (Math.random() * 6) + 1;
+                    defenderDiceValues[0] = splittableRandom.nextInt(6) + 1;
+                    defenderDiceValues[1] = splittableRandom.nextInt(6) + 1;
                 } else {
                     numberOfDefenderDice = 1;
-                    defenderDiceValues[0] = (int) (Math.random() * 6) + 1;
+                    defenderDiceValues[0] = splittableRandom.nextInt(6) + 1;
                 }
                 // Perform a fight
                 game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
@@ -117,6 +133,18 @@ public class SimAttackEvent {
         }
     }
 
+    private void copyAintoB(Vertex[]a,Vertex[]b){
+        for (int i=0;i<a.length;i++) {
+            b[i]=a[i];
+        }
+    }
+
+    private void copyAintoB(Edge[]a,Edge[]b){
+        for (int i=0;i<a.length;i++) {
+            b[i]=a[i];
+        }
+    }
+    
     // Logic that needs to happen after a territory is captured
     private void territoryCaptured(Player player, Vertex defender, Vertex attack) {
         // MCTS BOT ONLY UPDATE OWNED TROOPS

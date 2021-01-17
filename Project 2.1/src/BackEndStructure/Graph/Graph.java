@@ -4,16 +4,17 @@ import java.util.*;
 
 public class Graph {
 
-    private final ArrayList<Vertex> graph;
+    private Vertex[] graph=new Vertex[42];
+    int vertexNo=0;
 
     //------------------------------------------------------------------------------------------------------------------
     // Constructors
 
     public Graph() {
-        graph = new ArrayList<>();
+        graph = new Vertex[42];
     }
 
-    public Graph(ArrayList<Vertex> existingGraph) {
+    public Graph(Vertex[] existingGraph) {
         graph = existingGraph;
     }
 
@@ -21,7 +22,8 @@ public class Graph {
     // Building a graph
 
     public void AddVertex(Vertex newVertex) {
-        graph.add(newVertex);
+        graph[vertexNo]=newVertex;
+        vertexNo++;
     }
 
     public void addEdge(Vertex vertex1, Vertex vertex2) {
@@ -45,14 +47,14 @@ public class Graph {
     // Getters
 
     public Vertex get(int i) {
-        return graph.get(i);
+        return graph[i];
     }
 
     public int getSize() {
-        return graph.size();
+        return vertexNo;
     }
 
-    public ArrayList<Vertex> getArrayList() {
+    public Vertex[] getArrayList() {
         return graph;
     }
 
