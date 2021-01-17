@@ -57,16 +57,11 @@ public class AttackEvent {
             System.out.println("attack " + vertices[0].getTerritory().getTerritoryName());
             System.out.println("defend " + vertices[1].getTerritory().getTerritoryName());
             try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            botAttack(player, vertices);
-            try {
                 Thread.sleep(12000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            botAttack(player, vertices);
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
                 delay();

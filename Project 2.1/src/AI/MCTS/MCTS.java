@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    private final long maxTime = 10000; // Milliseconds
+    private final long maxTime = 20000; // Milliseconds
     private final int maxIterations = 100000; // Attacks
 
     //------------------------------------------------------------------------------------------------------------------
@@ -120,9 +120,11 @@ public class MCTS {
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
         for (Vertex v : owned) {
-            for (Edge e : v.getEdges()) {
-                if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
-                    addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+            if (v.getTerritory().getNumberOfTroops() > 1) {
+                for (Edge e : v.getEdges()) {
+                    if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
+                        addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+                    }
                 }
             }
         }
