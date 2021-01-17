@@ -34,6 +34,12 @@ public class SimulatedGameStage {
     // Gameplay
 
     public void mainGameStage() {
+        for (Player p : game.getPlayers()) {
+            if (p.getTerritoriesOwned() == 42 || p.getTerritoriesOwned() == 0) {
+                System.out.println("hey");
+                attack.setGameOver(true);
+            }
+        }
         while (!gameOver) {
             Iterator<Player> it2 = game.getPlayers().iterator();
             while (it2.hasNext()) {

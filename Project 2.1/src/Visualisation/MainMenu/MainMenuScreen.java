@@ -189,7 +189,12 @@ public class MainMenuScreen extends Application {
                         } else {
                             winsBasicBot++;
                         }
-                        mainGameLoop.dispose();
+                        mainGameLoop = null;
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         System.out.println("Wins MCTS Bot " + winsMCTS);
                         System.out.println("Wins Basic Bot " + winsBasicBot);
                     }

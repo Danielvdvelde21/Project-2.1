@@ -210,4 +210,6 @@ public class SimAttackEvent {
     public boolean getGameState() {
         return gameOver;
     }
+
+    public void setGameOver(boolean b) { gameOver = b; }
 }
