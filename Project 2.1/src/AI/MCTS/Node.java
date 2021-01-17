@@ -1,5 +1,6 @@
 package AI.MCTS;
 
+import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class Node {
 
     private Node parent;
 
-    private Node [] children = new Node [25];
+    private Node[] children = new Node[25];
     private int childrenSize = 0;
 
     private Vertex attacker;
@@ -21,6 +22,9 @@ public class Node {
     private int winScore = 0;
 
     private boolean isTerminal = false;
+
+    // Only used for getMaxChild
+    public ArrayList<ArrayList<Node>> childrenForAverage = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------
     // Constructor
@@ -47,18 +51,18 @@ public class Node {
     //------------------------------------------------------------------------------------------------------------------
     // Child
     public void addChild(Node node) {
-        if(childrenSize==children.length-1){
-            Node[]children2=new Node[children.length*2];
-            copyAintoB(children,children2);
-            children=children2;
+        if (childrenSize == children.length - 1) {
+            Node[] children2 = new Node[children.length * 2];
+            copyAintoB(children, children2);
+            children = children2;
         }
-        children[childrenSize]=node;
+        children[childrenSize] = node;
         childrenSize++;
     }
 
-    private void copyAintoB(Node[]a,Node[]b){
-        for (int i=0;i<a.length;i++) {
-            b[i]=a[i];
+    private void copyAintoB(Node[] a, Node[] b) {
+        for (int i = 0; i < a.length; i++) {
+            b[i] = a[i];
         }
     }
 
@@ -67,16 +71,29 @@ public class Node {
     }
 
     public Node getMaxScoreChild() {
-        int maxscore = 0;
-        Node maxNode = children[0];
-        for (int i=0;i<childrenSize;i++) {
-            Node n=children[i];
-            if (n.getWinScore() > maxscore) {
-                maxNode = n;
-                maxscore = n.getWinScore();
+        double[] averages = new double[childrenForAverage.size()];
+        int iterator = 0;
+        for (ArrayList<Node> n : childrenForAverage) {
+            int sum = 0;
+
+            for (Node n1 : n) {
+                sum += n1.winScore;
+            }
+            double average = (double) sum / (double) n.size();
+            averages[iterator] = average;
+            iterator++;
+        }
+
+        double maxAverage = averages[0];
+        int indexMaxAverage = 0;
+        for (int i = 0; i < averages.length; i++) {
+            if (averages[i] > maxAverage) {
+                maxAverage = averages[i];
+                indexMaxAverage = i;
             }
         }
-        return maxNode;
+
+        return childrenForAverage.get(indexMaxAverage).get(0);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -91,20 +108,24 @@ public class Node {
     }
 
     public Vertex getAttacker() {
-        assert(attacker != null);
+        assert (attacker != null);
         return attacker;
     }
 
     public Vertex getDefender() {
-        assert(defender != null);
+        assert (defender != null);
         return defender;
     }
 
     //------------------------------------------------------------------------------------------------------------------
     // Scores
-    public void addWinScore(int i) { winScore += i; }
+    public void addWinScore(int i) {
+        winScore += i;
+    }
 
-    public int getWinScore() { return winScore; }
+    public int getWinScore() {
+        return winScore;
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     // Visiting
@@ -113,9 +134,13 @@ public class Node {
         visitCount++;
     }
 
-    public int getVisitCount() { return visitCount; }
+    public int getVisitCount() {
+        return visitCount;
+    }
 
-    public boolean isSimulated() { return visitCount != 0;}
+    public boolean isSimulated() {
+        return visitCount != 0;
+    }
 
     public int getChildrenSize() {
         return childrenSize;
@@ -126,7 +151,11 @@ public class Node {
     }
 
     // Terminating
-    public void setTerminal() { isTerminal = true;}
+    public void setTerminal() {
+        isTerminal = true;
+    }
 
-    public boolean isTerminal() { return isTerminal;}
+    public boolean isTerminal() {
+        return isTerminal;
+    }
 }

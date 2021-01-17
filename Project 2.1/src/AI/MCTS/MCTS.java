@@ -13,7 +13,7 @@ import java.util.Collections;
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    private final long maxTime = 100; // Milliseconds
+    private final long maxTime = 10000; // Milliseconds
     private final int maxIterations = 100000; // Attacks
     public static ArrayList<Integer> childrenNo;
 
@@ -65,26 +65,26 @@ public class MCTS {
 
         // The vertices from the winner node are not the same objects as the vertices in the original graph
         // So we do some name detection and make sure we return vertices that are also in the original graph
-        Node winner = root.getMaxScoreChild();
+        Node returner = root.getMaxScoreChild();
 
-        Vertex[] returner = new Vertex[2];
-        String attackerTerritoryName = winner.getAttacker().getTerritory().getTerritoryName();
-        String defenderTerritoryName = winner.getDefender().getTerritory().getTerritoryName();
+        Vertex attacker = returner.getAttacker();
+        Vertex defender = returner.getDefender();
+        String attackerTerritoryName = attacker.getTerritory().getTerritoryName();
+        String defenderTerritoryName = defender.getTerritory().getTerritoryName();
 
         for (int i = 0; i < g.getSize(); i++) {
             if (g.get(i).getTerritory().getTerritoryName().equals(attackerTerritoryName)) {
-                returner[0] = g.get(i);
+                attacker = g.get(i);
             }
             if (g.get(i).getTerritory().getTerritoryName().equals(defenderTerritoryName)) {
-                returner[1] = g.get(i);
+                defender = g.get(i);
             }
         }
         // Make sure the territories are the same
         /*if (!g.getArrayList().contains(returner[0]) || !g.getArrayList().contains(returner[1])) {
             throw new RuntimeException("Duplicated vertices are returned");
         }*/
-
-        System.out.println("this turn:");
+        
         System.out.println("number of expansions: " + childrenNo.size());
         System.out.println("max expansion size: " + Collections.max(childrenNo));
         System.out.println("min expansion size: " + Collections.min(childrenNo));
@@ -93,7 +93,7 @@ public class MCTS {
         root = null;
         rootState = null;
         System.gc();
-        return returner;
+        return new Vertex[]{attacker, defender};
     }
 
     private double calculateAverage(ArrayList<Integer> marks) {//thanks StackOverflow
@@ -172,6 +172,9 @@ public class MCTS {
         ArrayList<Player> order = expandNode.getState().getOrder();
         Player botPlayer = expandNode.getState().getPlayerMCTS();
 
+        ArrayList<Node> adc = new ArrayList<>();
+        expandNode.childrenForAverage.add(adc);
+
         // Generate wins
         // Attacker has >= 1 troops, defender has >=1 troops and is now owned by attacker, attacker + defender troops = 2 - total attacking troops
         for (int i = 1; i < g.get(attackerIndex).getTerritory().getNumberOfTroops(); i++) {
@@ -202,6 +205,7 @@ public class MCTS {
                     newNode.setAttacker(attackingVertex);
                     newNode.setDefender(defendingVertex);
 
+                    adc.add(newNode);
                     expandNode.addChild(newNode);
                     newNode.setParent(expandNode);
                 } else {
@@ -225,6 +229,7 @@ public class MCTS {
             newNode.setAttacker(newState.getGraph().get(attackerIndex));
             newNode.setDefender(newState.getGraph().get(defenderIndex));
 
+            adc.add(newNode);
             expandNode.addChild(newNode);
             newNode.setParent(expandNode);
         }
