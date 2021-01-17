@@ -128,8 +128,10 @@ public class MCTS {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 for (Edge e : v.getEdges()) {
                     if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
-                        noNewStates = false;
-                        addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+                        if (v.getTerritory().getNumberOfTroops() > e.getVertex().getTerritory().getNumberOfTroops()) {
+                            noNewStates = false;
+                            addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+                        }
                     }
                 }
             }

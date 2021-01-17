@@ -53,6 +53,7 @@ public class AttackEvent {
                 }
             }
         } else if (player.isMCTSBot()) {
+            // TODO optimize condition
             boolean validAttacks = true;
 
             while (validAttacks) {
