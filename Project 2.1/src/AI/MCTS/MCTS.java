@@ -7,7 +7,6 @@ import BackEndStructure.Graph.Territories;
 import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
-import java.time.Period;
 import java.util.ArrayList;
 
 public class MCTS {
@@ -113,8 +112,6 @@ public class MCTS {
 
     // Add all the first possible moves or add 1 node to the bottom of the best node
     private void expansion(Node expandNode) {
-        System.out.println("expansion");
-
         // Move first player to back of the order
         ArrayList<Player> order = expandNode.getState().getOrder();
         Player currentMovePlayer = order.remove(0);
@@ -129,7 +126,6 @@ public class MCTS {
                 }
             }
         }
-        System.out.println("expansion finished");
     }
 
     // Adds all possible states from a certain state given an attacker and defender and adds them as children
@@ -165,7 +161,9 @@ public class MCTS {
 
                     // Add to tree
                     Node newNode = new Node(newState);
-                    // TODO newNode.setAttacker and set defender
+                    newNode.setAttacker(attackingVertex);
+                    newNode.setDefender(defendingVertex);
+
                     expandNode.addChild(newNode);
                     newNode.setParent(expandNode);
                 } else {
@@ -186,7 +184,9 @@ public class MCTS {
 
             // Add to tree
             Node newNode = new Node(newState);
-            // TODO newNode.setAttacker and set defender
+            newNode.setAttacker(newState.getGraph().get(attackerIndex));
+            newNode.setDefender(newState.getGraph().get(defenderIndex));
+
             expandNode.addChild(newNode);
             newNode.setParent(expandNode);
         }
