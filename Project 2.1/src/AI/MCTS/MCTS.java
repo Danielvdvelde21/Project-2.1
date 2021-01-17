@@ -79,6 +79,9 @@ public class MCTS {
         if (!g.getArrayList().contains(returner[0]) || !g.getArrayList().contains(returner[1])) {
             throw new RuntimeException("Duplicated vertices are returned");
         }
+        root=null;
+        rootState=null;
+        System.gc();
         return returner;
     }
 
