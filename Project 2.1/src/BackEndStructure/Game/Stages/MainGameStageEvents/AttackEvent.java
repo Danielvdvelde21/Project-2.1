@@ -54,6 +54,12 @@ public class AttackEvent {
         } else if (player.isMCTSBot()) {
             // TODO how many attacks is mcts going to do?
             Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(),player);
+            if (vertices[0] ==null || vertices[1] == null) {
+                throw new RuntimeException("Returned vertices from tree are null");
+            }
+            if (!graph.getArrayList().contains(vertices[0]) || !graph.getArrayList().contains(vertices[1])) {
+                throw new RuntimeException("Duplicated vertices are returned");
+            }
             botAttack(player, vertices);
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {

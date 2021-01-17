@@ -4,41 +4,50 @@ import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Node {
 
     private final State state;
+
     private Node parent;
     private final List<Node> children = new ArrayList<>();
 
     private Vertex attacker;
     private Vertex defender;
 
-    private int visitCount;
-    private int winScore;
+    private int visitCount = 0;
+    private int winScore = 0;
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructor
     public Node(State state) {
         this.state = state;
-        this.visitCount = 0;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // State
+    public State getState() {
+        return state;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Parents
     public void setParent(Node node) {
         this.parent = node;
     }
 
+    public Node getParent() {
+        return parent;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Child
     public void addChild(Node node) {
         this.children.add(node);
     }
 
     public List<Node> getChildren() {
         return children;
-    }
-
-    public Node getRandomChildNode() {
-        Random rn = new Random();
-        int random = rn.nextInt(children.size());
-        return children.get(random);
     }
 
     public Node getMaxScoreChild() {
@@ -53,13 +62,8 @@ public class Node {
         return maxNode;
     }
 
-    public Node getParent() {
-        return parent;
-    }
-
-    public State getState() {
-        return state;
-    }
+    //------------------------------------------------------------------------------------------------------------------
+    // Attacker and defender
 
     public void setAttacker(Vertex attacker) {
         this.attacker = attacker;
@@ -79,17 +83,18 @@ public class Node {
         return defender;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Scores
+    public void addWinScore(int i) { winScore += i; }
+
     public int getWinScore() { return winScore; }
 
-    public void setWinScore(int i) { winScore = i; }
-
-    public void addWinScore(int i) { winScore += i; }
+    //------------------------------------------------------------------------------------------------------------------
+    // Visiting
 
     public void visit() {
         visitCount++;
     }
-
-    public void setVisitCount(int visits) { visitCount = visits; }
 
     public int getVisitCount() { return visitCount; }
 

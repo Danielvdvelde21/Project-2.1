@@ -14,16 +14,16 @@ public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
     private final long maxTime = 10000; // Milliseconds
-    private final int maxIterations = 10000; // Attacks
+    private final int maxIterations = 100000; // Attacks
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
         // Construct the root node
-        State rootState = deepCopyState(g, order, p);
+        State rootState = deepCopyState(g, order, p, false);
         Node root = new Node(rootState);
-        root.setVisitCount(1); // Sets the root as simulated
+        root.visit(); // Sets the root as simulated
 
         // Initialize duration variable
         long beginTimer = System.currentTimeMillis();
@@ -61,6 +61,7 @@ public class MCTS {
          */
 
         Node winner = root.getMaxScoreChild();
+        // TODO Winner has vertices that arent in the original graph update them using name comparison with g
         return new Vertex[]{winner.getAttacker(), winner.getDefender()};
     }
 
@@ -81,51 +82,12 @@ public class MCTS {
     // Simulates a game
     private int playOut(Node node) {
         // Simulate game
-        SimulatedGameLoop game = new SimulatedGameLoop(node.getState());
+        Node simNode = new Node(deepCopyState(node.getState().getGraph(), node.getState().getOrder(), node.getState().getPlayerMCTS(), true));
+        SimulatedGameLoop game = new SimulatedGameLoop(simNode.getState());
         if (game.getWinner() == node.getState().getPlayerMCTS()) {
             return 10;
         }
         return 0;
-    }
-
-    private State deepCopyState(Graph g, ArrayList<Player> order, Player mctsPlayer) {
-        // Deep copy graph
-        Territories t = new Territories();
-        Graph newGraph = t.getGraph();
-
-        for (int i = 0; i < newGraph.getSize(); i++) {
-            newGraph.get(i).getTerritory().setOwner(g.get(i).getTerritory().getOwner());
-            newGraph.get(i).getTerritory().setNumberOfTroops(g.get(i).getTerritory().getNumberOfTroops());
-        }
-
-        // Deep copy players and update graph
-        ArrayList<Player> newOrder = new ArrayList<>();
-        for (Player p : order) {
-            Player newPlayer = p.clone();
-            newOrder.add(newPlayer);
-            for (Vertex v : newGraph.getArrayList()) {
-                if (v.getTerritory().getOwner() == p) {
-                    v.getTerritory().setOwner(newPlayer);
-                    newPlayer.getOwnedTerritories().add(v);
-                }
-            }
-        }
-
-        Player newMctsPlayer = null;
-        for (Player p : order) {
-            if (p == mctsPlayer) {
-                if (order.indexOf(p) == order.size()) {
-                    newMctsPlayer = newOrder.get(0);
-                } else {
-                    newMctsPlayer = newOrder.get(order.indexOf(p));
-                }
-                break;
-            }
-        }
-        if (newMctsPlayer == null) {
-            throw new RuntimeException("Player not updated properly");
-        }
-        return new State(newGraph, newOrder, newMctsPlayer);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -164,7 +126,7 @@ public class MCTS {
             for (int j = g.get(attackerIndex).getTerritory().getNumberOfTroops(); j > 0; j--) {
                 if (j - i > 0) {
                     // Deep copy state
-                    State newState = deepCopyState(g, order, botPlayer);
+                    State newState = deepCopyState(g, order, botPlayer, false);
 
                     Player attacker = newState.getGraph().get(attackerIndex).getTerritory().getOwner();
                     Player defender = newState.getGraph().get(defenderIndex).getTerritory().getOwner();
@@ -185,6 +147,7 @@ public class MCTS {
 
                     // Add to tree
                     Node newNode = new Node(newState);
+                    // TODO newNode.setAttacker and set defender
                     expandNode.addChild(newNode);
                     newNode.setParent(expandNode);
                 } else {
@@ -198,13 +161,14 @@ public class MCTS {
         // Attacker has only 1 troop left, defender has anywhere between 1 and total defenders left
         for (int i = 1; i < g.get(defenderIndex).getTerritory().getNumberOfTroops(); i++) {
             // Deep copy state
-            State newState = deepCopyState(g, order, botPlayer);
+            State newState = deepCopyState(g, order, botPlayer, false);
 
             newState.getGraph().get(attackerIndex).getTerritory().setNumberOfTroops(1);
             newState.getGraph().get(defenderIndex).getTerritory().setNumberOfTroops(i);
 
             // Add to tree
             Node newNode = new Node(newState);
+            // TODO newNode.setAttacker and set defender
             expandNode.addChild(newNode);
             newNode.setParent(expandNode);
         }
@@ -220,6 +184,58 @@ public class MCTS {
         if (node.getParent() != null) {
             backProp(node.getParent(), result);
         }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Copying States
+    private State deepCopyState(Graph g, ArrayList<Player> order, Player mctsPlayer, boolean simulation) {
+        // Deep copy graph
+        Territories t = new Territories();
+        Graph newGraph = t.getGraph();
+
+        for (int i = 0; i < newGraph.getSize(); i++) {
+            newGraph.get(i).getTerritory().setOwner(g.get(i).getTerritory().getOwner());
+            newGraph.get(i).getTerritory().setNumberOfTroops(g.get(i).getTerritory().getNumberOfTroops());
+        }
+
+        // Deep copy players and update graph
+        ArrayList<Player> newOrder = new ArrayList<>();
+        for (Player p : order) {
+            Player newPlayer = p.clone();
+            newOrder.add(newPlayer);
+            for (Vertex v : newGraph.getArrayList()) {
+                if (v.getTerritory().getOwner() == p) {
+                    v.getTerritory().setOwner(newPlayer);
+                    newPlayer.getOwnedTerritories().add(v);
+                }
+            }
+        }
+
+        Player newMctsPlayer = null;
+        // If the game is being simulated don't rotate the mcts player
+        if (simulation) {
+            for (Player p : order) {
+                if (p == mctsPlayer) {
+                    newMctsPlayer = newOrder.get(order.indexOf(p));
+                    break;
+                }
+            }
+        } else {
+            for (Player p : order) {
+                if (p == mctsPlayer) {
+                    if (order.indexOf(p) + 1 == order.size()) {
+                        newMctsPlayer = newOrder.get(0);
+                    } else {
+                        newMctsPlayer = newOrder.get(order.indexOf(p) + 1);
+                    }
+                    break;
+                }
+            }
+        }
+        if (newMctsPlayer == null) {
+            throw new RuntimeException("Player not updated properly");
+        }
+        return new State(newGraph, newOrder, newMctsPlayer);
     }
 
 }
