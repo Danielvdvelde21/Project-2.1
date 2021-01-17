@@ -3,6 +3,7 @@ package BackEndStructure.Game.Stages.MainGameStageEvents;
 import BackEndStructure.Entities.Cards.Card;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
+import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
@@ -53,15 +54,26 @@ public class AttackEvent {
             }
         } else if (player.isMCTSBot()) {
             // TODO how many attacks is mcts going to do?
-            for (int i = 0; i < 5; i++) {
-                Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(), player);
-                System.out.println("attack " + vertices[0].getTerritory().getTerritoryName());
-                System.out.println("defend " + vertices[1].getTerritory().getTerritoryName());
-                try {
-                    Thread.sleep(12000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            boolean validAttacks = true;
+
+            while (validAttacks) {
+                for (Vertex v : graph.getArrayList()) {
+                    validAttacks = false;
+                    if (v.getTerritory().getOwner() == player) {
+                        for (Edge edge : v.getEdges()) {
+                            if (edge.getVertex().getTerritory().getOwner() != player) {
+                                if (v.getTerritory().getNumberOfTroops() > edge.getVertex().getTerritory().getNumberOfTroops()) {
+                                    validAttacks = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (validAttacks){
+                        break;
+                    }
                 }
+                Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(), player);
                 botAttack(player, vertices);
             }
         } else {
