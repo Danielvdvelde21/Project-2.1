@@ -30,12 +30,14 @@ public class BotAttacking extends UsefulMethods {
         double[] grades = new double[g.getSize()];
         // Get the countries you're able to attack: enemy-owned and adjacent to a friendly territory
         boolean attackable;
-        LinkedList<Edge> edges;
+        Edge[] edges;
         for (int i = 0; i < g.getSize(); i++) {
             if (g.get(i).getTerritory().getOwner() != p) {
                 attackable = false;
-                edges = g.get(i).getEdges();
-                for (Edge e : edges) {
+                Edge[] neighbours = g.get(i).getEdges();
+                int neighboursNo = g.get(i).getEdgeNo();
+                for (int j=0;j<neighboursNo;j++) {
+                    Edge e=neighbours[j];
                     if (e.getVertex().getTerritory().getOwner() == p) {
                         attackable = true;
                         break;
@@ -187,9 +189,11 @@ public class BotAttacking extends UsefulMethods {
     // How many troops will be sent over when a territory is captured
     public int getTroopCarryOver(Vertex attacker) {
         // Two situations
-        LinkedList<Edge> neighbours = attacker.getEdges();
+        Edge[] neighbours = attacker.getEdges();
+        int neighboursNo = attacker.getEdgeNo();
         boolean friendlyNeighbours = true;
-        for (Edge e : neighbours) {
+        for (int i=0;i<neighboursNo;i++) {
+            Edge e=neighbours[i];
             if (e.getVertex().getTerritory().getOwner() != attacker.getTerritory().getOwner()) {
                 friendlyNeighbours = false;
                 break;

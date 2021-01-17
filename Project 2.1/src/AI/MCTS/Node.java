@@ -10,7 +10,9 @@ public class Node {
     private final State state;
 
     private Node parent;
-    private final List<Node> children = new ArrayList<>();
+
+    private Node [] children = new Node [25];
+    private int childrenSize = 0;
 
     private Vertex attacker;
     private Vertex defender;
@@ -43,17 +45,31 @@ public class Node {
     //------------------------------------------------------------------------------------------------------------------
     // Child
     public void addChild(Node node) {
-        this.children.add(node);
+        Node[]children2 = new Node[0];
+        if(childrenSize==children.length-10){
+            children2=new Node[children.length*2];
+            copyAintoB(children,children2);
+            children=children2;
+        }
+        children[childrenSize]=node;
+        childrenSize++;
     }
 
-    public List<Node> getChildren() {
+    private void copyAintoB(Node[]a,Node[]b){
+        for (int i=0;i<a.length;i++) {
+            b[i]=a[i];
+        }
+    }
+
+    public Node[] getChildren() {
         return children;
     }
 
     public Node getMaxScoreChild() {
         int maxscore = 0;
-        Node maxNode = children.get(0);
-        for (Node n : children) {
+        Node maxNode = children[0];
+        for (int i=0;i<childrenSize;i++) {
+            Node n=children[i];
             if (n.getWinScore() > maxscore) {
                 maxNode = n;
                 maxscore = n.getWinScore();
@@ -100,4 +116,11 @@ public class Node {
 
     public boolean isSimulated() { return visitCount != 0;}
 
+    public int getChildrenSize() {
+        return childrenSize;
+    }
+
+    public void setChildrenSize(int childrenSize) {
+        this.childrenSize = childrenSize;
+    }
 }

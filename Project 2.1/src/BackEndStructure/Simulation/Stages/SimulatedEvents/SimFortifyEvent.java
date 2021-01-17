@@ -18,7 +18,10 @@ public class SimFortifyEvent {
         for (Vertex v : ownedTerritories) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 boolean twoOwnedAdjacent = false;
-                for (Edge e : v.getEdges()) {
+                Edge[] neighbours = v.getEdges();
+                int neighboursNo = v.getEdgeNo();
+                for (int i=0;i<neighboursNo;i++) {
+                    Edge e=neighbours[i];
                     if (e.getVertex().getTerritory().getOwner() == player) {
                         twoOwnedAdjacent = true;
                         break;
@@ -37,7 +40,10 @@ public class SimFortifyEvent {
 
             // Select a random territory that is adjacent to the from territory (this territory receives troops)
             ArrayList<Edge> validTos = new ArrayList<>();
-            for (Edge e : from.getEdges()) {
+            Edge[] neighbours = from.getEdges();
+            int neighboursNo = from.getEdgeNo();
+            for (int i=0;i<neighboursNo;i++) {
+                Edge e=neighbours[i];
                 if (e.getVertex().getTerritory().getOwner() == player) {
                     validTos.add(e);
                 }

@@ -59,7 +59,10 @@ public class AttackEvent {
                 for (Vertex v : graph.getArrayList()) {
                     validAttacks = false;
                     if (v.getTerritory().getOwner() == player) {
-                        for (Edge edge : v.getEdges()) {
+                        Edge[] neighbours = v.getEdges();
+                        int neighboursNo = v.getEdgeNo();
+                        for (int i=0;i<neighboursNo;i++) {
+                            Edge edge=neighbours[i];
                             if (edge.getVertex().getTerritory().getOwner() != player) {
                                 if (v.getTerritory().getNumberOfTroops() > edge.getVertex().getTerritory().getNumberOfTroops()) {
                                     validAttacks = true;

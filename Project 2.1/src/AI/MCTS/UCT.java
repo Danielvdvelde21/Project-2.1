@@ -14,6 +14,17 @@ public class UCT {
     }
 
     public static Node findBestChildWithUCT(Node node) {
-        return Collections.max(node.getChildren(), Comparator.comparing(c -> uctValue(c.getParent().getVisitCount(), c.getWinScore(), c.getVisitCount())));
+        double maxUCT=0;
+        int maxUCTind=0;
+        double uct=0;
+        for (int i=0;i<node.getChildrenSize();i++) {
+            Node n=node.getChildren()[i];
+            uct=uctValue(n.getParent().getVisitCount(), n.getWinScore(), n.getVisitCount());
+            if(uct>maxUCT){
+                maxUCT=uct;
+                maxUCTind=i;
+            }
+        }
+        return node.getChildren()[maxUCTind];
     }
 }

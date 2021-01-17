@@ -25,16 +25,16 @@ public class Graph {
     }
 
     public void addEdge(Vertex vertex1, Vertex vertex2) {
-        vertex1.getEdges().add(new Edge(vertex2));
-        vertex2.getEdges().add(new Edge(vertex1));
+        vertex1.addEdge(new Edge(vertex2));
+        vertex2.addEdge(new Edge(vertex1));
     }
 
     //------------------------------------------------------------------------------------------------------------------
     // Checking for adjacency
 
     public boolean isAdjacent(Vertex vertex1, Vertex vertex2) {
-        for (int i = 0; i < vertex1.getEdges().size(); i++) {
-            if (vertex1.getEdges().get(i).getVertex() == vertex2) {
+        for (int i = 0; i < vertex1.getEdgeNo(); i++) {
+            if (vertex1.getEdges()[i].getVertex() == vertex2) {
                 return true;
             }
         }
@@ -65,7 +65,10 @@ public class Graph {
             System.out.print("Territory name: " + v.getTerritory().getTerritoryName());
             System.out.print(", owned by: " + v.getTerritory().getOwner().getName());
             System.out.print(", Connected with: ");
-            for (Edge e : v.getEdges()) {
+            Edge[] neighbours = v.getEdges();
+            int neighboursNo = v.getEdgeNo();
+            for (int i=0;i<neighboursNo;i++) {
+                Edge e=neighbours[i];
                 System.out.print(e.getVertex().getTerritory().getTerritoryName() + ", ");
             }
             System.out.print("\n");

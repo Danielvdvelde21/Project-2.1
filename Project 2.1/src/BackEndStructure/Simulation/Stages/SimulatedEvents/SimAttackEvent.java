@@ -30,7 +30,10 @@ public class SimAttackEvent {
         for (Vertex v : ownedTerritories) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
                 boolean enemy = false;
-                for (Edge e : v.getEdges()) {
+                Edge[] neighbours = v.getEdges();
+                int neighboursNo = v.getEdgeNo();
+                for (int i=0;i<neighboursNo;i++) {
+                    Edge e=neighbours[i];
                     if (e.getVertex().getTerritory().getOwner() != player) {
                         enemy = true;
                         break;
@@ -50,7 +53,10 @@ public class SimAttackEvent {
 
             // Randomly select defender
             ArrayList<Edge> validDefenders = new ArrayList<>();
-            for (Edge e : attacker.getEdges()) {
+            Edge[] neighbours = attacker.getEdges();
+            int neighboursNo = attacker.getEdgeNo();
+            for (int i=0;i<neighboursNo;i++) {
+                Edge e=neighbours[i];
                 if (e.getVertex().getTerritory().getOwner() != player) {
                     validDefenders.add(e);
                 }

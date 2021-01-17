@@ -8,17 +8,21 @@ import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
     private final long maxTime = 5000; // Milliseconds
     private final int maxIterations = 100000; // Attacks
+    public static ArrayList<Integer> childrenNo;
 
     //------------------------------------------------------------------------------------------------------------------
     // Move-maker
 
     public Vertex[] findNextMove(Graph g, ArrayList<Player> order, Player p) {
+        childrenNo=new ArrayList<Integer>();
         // Construct the root node
         State rootState = deepCopyState(g, order, p, true);
         Node root = new Node(rootState);
@@ -35,10 +39,12 @@ public class MCTS {
             // Expansion
             if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
-                if (promisingNode.getChildren().size() == 0) {
+                if (promisingNode.getChildrenSize() == 0) {
                     throw new RuntimeException("Expansion error! children not added!");
+                } else {
+                    childrenNo.add(promisingNode.getChildrenSize());
                 }
-                promisingNode = promisingNode.getChildren().get(0);
+                promisingNode = promisingNode.getChildren()[0];
             }
 
             // Play out (simulation)
@@ -79,10 +85,26 @@ public class MCTS {
         if (!g.getArrayList().contains(returner[0]) || !g.getArrayList().contains(returner[1])) {
             throw new RuntimeException("Duplicated vertices are returned");
         }
+        /*System.out.println("this turn:");
+        System.out.println("number of expansions: "+childrenNo.size());
+        System.out.println("max expansion size: "+Collections.max(childrenNo));
+        System.out.println("min expansion size: "+Collections.min(childrenNo));
+        System.out.println("average: "+calculateAverage(childrenNo));*/
         root=null;
         rootState=null;
         System.gc();
         return returner;
+    }
+
+    private double calculateAverage(List <Integer> marks) {//thanks StackOverflow
+        Integer sum = 0;
+        if(!marks.isEmpty()) {
+            for (Integer mark : marks) {
+                sum += mark;
+            }
+            return sum.doubleValue() / marks.size();
+        }
+        return sum;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -90,7 +112,7 @@ public class MCTS {
 
     // Selection considers all leaves
     private Node selectPromisingChild(Node curNode) {
-        while (curNode.getChildren().size() != 0) {
+        while (curNode.getChildrenSize() != 0) {
             curNode = UCT.findBestChildWithUCT(curNode);
         }
         return curNode;
@@ -116,30 +138,24 @@ public class MCTS {
     // Add all the first possible moves or add 1 node to the bottom of the best node
     private void expansion(Node expandNode) {
         // Move first player to back of the order
-        // ArrayList<Player> order = expandNode.getState().getOrder();
-        // Player currentMovePlayer = order.remove(0);
-        // order.add(currentMovePlayer);
+        ArrayList<Player> order = expandNode.getState().getOrder();
+//        Player currentMovePlayer = order.remove(0);
+//        order.add(currentMovePlayer);
         Player currentMovePlayer = expandNode.getState().getPlayerMCTS();
 
         // pruning: defender outnumbers attack
         ArrayList<Vertex> owned = currentMovePlayer.getOwnedTerritories();
-        boolean noNewStates = true;
         for (Vertex v : owned) {
             if (v.getTerritory().getNumberOfTroops() > 1) {
-                for (Edge e : v.getEdges()) {
+                Edge[] neighbours = v.getEdges();
+                int neighboursNo = v.getEdgeNo();
+                for (int i=0;i<neighboursNo;i++) {
+                    Edge e=neighbours[i];
                     if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
-                        noNewStates = false;
                         addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
                     }
                 }
             }
-        }
-        if (noNewStates) {
-            State newState = deepCopyState(expandNode.getState().getGraph(), expandNode.getState().getOrder(), expandNode.getState().getPlayerMCTS(), false);
-            Node newNode = new Node(newState);
-
-            expandNode.addChild(newNode);
-            newNode.setParent(expandNode);
         }
     }
 
