@@ -152,7 +152,10 @@ public class MCTS {
                 for (int i=0;i<neighboursNo;i++) {
                     Edge e=neighbours[i];
                     if (e.getVertex().getTerritory().getOwner() != currentMovePlayer) {
-                        addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+                        if (v.getTerritory().getNumberOfTroops() > e.getVertex().getTerritory().getNumberOfTroops()) {
+                            noNewStates = false;
+                            addAllPossibleStates(v.getTerritory().getTerritoryNumber(), e.getVertex().getTerritory().getTerritoryNumber(), expandNode);
+                        }
                     }
                 }
             }
