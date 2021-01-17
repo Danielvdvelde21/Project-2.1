@@ -38,12 +38,12 @@ public class MCTS {
             // Expansion
             if (promisingNode.isSimulated()) {
                 expansion(promisingNode);
-
-                if (promisingNode.getChildrenSize() == 0) {
-                    throw new RuntimeException("Expansion error! children not added!");
+                if (promisingNode.isTerminal()) {
+                    continue;
                 } else {
                     childrenNo.add(promisingNode.getChildrenSize());
                 }
+
                 promisingNode = promisingNode.getChildren()[0];
             }
 
@@ -162,11 +162,7 @@ public class MCTS {
             }
         }
         if (noNewStates) {
-            State newState = deepCopyState(expandNode.getState().getGraph(), expandNode.getState().getOrder(), expandNode.getState().getPlayerMCTS(), false);
-            Node newNode = new Node(newState);
-
-            expandNode.addChild(newNode);
-            newNode.setParent(expandNode);
+            expandNode.setTerminal();
         }
     }
 

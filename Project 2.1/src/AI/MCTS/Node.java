@@ -20,6 +20,8 @@ public class Node {
     private int visitCount = 0;
     private int winScore = 0;
 
+    private boolean isTerminal = false;
+
     //------------------------------------------------------------------------------------------------------------------
     // Constructor
     public Node(State state) {
@@ -122,4 +124,9 @@ public class Node {
     public void setChildrenSize(int childrenSize) {
         this.childrenSize = childrenSize;
     }
+
+    // Terminating
+    public void setTerminal() { isTerminal = true;}
+
+    public boolean isTerminal() { return isTerminal;}
 }
