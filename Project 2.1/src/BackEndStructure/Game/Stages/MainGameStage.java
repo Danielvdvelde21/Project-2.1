@@ -34,7 +34,7 @@ public class MainGameStage {
         this.receiveTroops = new ReceiveTroops(game);
     }
 
-    public void mainGameStage(boolean randomPlayer) {
+    public void mainGameStage() {
         while (!gameOver) {
             Iterator<Player> itr = game.getPlayers().iterator();
             while (itr.hasNext()){
@@ -46,7 +46,7 @@ public class MainGameStage {
                     // Set the player's inventory and turn
                     playerTurn.setPlayerTurn(player);
                     cardInventory.setCurrentPlayer(player);
-                    playerTurn(player, randomPlayer);
+                    playerTurn(player);
 
                     if (gameOver) {
                         break;
@@ -57,19 +57,19 @@ public class MainGameStage {
         winner = attack.getWinner();
     }
 
-    private void playerTurn(Player player, boolean randomPlayer) {
+    private void playerTurn(Player player) {
         // Gain troops at start of turn
-        receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player, randomPlayer), randomPlayer);
+        receiveTroops.placeReceivedTroops(player, receiveTroops.receivedTroops(player));
 
         // Player can start attacking different territories
         playerTurn.resetTurn();
-        attack.attacking(player, randomPlayer);
+        attack.attacking(player);
         gameOver = attack.getGameState();
 
         // Player can fortify 1 territory if he chooses to do so at the end of his turn
         if (!gameOver) {
             playerTurn.resetTurn();
-            fortify.fortifyTerritory(player, randomPlayer);
+            fortify.fortifyTerritory(player);
         }
     }
 

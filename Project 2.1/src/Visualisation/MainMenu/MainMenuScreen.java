@@ -1,6 +1,5 @@
 package Visualisation.MainMenu;
 
-import AI.MCTS.MCTS;
 import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
 import javafx.application.HostServices;
@@ -25,8 +24,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import java.io.FileWriter;   // Import the FileWriter class
-import java.io.IOException;  // Import the IOException class to handle errors
 
 import java.io.File;
 import java.io.InputStream;
@@ -43,7 +40,7 @@ public class MainMenuScreen extends Application {
     public void start(Stage primaryStage) throws Exception {
         ps = primaryStage;
         Pane root = new Pane();
-        root.setPrefSize(1000,700);
+        root.setPrefSize(1000, 700);
         InputStream is = getClass().getClassLoader().getResourceAsStream("risk1.jpg"); // Load image
         Image img = new Image(is);
         is.close();
@@ -65,7 +62,7 @@ public class MainMenuScreen extends Application {
     private class GameMenu extends Parent {
 
         public boolean emptyString(String[] array) {
-            for ( String s : array ) {
+            for (String s : array) {
                 if (s.length() == 0) {
                     return true;
                 }
@@ -75,8 +72,8 @@ public class MainMenuScreen extends Application {
 
         public boolean duplicateString(String[] array) {
             Set<String> set = new HashSet<>();
-            for(String s : array) {
-                if(!set.add(s)) {
+            for (String s : array) {
+                if (!set.add(s)) {
                     return true;
                 }
             }
@@ -106,7 +103,8 @@ public class MainMenuScreen extends Application {
             });
 
             MenuButton settingsBtn = new MenuButton("Settings");
-            settingsBtn.setOnMouseClicked(event -> {});
+            settingsBtn.setOnMouseClicked(event -> {
+            });
 
             MenuButton helpBtn = new MenuButton("Help");
             helpBtn.setOnMouseClicked(event -> {    //transition to menu4
@@ -119,19 +117,19 @@ public class MainMenuScreen extends Application {
 
             // Menu 4 - names of players
             Label botLabel = new Label("BOT");
-            botLabel.setFont(Font.font ("Verdana", FontWeight.BOLD, 18));
+            botLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
             botLabel.setTextFill(Color.DARKRED);
             botLabel.setTranslateY(10);
             botLabel.setTranslateX(245);
 
             Label basicLabel = new Label("Basic:");
-            basicLabel.setFont(Font.font ("Verdana", FontWeight.SEMI_BOLD, 14));
+            basicLabel.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 14));
             basicLabel.setTextFill(Color.DARKRED);
             basicLabel.setTranslateY(5);
             basicLabel.setTranslateX(215);
 
             Label mctsLabel = new Label("MCTS:");
-            mctsLabel.setFont(Font.font ("Verdana", FontWeight.SEMI_BOLD, 14));
+            mctsLabel.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 14));
             mctsLabel.setTextFill(Color.DARKRED);
             mctsLabel.setTranslateY(5);
             mctsLabel.setTranslateX(230);
@@ -151,85 +149,39 @@ public class MainMenuScreen extends Application {
                 //getting players' names from TextInput objects
                 int count = menu3.getChildren().size();
                 String[] pm = new String[]{name1.tf.getText(), name2.tf.getText(), name3.tf.getText(), name4.tf.getText(), name5.tf.getText(), name6.tf.getText()};
-                playerNames = Arrays.copyOf(pm, count-4);
+                playerNames = Arrays.copyOf(pm, count - 4);
 
                 //getting bot checkBoxes from TextInput objects
-                CheckBox[] checkBoxesBasicBot  = new CheckBox[]{name1.checkBoxBasicBot, name2.checkBoxBasicBot, name3.checkBoxBasicBot, name4.checkBoxBasicBot, name5.checkBoxBasicBot, name6.checkBoxBasicBot};
-                checkBoxesBasicBot = Arrays.copyOf(checkBoxesBasicBot, count-4);
+                CheckBox[] checkBoxesBasicBot = new CheckBox[]{name1.checkBoxBasicBot, name2.checkBoxBasicBot, name3.checkBoxBasicBot, name4.checkBoxBasicBot, name5.checkBoxBasicBot, name6.checkBoxBasicBot};
+                checkBoxesBasicBot = Arrays.copyOf(checkBoxesBasicBot, count - 4);
 
-                CheckBox[] checkBoxesMCTSBot  = new CheckBox[]{name1.checkBoxMCTSBot, name2.checkBoxMCTSBot, name3.checkBoxMCTSBot, name4.checkBoxMCTSBot, name5.checkBoxMCTSBot, name6.checkBoxMCTSBot};
-                checkBoxesMCTSBot = Arrays.copyOf(checkBoxesMCTSBot, count-4);
+                CheckBox[] checkBoxesMCTSBot = new CheckBox[]{name1.checkBoxMCTSBot, name2.checkBoxMCTSBot, name3.checkBoxMCTSBot, name4.checkBoxMCTSBot, name5.checkBoxMCTSBot, name6.checkBoxMCTSBot};
+                checkBoxesMCTSBot = Arrays.copyOf(checkBoxesMCTSBot, count - 4);
 
                 int i = 0;
-                boolean[] botsBasic = new boolean[count-4];
-                for(CheckBox cb : checkBoxesBasicBot) {
+                boolean[] botsBasic = new boolean[count - 4];
+                for (CheckBox cb : checkBoxesBasicBot) {
                     botsBasic[i] = cb.isSelected();
                     i++;
                 }
 
                 int j = 0;
-                boolean[] botsMCTS = new boolean[count-4];
-                for(CheckBox cb : checkBoxesMCTSBot) {
+                boolean[] botsMCTS = new boolean[count - 4];
+                for (CheckBox cb : checkBoxesMCTSBot) {
                     botsMCTS[j] = cb.isSelected();
                     j++;
                 }
 
 
-                if(emptyString(playerNames)) {  //name input restrictions
+                if (emptyString(playerNames)) {  //name input restrictions
                     startBtn.addWarning("[ENTER NAMES]");
-                }
-                else if(duplicateString(playerNames)) {
+                } else if (duplicateString(playerNames)) {
                     startBtn.addWarning("[DUPLICATE NAMES]");
-                }
-                else {
+                } else {
                     ps.hide();  //hide menu
-                    int winsMCTS = 0;
-                    int winsBasicBot = 0;
-                    MCTS.maxTime=0;
-                    try{
-                        FileWriter myWriter = new FileWriter("logFile.txt");
-                        myWriter.close();
-                    } catch (IOException e) {
-                        System.out.println("An error occurred.");
-                        e.printStackTrace();
-                    }
-                    while(true){
-                        MCTS.maxTime+=500;
-                        winsMCTS = 0;
-                        winsBasicBot = 0;
-                        for (int game = 0; game < 50; game++) {
-                            // Instead of having normal player have a random player
-                            boolean randomPlayer = true;
-                            MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
-                            if (mainGameLoop.getWinner().isMCTSBot()) {
-                                winsMCTS++;
-                            } else {
-                                winsBasicBot++;
-                            }
-                            mainGameLoop = null;
-                            System.out.println();
-                            System.out.println("Wins MCTS Bot " + winsMCTS);
-                            System.out.println("Wins Basic Bot " + winsBasicBot);
-                            try {
-                                FileWriter myWriter = new FileWriter("logFile.txt", true);
-                                myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/50"+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
-
-                                myWriter.close();
-                            } catch (IOException e) {
-                                System.out.println("An error occurred.");
-                                e.printStackTrace();
-                            }
-                        }
-                        try {
-                            FileWriter myWriter = new FileWriter("logFile.txt", true);
-                            myWriter.write("experiment end: maxTime: "+MCTS.maxTime+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
-                            myWriter.close();
-                        } catch (IOException e) {
-                            System.out.println("An error occurred.");
-                            e.printStackTrace();
-                        }
-                    }
+                    MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS);
                 }
+
             });
 
             MenuButton backBtn = new MenuButton("Back");
@@ -264,7 +216,7 @@ public class MainMenuScreen extends Application {
                 getChildren().remove(menu2);
             });
 
-            MenuButton players5Btn  = new MenuButton("5 Players");
+            MenuButton players5Btn = new MenuButton("5 Players");
             players5Btn.setOnMouseClicked(event -> {
                 menu3.getChildren().clear();
                 menu3.getChildren().addAll(botLabel, botLabelsHBox, name1, name2, name3, name4, name5, startBtn, backBtn);
@@ -323,7 +275,7 @@ public class MainMenuScreen extends Application {
             w.setFont(Font.font(15));
             w.setFill(Color.RED);
             w.setTranslateX(100);
-            if(!getChildren().contains(w)) {
+            if (!getChildren().contains(w)) {
                 getChildren().add(w);
             }
         }
@@ -403,9 +355,10 @@ public class MainMenuScreen extends Application {
                 if (event.getSource() instanceof CheckBox) {
                     CheckBox chk = (CheckBox) event.getSource();
                     if (chk.equals(checkBoxBasicBot) && checkBoxMCTSBot.isSelected()) {
-                        checkBoxMCTSBot.setSelected(false); }
-                    else if (chk.equals(checkBoxMCTSBot) && checkBoxBasicBot.isSelected()) {
-                        checkBoxBasicBot.setSelected(false); }
+                        checkBoxMCTSBot.setSelected(false);
+                    } else if (chk.equals(checkBoxMCTSBot) && checkBoxBasicBot.isSelected()) {
+                        checkBoxBasicBot.setSelected(false);
+                    }
                 }
             };
 
@@ -423,7 +376,7 @@ public class MainMenuScreen extends Application {
 
             setAlignment(Pos.CENTER_LEFT);
             setRotate(-0.5);
-            getChildren().addAll(r,  hb);  //add hBox (label and textField) over background
+            getChildren().addAll(r, hb);  //add hBox (label and textField) over background
         }
     }
 

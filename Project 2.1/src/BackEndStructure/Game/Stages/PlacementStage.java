@@ -33,7 +33,7 @@ public class PlacementStage {
         cardInventory.setGame(game);
     }
 
-    public void placementStage(boolean randomPlayer) {
+    public void placementStage() {
         // For each player till all countries are chosen
         int round = 1;
 
@@ -43,15 +43,15 @@ public class PlacementStage {
                 narrator.addText("It's " + p.getName() + "'s turn to place down 1 troop");
                 cardInventory.setCurrentPlayer(p);
                 playerTurn.setPlayerTurn(p);
-                placementTurn(p, randomPlayer);
+                placementTurn(p);
             }
             round++;
         }
     }
 
-    private void placementTurn(Player player, boolean randomPlayer) {
+    private void placementTurn(Player player) {
         // Both bots use the rule based approach in the placement phase
-        if (player.isBot() || player.isMCTSBot() || randomPlayer) {
+        if (player.isBot() || player.isMCTSBot()) {
             placeTroop(player, game.getAi().getPlaceTroops().placementDecider(graph, player));
         } else {
             placeTroop(player, getSelectedTerritoryNumber(player));

@@ -2,19 +2,14 @@ package BackEndStructure.Game.Stages.MainGameStageEvents;
 
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
-import BackEndStructure.Graph.Edge;
 import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Territory;
 import BackEndStructure.Graph.Vertex;
 import Visualisation.Map.Components.*;
 import Visualisation.Map.Map;
 
-import java.util.ArrayList;
-import java.util.SplittableRandom;
 
 public class FortifyEvent {
-    SplittableRandom splittableRandom = new SplittableRandom();
-
     private final Game game;
     private final Map map;
     private final Narrator narrator;
@@ -29,7 +24,7 @@ public class FortifyEvent {
         this.graph = game.getGraph();
     }
 
-    public void fortifyTerritory(Player player, boolean randomPlayer) {
+    public void fortifyTerritory(Player player) {
         map.deselectTerritory();
         narrator.addText("Player " + player.getName() + " is fortifying his territories!");
         boolean fortified = false;
@@ -48,8 +43,6 @@ public class FortifyEvent {
                 map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
                 narrator.addText("Player " + player.getName() + " send " + troopsSend + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
             }
-        } else if (randomPlayer) {
-            randomFortification(player);
         } else {
             while (!playerTurn.hasTurnEnded() && !fortified) {
                 delay();
@@ -120,69 +113,69 @@ public class FortifyEvent {
         return t.getOwner() == p;
     }
 
-    public void randomFortification(Player player) {
-        // Get all the owned territories for this player
-        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
-        for (Vertex v : game.getGraph().getArrayList()) {
-            if (v.getTerritory().getOwner() == player) {
-                ownedTerritories.add(v);
-            }
-        }
-
-        // For all owned territories select the ones that have another adjacent owned territory and have more than 1 troop
-        Vertex[] validFroms = new Vertex[42];
-        int validFromsNo = 0;
-
-        for (Vertex v : ownedTerritories) {
-            if (v.getTerritory().getNumberOfTroops() > 1) {
-                boolean twoOwnedAdjacent = false;
-                Edge[] neighbours = v.getEdges();
-                int neighboursNo = v.getEdgeNo();
-                for (int i=0;i<neighboursNo;i++) {
-                    Edge e=neighbours[i];
-                    if (e.getVertex().getTerritory().getOwner() == player) {
-                        twoOwnedAdjacent = true;
-                        break;
-                    }
-                }
-                if (twoOwnedAdjacent) {
-                    validFroms[validFromsNo]=v;
-                    validFromsNo++;
-                }
-            }
-        }
-
-        if (validFromsNo!=0) {
-            // Select a random territory from this list (this territory will send troops)
-
-            Vertex from = validFroms[splittableRandom.nextInt(validFromsNo)];
-
-            // Select a random territory that is adjacent to the from territory (this territory receives troops)
-            Edge[] validTos = new Edge[10];
-            int validTosNo=0;
-            Edge[] neighbours = from.getEdges();
-            int neighboursNo = from.getEdgeNo();
-            for (int i=0;i<neighboursNo;i++) {
-                Edge e=neighbours[i];
-                if (e.getVertex().getTerritory().getOwner() == player) {
-                    validTos[validTosNo]=e;
-                    validTosNo++;
-                }
-            }
-            Vertex to = validTos[splittableRandom.nextInt(validTosNo)].getVertex();
-
-            // Send a random quantity of troops
-            int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;
-
-            // Update the troop counts in the graph
-            from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
-            to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
-            map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
-            map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
-            narrator.addText("Player " + player.getName() + " send " + troopsSend + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
-        } else {
-            narrator.addText("No valid fortifications");
-        }
-    }
+//    public void randomFortification(Player player) {
+//        // Get all the owned territories for this player
+//        ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+//        for (Vertex v : game.getGraph().getArrayList()) {
+//            if (v.getTerritory().getOwner() == player) {
+//                ownedTerritories.add(v);
+//            }
+//        }
+//
+//        // For all owned territories select the ones that have another adjacent owned territory and have more than 1 troop
+//        Vertex[] validFroms = new Vertex[42];
+//        int validFromsNo = 0;
+//
+//        for (Vertex v : ownedTerritories) {
+//            if (v.getTerritory().getNumberOfTroops() > 1) {
+//                boolean twoOwnedAdjacent = false;
+//                Edge[] neighbours = v.getEdges();
+//                int neighboursNo = v.getEdgeNo();
+//                for (int i=0;i<neighboursNo;i++) {
+//                    Edge e=neighbours[i];
+//                    if (e.getVertex().getTerritory().getOwner() == player) {
+//                        twoOwnedAdjacent = true;
+//                        break;
+//                    }
+//                }
+//                if (twoOwnedAdjacent) {
+//                    validFroms[validFromsNo]=v;
+//                    validFromsNo++;
+//                }
+//            }
+//        }
+//
+//        if (validFromsNo!=0) {
+//            // Select a random territory from this list (this territory will send troops)
+//
+//            Vertex from = validFroms[splittableRandom.nextInt(validFromsNo)];
+//
+//            // Select a random territory that is adjacent to the from territory (this territory receives troops)
+//            Edge[] validTos = new Edge[10];
+//            int validTosNo=0;
+//            Edge[] neighbours = from.getEdges();
+//            int neighboursNo = from.getEdgeNo();
+//            for (int i=0;i<neighboursNo;i++) {
+//                Edge e=neighbours[i];
+//                if (e.getVertex().getTerritory().getOwner() == player) {
+//                    validTos[validTosNo]=e;
+//                    validTosNo++;
+//                }
+//            }
+//            Vertex to = validTos[splittableRandom.nextInt(validTosNo)].getVertex();
+//
+//            // Send a random quantity of troops
+//            int troopsSend = (int) (Math.random() * (from.getTerritory().getNumberOfTroops() - 1)) + 1;
+//
+//            // Update the troop counts in the graph
+//            from.getTerritory().setNumberOfTroops(from.getTerritory().getNumberOfTroops() - troopsSend);
+//            to.getTerritory().setNumberOfTroops(to.getTerritory().getNumberOfTroops() + troopsSend);
+//            map.updateTroopCount(from.getTerritory().getTerritoryNumber(), from.getTerritory().getNumberOfTroops());
+//            map.updateTroopCount(to.getTerritory().getTerritoryNumber(), to.getTerritory().getNumberOfTroops());
+//            narrator.addText("Player " + player.getName() + " send " + troopsSend + " troop(s) from " + from.getTerritory().getTerritoryName() + " to " + to.getTerritory().getTerritoryName());
+//        } else {
+//            narrator.addText("No valid fortifications");
+//        }
+//    }
 
 }

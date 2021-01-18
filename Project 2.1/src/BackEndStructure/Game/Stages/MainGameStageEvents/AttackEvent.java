@@ -11,11 +11,9 @@ import Visualisation.Map.Components.*;
 import Visualisation.Map.Map;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.SplittableRandom;
 
 public class AttackEvent {
-    SplittableRandom splittableRandom = new SplittableRandom();
 
     private final Game game;
     private final Map map;
@@ -44,14 +42,14 @@ public class AttackEvent {
         dicePanel.setGame(game);
     }
 
-    public void attacking(Player player, boolean randomPlayer) {
+    public void attacking(Player player) {
         oneTerritoryCaptured = false;
         narrator.addText("Brace yourself! Player " + player.getName() + " is attacking different players!");
         map.deselectTerritory();
 
         if (player.isBot()) {
             while (game.getAi().getBotAttacking().botWantsToAttack(graph, player)) {
-                if (!botAttack(player, null, randomPlayer)) {
+                if (!botAttack(player, null)) {
                     break;
                 }
             }
@@ -80,12 +78,8 @@ public class AttackEvent {
                 }
                 if (validAttacks) {
                     Vertex[] vertices = game.getAIMCTS().findNextMove(graph, game.getPlayers(), player);
-                    botAttack(player, vertices, randomPlayer);
+                    botAttack(player, vertices);
                 }
-            }
-        } else if (randomPlayer) {
-            for (int i = splittableRandom.nextInt(10); i < 10; i++) {
-                randomAttack(player, randomPlayer);
             }
         } else {
             while (!playerTurn.hasTurnEnded() && !gameOver) {
@@ -130,7 +124,7 @@ public class AttackEvent {
                                         // If a territory is captured
                                         if (defender.getTerritory().getNumberOfTroops() < 1) {
                                             oneTerritoryCaptured = true;
-                                            territoryCaptured(player, defender, attacker, randomPlayer);
+                                            territoryCaptured(player, defender, attacker);
                                         }
                                     } else {
                                         map.deselectTerritory();
@@ -161,7 +155,7 @@ public class AttackEvent {
         }
     }
 
-    private boolean botAttack(Player player, Vertex[] attackerDefender, boolean randomPlayer) {
+    private boolean botAttack(Player player, Vertex[] attackerDefender) {
         Vertex[] vertices;
         Vertex attacker;
         Vertex defender;
@@ -216,7 +210,7 @@ public class AttackEvent {
         narrator.addText("Player " + player.getName() + " is trying to attack " + defender.getTerritory().getTerritoryName() + " with " + attacker.getTerritory().getTerritoryName() + " Using " + dicePanel.getNumberOfAttackingDice() + " Dice(s)");
 
         // If the bot is attacking another bot, the defending bot will use a much defending dice
-        if (ownedByBot(defender) || randomPlayer) {
+        if (ownedByBot(defender)) {
             if (defender.getTerritory().getNumberOfTroops() > 1) {
                 dicePanel.addDefendDie();
             } else {
@@ -271,7 +265,7 @@ public class AttackEvent {
         // If a territory is captured
         if (defender.getTerritory().getNumberOfTroops() < 1) {
             oneTerritoryCaptured = true;
-            territoryCaptured(player, defender, attacker, randomPlayer);
+            territoryCaptured(player, defender, attacker);
             return true;
         }
         return true;
@@ -279,7 +273,7 @@ public class AttackEvent {
     }
 
     // Logic that needs to happen after a territory is captured
-    private void territoryCaptured(Player player, Vertex defender, Vertex attack, boolean randomPlayer) {
+    private void territoryCaptured(Player player, Vertex defender, Vertex attack ) {
         // Player gets the territory
         Player defenderOwner = defender.getTerritory().getOwner();
         player.increaseTerritoriesOwned();
@@ -297,7 +291,7 @@ public class AttackEvent {
 
         // How many troops are sent over
         int troops;
-        if (player.isBot() || player.isMCTSBot() || randomPlayer) {
+        if (player.isBot() || player.isMCTSBot()) {
             troops = game.getAi().getBotAttacking().getTroopCarryOver(attack);
         } else {
             TerritoryCaptured popUp = new TerritoryCaptured(attack.getTerritory());
@@ -314,12 +308,12 @@ public class AttackEvent {
 
         // When player receives cards from an elimination, if he has more then 5 cards he has to turn in a set
         if (player.getHand().size() >= 6) {
-            turnInCardsAttacking(player, randomPlayer);
+            turnInCardsAttacking(player);
         }
     }
 
     // Forcing a player to turn in a set during an attacking phase
-    private void turnInCardsAttacking(Player player, boolean randomPlayer) {
+    private void turnInCardsAttacking(Player player) {
         if (player.isBot() || player.isMCTSBot()) {
             // Set of cards the bot is going to turn in
             ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
@@ -342,21 +336,17 @@ public class AttackEvent {
             cardInventory.tradingAllowed(false);
             cardInventory.attacking(false);
         }
-        placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()), randomPlayer);
+        placeReceivedTroops(player, game.getSetValue(player.getSetsTurnedIn()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Placing troops
 
-    public void placeReceivedTroops(Player player, int troops, boolean randomPlayer) {
+    public void placeReceivedTroops(Player player, int troops) {
         narrator.addText("Player " + player.getName() + " can put " + troops + " troops on his territories");
         if (player.isBot() || player.isMCTSBot()) {
             for (int i = 0; i < troops; i++) {
                 placeTroop(player, game.getAi().getPlaceTroops().placeTroop(graph, player));
-            }
-        } else if (randomPlayer) {
-            for (int i = 0; i < troops; i++) {
-                placeTroopRandomly(player);
             }
         } else {
             for (int i = 0; i < troops; i++) {
@@ -365,24 +355,24 @@ public class AttackEvent {
         }
     }
 
-    private void placeTroopRandomly(Player player) {
-        ArrayList<Vertex> owned = new ArrayList<>();
-        for (Vertex v : game.getGraph().getArrayList()) {
-            if (v.getTerritory().getOwner() == player) {
-                owned.add(v);
-            }
-        }
-
-        // Select a random territory
-        Territory t = owned.get(splittableRandom.nextInt(owned.size())).getTerritory();
-
-        // place a troop on the random territory
-        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
-
-        // Update the Map
-        narrator.addText(player.getName() + " put a troop on " + t.getTerritoryName());
-        map.updateTroopCount(t.getTerritoryNumber(), t.getNumberOfTroops());
-    }
+//    private void placeTroopRandomly(Player player) {
+//        ArrayList<Vertex> owned = new ArrayList<>();
+//        for (Vertex v : game.getGraph().getArrayList()) {
+//            if (v.getTerritory().getOwner() == player) {
+//                owned.add(v);
+//            }
+//        }
+//
+//        // Select a random territory
+//        Territory t = owned.get(splittableRandom.nextInt(owned.size())).getTerritory();
+//
+//        // place a troop on the random territory
+//        t.setNumberOfTroops(t.getNumberOfTroops() + 1);
+//
+//        // Update the Map
+//        narrator.addText(player.getName() + " put a troop on " + t.getTerritoryName());
+//        map.updateTroopCount(t.getTerritoryNumber(), t.getNumberOfTroops());
+//    }
 
     private void placeTroop(Player player, int territoryNumber) {
         Territory t = graph.get(territoryNumber).getTerritory();
@@ -483,129 +473,129 @@ public class AttackEvent {
         return gameOver;
     }
 
-    public void randomAttack(Player player, boolean randomPlayer) {
-        // Get all the owned territories for this player
-        ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
-        for (Vertex v : game.getGraph().getArrayList()) {
-            if (v.getTerritory().getOwner() == player) {
-                ownedTerritories.add(v);
-            }
-        }
-
-        // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
-        Vertex[] validAttackers = new Vertex[10];
-        int validAttackersNo = 0;
-
-        for (Vertex v : ownedTerritories) {
-            if (v.getTerritory().getNumberOfTroops() > 1) {
-                boolean enemy = false;
-                Edge[] neighbours = v.getEdges();
-                int neighboursNo = v.getEdgeNo();
-                for (int i = 0; i < neighboursNo; i++) {
-                    Edge e = neighbours[i];
-                    if (e.getVertex().getTerritory().getOwner() != player) {
-                        enemy = true;
-                        break;
-                    }
-                }
-                if (enemy) {
-                    if (validAttackersNo == validAttackers.length - 1) {
-                        Vertex[] validAttackers2 = new Vertex[validAttackers.length * 2];
-                        copyAintoB(validAttackers, validAttackers2);
-                        validAttackers = validAttackers2;
-                    }
-                    validAttackers[validAttackersNo] = v;
-                    validAttackersNo++;
-                }
-            }
-        }
-
-        // Randomly select attacker if there is a valid one
-        if (validAttackersNo != 0) {
-            Vertex attacker = validAttackers[splittableRandom.nextInt(validAttackersNo)];
-
-            // Randomly select defender
-            Edge[] validDefenders = new Edge[10];
-            int validDefendersNo = 0;
-            Edge[] neighbours = attacker.getEdges();
-            int neighboursNo = attacker.getEdgeNo();
-            for (int i = 0; i < neighboursNo; i++) {
-                Edge e = neighbours[i];
-                if (e.getVertex().getTerritory().getOwner() != player) {
-                    if (validDefendersNo == validDefenders.length - 1) {
-                        Edge[] validDefenders2 = new Edge[validDefenders.length * 2];
-                        copyAintoB(validDefenders, validDefenders2);
-                        validDefenders = validDefenders2;
-                    }
-                    validDefenders[validDefendersNo] = e;
-                    validDefendersNo++;
-                }
-            }
-            Vertex defender = validDefenders[splittableRandom.nextInt(validDefendersNo)].getVertex();
-
-            // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
-            int numberOfAttackerDice;
-            int numberOfDefenderDice;
-            int[] attackerDiceValues = new int[3];
-            int[] defenderDiceValues = new int[2];
-
-            // Setting the attacker dice
-            switch (attacker.getTerritory().getNumberOfTroops()) {
-                case 2:
-                    numberOfAttackerDice = 1;
-                    attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
-                    break;
-                case 3:
-                    numberOfAttackerDice = 2;
-                    attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
-                    attackerDiceValues[1] = splittableRandom.nextInt(6) + 1;
-                    break;
-                default:
-                    numberOfAttackerDice = 3;
-                    attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
-                    attackerDiceValues[1] = splittableRandom.nextInt(6) + 1;
-                    attackerDiceValues[2] = splittableRandom.nextInt(6) + 1;
-            }
-
-            // Setting the defender dice
-            if (defender.getTerritory().getNumberOfTroops() > 1) {
-                numberOfDefenderDice = 2;
-                defenderDiceValues[0] = splittableRandom.nextInt(6) + 1;
-                defenderDiceValues[1] = splittableRandom.nextInt(6) + 1;
-            } else {
-                numberOfDefenderDice = 1;
-                defenderDiceValues[0] = splittableRandom.nextInt(6) + 1;
-            }
-            // Perform a fight
-            game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
-
-            // Update troops counts
-            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
-            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
-            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
-            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
-            narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsDefenders() + ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsAttackers() + ")");
-            // Reset classes
-            game.getAttackingHandler().resetTroopsLost();
-
-            // If a territory is captured
-            if (defender.getTerritory().getNumberOfTroops() < 1) {
-                // oneTerritoryCaptured = true;
-                territoryCaptured(player, defender, attacker, randomPlayer);
-            }
-        }
-    }
-
-    private void copyAintoB(Vertex[] a, Vertex[] b) {
-        for (int i = 0; i < a.length; i++) {
-            b[i] = a[i];
-        }
-    }
-
-    private void copyAintoB(Edge[] a, Edge[] b) {
-        for (int i = 0; i < a.length; i++) {
-            b[i] = a[i];
-        }
-    }
+//    public void randomAttack(Player player, boolean randomPlayer) {
+//        // Get all the owned territories for this player
+//        ArrayList<Vertex> ownedTerritories = player.getOwnedTerritories();
+//        for (Vertex v : game.getGraph().getArrayList()) {
+//            if (v.getTerritory().getOwner() == player) {
+//                ownedTerritories.add(v);
+//            }
+//        }
+//
+//        // Can't attack with only 1 troop or attack if the territory is surrounded by friendly territories
+//        Vertex[] validAttackers = new Vertex[10];
+//        int validAttackersNo = 0;
+//
+//        for (Vertex v : ownedTerritories) {
+//            if (v.getTerritory().getNumberOfTroops() > 1) {
+//                boolean enemy = false;
+//                Edge[] neighbours = v.getEdges();
+//                int neighboursNo = v.getEdgeNo();
+//                for (int i = 0; i < neighboursNo; i++) {
+//                    Edge e = neighbours[i];
+//                    if (e.getVertex().getTerritory().getOwner() != player) {
+//                        enemy = true;
+//                        break;
+//                    }
+//                }
+//                if (enemy) {
+//                    if (validAttackersNo == validAttackers.length - 1) {
+//                        Vertex[] validAttackers2 = new Vertex[validAttackers.length * 2];
+//                        copyAintoB(validAttackers, validAttackers2);
+//                        validAttackers = validAttackers2;
+//                    }
+//                    validAttackers[validAttackersNo] = v;
+//                    validAttackersNo++;
+//                }
+//            }
+//        }
+//
+//        // Randomly select attacker if there is a valid one
+//        if (validAttackersNo != 0) {
+//            Vertex attacker = validAttackers[splittableRandom.nextInt(validAttackersNo)];
+//
+//            // Randomly select defender
+//            Edge[] validDefenders = new Edge[10];
+//            int validDefendersNo = 0;
+//            Edge[] neighbours = attacker.getEdges();
+//            int neighboursNo = attacker.getEdgeNo();
+//            for (int i = 0; i < neighboursNo; i++) {
+//                Edge e = neighbours[i];
+//                if (e.getVertex().getTerritory().getOwner() != player) {
+//                    if (validDefendersNo == validDefenders.length - 1) {
+//                        Edge[] validDefenders2 = new Edge[validDefenders.length * 2];
+//                        copyAintoB(validDefenders, validDefenders2);
+//                        validDefenders = validDefenders2;
+//                    }
+//                    validDefenders[validDefendersNo] = e;
+//                    validDefendersNo++;
+//                }
+//            }
+//            Vertex defender = validDefenders[splittableRandom.nextInt(validDefendersNo)].getVertex();
+//
+//            // Attack will finish either by ending up with 1 troop or capturing (capturing should return true anyway)
+//            int numberOfAttackerDice;
+//            int numberOfDefenderDice;
+//            int[] attackerDiceValues = new int[3];
+//            int[] defenderDiceValues = new int[2];
+//
+//            // Setting the attacker dice
+//            switch (attacker.getTerritory().getNumberOfTroops()) {
+//                case 2:
+//                    numberOfAttackerDice = 1;
+//                    attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
+//                    break;
+//                case 3:
+//                    numberOfAttackerDice = 2;
+//                    attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
+//                    attackerDiceValues[1] = splittableRandom.nextInt(6) + 1;
+//                    break;
+//                default:
+//                    numberOfAttackerDice = 3;
+//                    attackerDiceValues[0] = splittableRandom.nextInt(6) + 1;
+//                    attackerDiceValues[1] = splittableRandom.nextInt(6) + 1;
+//                    attackerDiceValues[2] = splittableRandom.nextInt(6) + 1;
+//            }
+//
+//            // Setting the defender dice
+//            if (defender.getTerritory().getNumberOfTroops() > 1) {
+//                numberOfDefenderDice = 2;
+//                defenderDiceValues[0] = splittableRandom.nextInt(6) + 1;
+//                defenderDiceValues[1] = splittableRandom.nextInt(6) + 1;
+//            } else {
+//                numberOfDefenderDice = 1;
+//                defenderDiceValues[0] = splittableRandom.nextInt(6) + 1;
+//            }
+//            // Perform a fight
+//            game.getAttackingHandler().oneFight(numberOfAttackerDice, attackerDiceValues, numberOfDefenderDice, defenderDiceValues);
+//
+//            // Update troops counts
+//            attacker.getTerritory().setNumberOfTroops(attacker.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsAttackers());
+//            defender.getTerritory().setNumberOfTroops(defender.getTerritory().getNumberOfTroops() - game.getAttackingHandler().getLostTroopsDefenders());
+//            map.updateTroopCount(attacker.getTerritory().getTerritoryNumber(), attacker.getTerritory().getNumberOfTroops());
+//            map.updateTroopCount(defender.getTerritory().getTerritoryNumber(), defender.getTerritory().getNumberOfTroops());
+//            narrator.addText("Player " + player.getName() + " attacked " + defender.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsDefenders() + ") with " + attacker.getTerritory().getTerritoryName() + "(-" + game.getAttackingHandler().getLostTroopsAttackers() + ")");
+//            // Reset classes
+//            game.getAttackingHandler().resetTroopsLost();
+//
+//            // If a territory is captured
+//            if (defender.getTerritory().getNumberOfTroops() < 1) {
+//                // oneTerritoryCaptured = true;
+//                territoryCaptured(player, defender, attacker);
+//            }
+//        }
+//    }
+//
+//    private void copyAintoB(Vertex[] a, Vertex[] b) {
+//        for (int i = 0; i < a.length; i++) {
+//            b[i] = a[i];
+//        }
+//    }
+//
+//    private void copyAintoB(Edge[] a, Edge[] b) {
+//        for (int i = 0; i < a.length; i++) {
+//            b[i] = a[i];
+//        }
+//    }
 
 }

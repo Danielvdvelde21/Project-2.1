@@ -22,18 +22,20 @@ public class Narrator {
     }
 
     public void addText(String text) {
-//        System.out.println(text);
-//        String newText = text;
-//        if (oldText == null) {
-//            label.setText("<html><br>" + ">> " + newText + "</html>");
-//        } else {
-//            label.setText("<html>" + "> " + oldText + "<br>" + ">> " + newText + "</html>");
-//        }
-//        oldText = newText;
-//
-//        label.setVisible(true);
+        System.out.println(text);
+        String newText = text;
+        if (oldText == null) {
+            label.setText("<html><br>" + ">> " + newText + "</html>");
+        } else {
+            label.setText("<html>" + "> " + oldText + "<br>" + ">> " + newText + "</html>");
+        }
+        oldText = newText;
 
+        label.setVisible(true);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
-
-
 }
