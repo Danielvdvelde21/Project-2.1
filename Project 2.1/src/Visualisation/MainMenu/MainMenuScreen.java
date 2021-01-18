@@ -187,12 +187,19 @@ public class MainMenuScreen extends Application {
                     int winsBasicBot = 0;
                     int winsRandomPlayer = 0;
                     MCTS.maxTime=0;
+                    try{
+                        FileWriter myWriter = new FileWriter("logFile.txt");
+                        myWriter.close();
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                        e.printStackTrace();
+                    }
                     while(true){
-                        MCTS.maxTime+=500;
+                        MCTS.maxTime+=100;
                         winsMCTS = 0;
                         winsBasicBot = 0;
                         winsRandomPlayer = 0;
-                        for (int game = 0; game < 50; game++) {
+                        for (int game = 0; game < 2; game++) {
                             // Instead of having normal player have a random player
                             boolean randomPlayer = true;
                             MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
@@ -210,7 +217,7 @@ public class MainMenuScreen extends Application {
                             System.out.println("Wins Basic Bot " + winsBasicBot);
                             try {
                                 FileWriter myWriter = new FileWriter("logFile.txt", true);
-                                myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/100"+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
+                                myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/50"+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
 
                                 myWriter.close();
                             } catch (IOException e) {
