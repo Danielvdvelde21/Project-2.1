@@ -8,9 +8,7 @@ import java.awt.*;
 
 public class PlayerTurn {
     private final JLabel nameLabel = new JLabel();
-    private final JPanel p1 = new JPanel();
     private final JPanel p2 = new JPanel();
-    private final JPanel p3 = new JPanel();
 
     private boolean turnEnded = false;
 
@@ -30,8 +28,10 @@ public class PlayerTurn {
             endTurnButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             endTurnButton.addActionListener(e -> turnEnded = true);
 
+            JPanel p1 = new JPanel();
             p1.setBackground(Map.themeColor);
             p2.setBackground(Map.themeColor);
+            JPanel p3 = new JPanel();
             p3.setBackground(Map.themeColor);
 
             p1.add(label);

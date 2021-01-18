@@ -14,7 +14,6 @@ public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
     public static long maxTime = 100; // Milliseconds
-    private final int maxIterations = 10000; // Attacks
     public static ArrayList<Integer> childrenNo;
 
     //------------------------------------------------------------------------------------------------------------------
@@ -33,6 +32,8 @@ public class MCTS {
         long beginTimer = System.currentTimeMillis();
         int iteration = 0;
 
+        // Attacks
+        int maxIterations = 10000;
         while (System.currentTimeMillis() - beginTimer < maxTime && iteration < maxIterations) {
             // Selection
             Node oldPromisingNode = promisingNode;

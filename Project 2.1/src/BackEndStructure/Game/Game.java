@@ -22,7 +22,6 @@ public class Game {
 
     // Player object List, all the players of the game
     private ArrayList<Player> players = new ArrayList<>();
-    private final Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
 
     // the Board
     private final Map map;
@@ -89,6 +88,7 @@ public class Game {
 
         // Instantiate players
         for (int i = 0; i < numberOfPlayers; i++) {
+            Color[] colors = {Color.red, Color.blue, Color.green, Color.orange, Color.yellow, Color.CYAN};
             players.add(new Player(names[i], colors[i], basicBots[i], MCTSBots[i]));
         }
 

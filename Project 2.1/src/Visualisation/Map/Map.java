@@ -16,9 +16,6 @@ public class Map {
     private int territoryNumber = -1; // Int that represents a territory
     private int buttonCount = -1; // The first button will have count 0 (array indexing)
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Variables for creating the map
-    private static Insets insets;
     private static Dimension size;
     private static BufferedImage wPic;
 
@@ -90,7 +87,9 @@ public class Map {
         b.setContentAreaFilled(false);
         b.setBorderPainted(false);
         // b.repaint();
-        insets = p.getInsets();
+        // -----------------------------------------------------------------------------------------------------------------
+        // Variables for creating the map
+        Insets insets = p.getInsets();
         size = b.getPreferredSize();
         b.setBounds(((posX * frameX) / 1100) - size.width / 2, ((posY * frameY) / 700) - size.height / 2, size.width, size.height);
 

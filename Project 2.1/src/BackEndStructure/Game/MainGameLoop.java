@@ -22,9 +22,6 @@ public class MainGameLoop {
     // For updating the player turn label (current player)
     private final PlayerTurn playerTurn;
 
-    // For updating the card inventory
-    private final CardInventory cardInventory;
-
     // For updating the dice panel
     private final DicePanel dicePanel;
 
@@ -34,7 +31,8 @@ public class MainGameLoop {
         this.game = new Game(players, playerNames, basicBots, MCTSBots);
         this.narrator = game.getNarrator();
         this.playerTurn = game.getPlayerTurn();
-        this.cardInventory = game.getCardInventory();
+        // For updating the card inventory
+        CardInventory cardInventory = game.getCardInventory();
         this.dicePanel = game.getDicePanel();
         cardInventory.setGame(game);
         dicePanel.setGame(game);

@@ -18,12 +18,10 @@ public class DicePanel {
 
     private final JPanel p1 = new JPanel();   // offence label
     private final JPanel p1a = new JPanel();  // dice
-    private final JPanel p1b = new JPanel();  // throw button
     private final JPanel p2 = new JPanel();   // defence label
     private final JPanel p2a = new JPanel();  // dice
     private final JPanel p2b = new JPanel();  // throw button
 
-    private final JLabel playerOrder = new JLabel("Player Order Dice:");
     private final JLabel offence = new JLabel("Offence:");
     private final JLabel defence = new JLabel("Defence:");
 
@@ -32,7 +30,6 @@ public class DicePanel {
     private final JButton previous = new JButton("<<"); // Remove attack die
     private final JButton previous1 = new JButton("<<"); // Remove defend die
 
-    private final JButton attackDiceRoll = new JButton("Throw");
     private final JButton defendDiceRoll = new JButton("Throw");
 
     private Game game;
@@ -51,6 +48,7 @@ public class DicePanel {
 
     public DicePanel() {
         if(!AI.GlobalVariables.SIMULATED) {
+            JLabel playerOrder = new JLabel("Player Order Dice:");
             playerOrder.setFont(new Font("Courier New", Font.BOLD, 16));
             playerOrder.setForeground(Color.white);
             offence.setFont(new Font("Courier New", Font.BOLD, 16));
@@ -60,6 +58,8 @@ public class DicePanel {
 
             p1.setBackground(Map.themeColor);
             p1a.setBackground(Map.themeColor);
+            // throw button
+            JPanel p1b = new JPanel();
             p1b.setBackground(Map.themeColor);
             p2.setBackground(Map.themeColor);
             p2a.setBackground(Map.themeColor);
@@ -111,6 +111,7 @@ public class DicePanel {
                 addDefendDie();
             });
 
+            JButton attackDiceRoll = new JButton("Throw");
             attackDiceRoll.setFont(new Font("Courier New", Font.BOLD, 16));
             attackDiceRoll.setBackground(new Color(80, 100, 182));
             attackDiceRoll.setForeground(Color.WHITE);
