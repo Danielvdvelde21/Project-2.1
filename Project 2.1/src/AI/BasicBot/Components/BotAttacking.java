@@ -153,7 +153,7 @@ public class BotAttacking extends UsefulMethods {
             }
             else if(getHighest(grades) == bestTarget && g.isAdjacent(g.get(bestTarget), g.get(bestAttackIsFrom))){
                 grades[bestTarget] += (bestAttackers - defenders) * 0.1;
-                grades[bestTarget] += (bestAttackers/defenders) * 0.5;
+                grades[bestTarget] += ((double) bestAttackers/ (double) defenders) * 0.5;
                 bestAttack = true;
             }
             else{
