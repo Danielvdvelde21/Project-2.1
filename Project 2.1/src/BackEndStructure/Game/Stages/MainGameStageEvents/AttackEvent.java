@@ -320,7 +320,7 @@ public class AttackEvent {
 
     // Forcing a player to turn in a set during an attacking phase
     private void turnInCardsAttacking(Player player, boolean randomPlayer) {
-        if (player.isBot() || player.isMCTSBot()) {
+        if (player.isBot() || player.isMCTSBot()||randomPlayer) {
             // Set of cards the bot is going to turn in
             ArrayList<Card> turnInSet = game.getAi().getBotAttacking().attackingCard(graph, player);
 

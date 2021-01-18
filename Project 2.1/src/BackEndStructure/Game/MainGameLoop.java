@@ -49,7 +49,9 @@ public class MainGameLoop {
         mainGameStage(randomPlayer);
 
         // Game over
+        if(winner!=null)
         narrator.addText("GAME OVER! PLAYER " + winner.getName() + " IS VICTORIOUS");
+        else narrator.addText("DRAW");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

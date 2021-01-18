@@ -18,6 +18,7 @@ public class MainGameStage {
     private final AttackEvent attack;
     private final FortifyEvent fortify;
     private final ReceiveTroops receiveTroops;
+    public int turnNo=0;
 
     // Game state
     private boolean gameOver = false;
@@ -35,7 +36,8 @@ public class MainGameStage {
     }
 
     public void mainGameStage(boolean randomPlayer) {
-        while (!gameOver) {
+        turnNo=0;
+        while (!gameOver&&turnNo<100) {
             Iterator<Player> itr = game.getPlayers().iterator();
             while (itr.hasNext()){
                 Player player = itr.next();
@@ -53,8 +55,10 @@ public class MainGameStage {
                     }
                 }
             }
+            turnNo++;
         }
-        winner = attack.getWinner();
+        if(gameOver) winner = attack.getWinner();
+        else winner = null;
     }
 
     private void playerTurn(Player player, boolean randomPlayer) {
