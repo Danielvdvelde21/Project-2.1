@@ -185,7 +185,6 @@ public class MainMenuScreen extends Application {
                     ps.hide();  //hide menu
                     int winsMCTS = 0;
                     int winsBasicBot = 0;
-                    int winsRandomPlayer = 0;
                     MCTS.maxTime=0;
                     try{
                         FileWriter myWriter = new FileWriter("logFile.txt");
@@ -195,29 +194,25 @@ public class MainMenuScreen extends Application {
                         e.printStackTrace();
                     }
                     while(true){
-                        MCTS.maxTime+=100;
+                        MCTS.maxTime+=500;
                         winsMCTS = 0;
                         winsBasicBot = 0;
-                        winsRandomPlayer = 0;
-                        for (int game = 0; game < 2; game++) {
+                        for (int game = 0; game < 50; game++) {
                             // Instead of having normal player have a random player
                             boolean randomPlayer = true;
                             MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
                             if (mainGameLoop.getWinner().isMCTSBot()) {
                                 winsMCTS++;
-                            } else if (mainGameLoop.getWinner().isBot()){
-                                winsBasicBot++;
                             } else {
-                                winsRandomPlayer++;
+                                winsBasicBot++;
                             }
                             mainGameLoop = null;
                             System.out.println();
-                            System.out.println("Wins random Bot " + winsRandomPlayer);
                             System.out.println("Wins MCTS Bot " + winsMCTS);
                             System.out.println("Wins Basic Bot " + winsBasicBot);
                             try {
                                 FileWriter myWriter = new FileWriter("logFile.txt", true);
-                                myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/50"+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
+                                myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/50"+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
 
                                 myWriter.close();
                             } catch (IOException e) {
@@ -227,7 +222,7 @@ public class MainMenuScreen extends Application {
                         }
                         try {
                             FileWriter myWriter = new FileWriter("logFile.txt", true);
-                            myWriter.write("experiment end: maxTime: "+MCTS.maxTime+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
+                            myWriter.write("experiment end: maxTime: "+MCTS.maxTime+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
                             myWriter.close();
                         } catch (IOException e) {
                             System.out.println("An error occurred.");
