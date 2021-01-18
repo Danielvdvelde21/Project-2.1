@@ -22,7 +22,7 @@ public class Player {
     private int setsTurnedIn;
 
     // MCTS BOT
-    private ArrayList<Vertex> ownedTerritories = new ArrayList<>();
+    private final ArrayList<Vertex> ownedTerritories = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------
     // Constructors

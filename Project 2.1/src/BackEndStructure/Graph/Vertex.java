@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Vertex {
 
-    private Edge[]edgeList;
+    private final Edge[]edgeList;
     public int edgeNo=0;
 
     private Territory territory;
