@@ -7,7 +7,6 @@ import BackEndStructure.Graph.Graph;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class BotAttacking extends UsefulMethods {
 

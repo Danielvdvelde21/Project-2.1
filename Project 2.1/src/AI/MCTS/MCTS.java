@@ -8,12 +8,11 @@ import BackEndStructure.Graph.Vertex;
 import BackEndStructure.Simulation.SimulatedGameLoop;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    public static long maxTime = 100; // Milliseconds
+    public static final long maxTime = 100; // Milliseconds
     public static ArrayList<Integer> childrenNo;
 
     //------------------------------------------------------------------------------------------------------------------

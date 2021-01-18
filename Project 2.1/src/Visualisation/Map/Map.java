@@ -22,8 +22,8 @@ public class Map {
     // private static int frameX = 1600;
     // private static int frameY = 900;
 
-    public static int frameX = 1100;
-    public static int frameY = 700;
+    public static final int frameX = 1100;
+    public static final int frameY = 700;
 
     private ArrayList<JButton> buttonList = new ArrayList<JButton>();
     private ArrayList<JLabel> labelList = new ArrayList<>();

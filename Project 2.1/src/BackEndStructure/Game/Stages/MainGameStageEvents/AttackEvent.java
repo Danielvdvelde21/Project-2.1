@@ -11,7 +11,6 @@ import Visualisation.Map.Components.*;
 import Visualisation.Map.Map;
 
 import java.util.ArrayList;
-import java.util.SplittableRandom;
 
 public class AttackEvent {
 

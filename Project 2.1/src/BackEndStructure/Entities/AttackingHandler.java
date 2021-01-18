@@ -1,7 +1,5 @@
 package BackEndStructure.Entities;
 
-import java.util.Arrays;
-
 public class AttackingHandler {
 
     private int lostTroopsDefenders;

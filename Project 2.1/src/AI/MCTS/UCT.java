@@ -1,8 +1,5 @@
 package AI.MCTS;
 
-import java.util.Collections;
-import java.util.Comparator;
-
 // Class that uses Upper Confidence Bounds to make a smart decision about which node to explore
 public class UCT {
 

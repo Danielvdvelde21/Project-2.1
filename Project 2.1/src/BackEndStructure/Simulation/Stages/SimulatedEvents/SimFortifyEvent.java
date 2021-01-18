@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.SplittableRandom;
 
 public class SimFortifyEvent {
-    SplittableRandom splittableRandom = new SplittableRandom();
+    final SplittableRandom splittableRandom = new SplittableRandom();
 
     public void randomFortification(Player player) {
         // Get all the owned territories for this player

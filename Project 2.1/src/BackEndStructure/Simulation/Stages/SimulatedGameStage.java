@@ -37,6 +37,7 @@ public class SimulatedGameStage {
         for (Player p : game.getPlayers()) {
             if (p.getTerritoriesOwned() == 42 || p.getTerritoriesOwned() == 0) {
                 gameOver = true;
+                break;
             }
         }
         while (!gameOver) {

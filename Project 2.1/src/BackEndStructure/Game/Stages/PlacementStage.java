@@ -9,8 +9,6 @@ import Visualisation.Map.Components.Narrator;
 import Visualisation.Map.Components.PlayerTurn;
 import Visualisation.Map.Map;
 
-import javax.print.attribute.standard.PrinterMakeAndModel;
-
 public class PlacementStage {
 
     private final Game game;

@@ -1,6 +1,5 @@
 package BackEndStructure.Simulation.Stages.SimulatedEvents;
 
-import AI.MCTS.Node;
 import BackEndStructure.Entities.Player;
 import BackEndStructure.Game.Game;
 import BackEndStructure.Graph.Edge;
@@ -15,7 +14,7 @@ public class SimAttackEvent {
 
     private boolean gameOver = false;
     private Player winner;
-    SplittableRandom splittableRandom = new SplittableRandom();
+    final SplittableRandom splittableRandom = new SplittableRandom();
 
     private final ArrayList<Player> eliminatedPlayers = new ArrayList<>();
 
@@ -134,15 +133,11 @@ public class SimAttackEvent {
     }
 
     private void copyAintoB(Vertex[]a,Vertex[]b){
-        for (int i=0;i<a.length;i++) {
-            b[i]=a[i];
-        }
+        System.arraycopy(a, 0, b, 0, a.length);
     }
 
     private void copyAintoB(Edge[]a,Edge[]b){
-        for (int i=0;i<a.length;i++) {
-            b[i]=a[i];
-        }
+        System.arraycopy(a, 0, b, 0, a.length);
     }
     
     // Logic that needs to happen after a territory is captured

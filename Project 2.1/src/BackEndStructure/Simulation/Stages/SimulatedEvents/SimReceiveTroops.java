@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.SplittableRandom;
 
 public class SimReceiveTroops {
-    SplittableRandom splittableRandom = new SplittableRandom();
+    final SplittableRandom splittableRandom = new SplittableRandom();
 
     private final Game game;
 

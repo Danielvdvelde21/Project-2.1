@@ -39,18 +39,18 @@ public class SetHandler {
     }
 
     private void checkMatchingTerritories(Game game, Player player, ArrayList<Card> cards) {
-        String territoriesOnCards = "";
+        StringBuilder territoriesOnCards = new StringBuilder();
         for (int i = 0; i < 42; i++) {
             for (int j = 0; j < 3; j++) {
                 if (game.getGraph().get(i).getTerritory().getOwner()==player && game.getGraph().get(i).getTerritory().getTerritoryName().equals(cards.get(j).getCardName())) {
                     game.getGraph().get(i).getTerritory().setNumberOfTroops(game.getGraph().get(i).getTerritory().getNumberOfTroops() + 2);
                     game.getMap().updateTroopCount(i, game.getGraph().get(i).getTerritory().getNumberOfTroops());
-                    territoriesOnCards += game.getGraph().get(i).getTerritory().getTerritoryName() + ", ";
+                    territoriesOnCards.append(game.getGraph().get(i).getTerritory().getTerritoryName()).append(", ");
                 }
             }
         }
-        if (!territoriesOnCards.equals("")) {
-            territoriesOnCards = territoriesOnCards.substring(0, territoriesOnCards.length() - 2);
+        if (!territoriesOnCards.toString().equals("")) {
+            territoriesOnCards = new StringBuilder(territoriesOnCards.substring(0, territoriesOnCards.length() - 2));
             game.getNarrator().addText("Since player " + player.getName() + " owned territories: " + territoriesOnCards + " , he will get 2 additional troops on these territories!");
         }
     }

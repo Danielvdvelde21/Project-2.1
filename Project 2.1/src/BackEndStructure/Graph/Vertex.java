@@ -1,7 +1,5 @@
 package BackEndStructure.Graph;
 
-import java.util.*;
-
 public class Vertex {
 
     private final Edge[]edgeList;

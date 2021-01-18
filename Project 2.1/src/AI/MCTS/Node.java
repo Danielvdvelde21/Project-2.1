@@ -1,10 +1,8 @@
 package AI.MCTS;
 
-import BackEndStructure.Entities.Player;
 import BackEndStructure.Graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Node {
 
@@ -24,7 +22,7 @@ public class Node {
     private boolean isTerminal = false;
 
     // Only used for getMaxChild
-    public ArrayList<ArrayList<Node>> childrenForAverage = new ArrayList<>();
+    public final ArrayList<ArrayList<Node>> childrenForAverage = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------
     // Constructor
@@ -61,9 +59,7 @@ public class Node {
     }
 
     private void copyAintoB(Node[] a, Node[] b) {
-        for (int i = 0; i < a.length; i++) {
-            b[i] = a[i];
-        }
+        System.arraycopy(a, 0, b, 0, a.length);
     }
 
     public Node[] getChildren() {
