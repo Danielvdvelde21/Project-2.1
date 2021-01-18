@@ -211,6 +211,7 @@ public class MainMenuScreen extends Application {
                             try {
                                 FileWriter myWriter = new FileWriter("logFile.txt", true);
                                 myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/100"+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
+
                                 myWriter.close();
                             } catch (IOException e) {
                                 System.out.println("An error occurred.");
