@@ -1,5 +1,6 @@
 package Visualisation.MainMenu;
 
+import AI.MCTS.MCTS;
 import BackEndStructure.Game.MainGameLoop;
 import javafx.application.Application;
 import javafx.application.HostServices;
@@ -24,6 +25,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.io.FileWriter;   // Import the FileWriter class
+import java.io.IOException;  // Import the IOException class to handle errors
 
 import java.io.File;
 import java.io.InputStream;
@@ -183,22 +186,45 @@ public class MainMenuScreen extends Application {
                     int winsMCTS = 0;
                     int winsBasicBot = 0;
                     int winsRandomPlayer = 0;
-                    for (int game = 0; game < 100; game++) {
-                        // Instead of having normal player have a random player
-                        boolean randomPlayer = true;
-                        MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
-                        if (mainGameLoop.getWinner().isMCTSBot()) {
-                            winsMCTS++;
-                        } else if (mainGameLoop.getWinner().isBot()){
-                            winsBasicBot++;
-                        } else {
-                            winsRandomPlayer++;
+                    MCTS.maxTime=0;
+                    while(true){
+                        MCTS.maxTime+=500;
+                        winsMCTS = 0;
+                        winsBasicBot = 0;
+                        winsRandomPlayer = 0;
+                        for (int game = 0; game < 50; game++) {
+                            // Instead of having normal player have a random player
+                            boolean randomPlayer = true;
+                            MainGameLoop mainGameLoop = new MainGameLoop(playerNames.length, playerNames, botsBasic, botsMCTS, randomPlayer);
+                            if (mainGameLoop.getWinner().isMCTSBot()) {
+                                winsMCTS++;
+                            } else if (mainGameLoop.getWinner().isBot()){
+                                winsBasicBot++;
+                            } else {
+                                winsRandomPlayer++;
+                            }
+                            mainGameLoop = null;
+                            System.out.println();
+                            System.out.println("Wins random Bot " + winsRandomPlayer);
+                            System.out.println("Wins MCTS Bot " + winsMCTS);
+                            System.out.println("Wins Basic Bot " + winsBasicBot);
+                            try {
+                                FileWriter myWriter = new FileWriter("logFile.txt", true);
+                                myWriter.write("maxTime: "+MCTS.maxTime+" - "+(game+1)+"/100"+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
+                                myWriter.close();
+                            } catch (IOException e) {
+                                System.out.println("An error occurred.");
+                                e.printStackTrace();
+                            }
                         }
-                        mainGameLoop = null;
-                        System.out.println();
-                        System.out.println("Wins random Bot " + winsRandomPlayer);
-                        System.out.println("Wins MCTS Bot " + winsMCTS);
-                        System.out.println("Wins Basic Bot " + winsBasicBot);
+                        try {
+                            FileWriter myWriter = new FileWriter("logFile.txt", true);
+                            myWriter.write("experiment end: maxTime: "+MCTS.maxTime+" - r:"+winsRandomPlayer+" - m:"+winsMCTS+" - b:"+winsBasicBot+"\n");
+                            myWriter.close();
+                        } catch (IOException e) {
+                            System.out.println("An error occurred.");
+                            e.printStackTrace();
+                        }
                     }
                 }
             });

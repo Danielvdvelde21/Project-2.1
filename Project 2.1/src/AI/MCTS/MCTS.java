@@ -13,7 +13,7 @@ import java.util.Collections;
 public class MCTS {
 
     // Variables that determine the maximum time or iterations the bot has
-    private final long maxTime = 1000; // Milliseconds
+    public static long maxTime = 100; // Milliseconds
     private final int maxIterations = 10000; // Attacks
     public static ArrayList<Integer> childrenNo;
 
