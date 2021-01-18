@@ -189,7 +189,7 @@ public class MainMenuScreen extends Application {
                     int winsBasicBot = 0;
                     int winsRandomPlayer = 0;
                     int draws = 0;
-                    MCTS.maxTime=1000;
+                    MCTS.maxTime=2000;
                     try{
                         FileWriter myWriter = new FileWriter("logFile.txt");
                         myWriter.close();
